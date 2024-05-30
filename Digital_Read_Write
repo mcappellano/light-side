@@ -1,0 +1,39 @@
+/**
+ * @brief Example reading and writing digital lines on BluePill
+ */
+#include "Arduino.h"
+
+#define DIO_READ_PIN PA0    //digital read pin
+#define DIO_WRITE_PIN PC13  //digital write pin
+
+// Variable to store the value of the digital read pin.
+volatile uint8_t value = 0;
+
+/**
+ * @brief Initialize digital read and write pins.
+ * @param none
+ * @retval none
+ */
+void setup()
+{
+  pinMode(DIO_READ_PIN, INPUT_PULLUP);
+  pinMode(DIO_WRITE_PIN, OUTPUT);
+}
+
+/**
+ * @brief Read the value of a digital pin and output this value on the pin
+ *        controlling the LED.
+ * @param none
+ * @retval none
+ */
+void loop()
+{
+  value = digitalRead(DIO_READ_PIN);
+
+  if (value == 1){
+	digitalWrite(LED_BUILTIN, HIGH);
+  }
+  else{
+	digitalWrite(LED_BUILTIN, LOW);
+  }
+}
