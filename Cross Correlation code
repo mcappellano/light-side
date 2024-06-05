@@ -1,0 +1,181 @@
+/**
+ * @brief Example generating an analog out signal and then reading it as an
+ *    	analog in signal and displaying it on the OLED.
+ * @pre Have an OLED display connected to the Blue Pill. Connect PA0 to PA1 on
+ *      Blue Pill.
+ */
+#include <Wire.h>
+#include <Adafruit_SSD1306.h>
+
+#define SCREEN_WIDTH 128 // OLED display width, in pixels
+#define SCREEN_HEIGHT 64 // OLED display height, in pixels
+#define OLED_RESET 	-1 // This display does not have a reset pin accessible
+Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+#define AIN_PIN PA0	// analog read pin
+#define AOUT_PIN PA1   // analog out pin
+#define AOUT_PIN_PWM PA_1 // analog out pin for PWM (same pin but different
+                      	// data type - this is confusing!)
+
+// Variable to store the value of the analog in pin.
+volatile uint16_t value = 0; //ADC is 12bit
+
+// Variable to show the program is running
+uint32_t loop_counter = 0;
+
+const int SAMPLE = 200; // Assuming SAMPLE is the number of samples for your waveforms
+double elapsed_time = 1000.0; // Just a placeholder for elapsed time
+
+double onekHz[SAMPLE*2]; // Array to store 1kHz waveform
+double tenkHz[SAMPLE*2]; // Array to store 10kHz waveform
+double onekcorr[SAMPLE]; // Array for correlation results of 1kHz
+double tenkcorr[SAMPLE]; // Array for correlation results of 10kHz
+double Waveform[SAMPLE]; // Array for correlation results of 1kHz
+long max_one = 0;
+long max_ten = 0;
+
+
+/**
+ * @brief Initialize the analog in and out pins. We will use the analog out
+ *    	pin as PWM. Also initialize the OLED display.
+ * @param none
+ * @retval none
+ */
+void setup()
+{
+  Serial.begin(9600);
+
+  //Initialize analog in pin
+  pinMode(AIN_PIN, INPUT);
+  pinMode(AOUT_PIN, OUTPUT);
+
+  analogReadResolution(10);
+
+  //Initialize OLED display
+  display_handler.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+ 
+  // Displays Adafruit logo by default. call clearDisplay immediately if you
+  // don't want this.
+  display_handler.display();
+  delay(2000);
+
+  // Displays "Hello world!" on the screen
+  display_handler.clearDisplay();
+  display_handler.setTextSize(1);
+  display_handler.setTextColor(SSD1306_WHITE);
+  display_handler.setCursor(0,0);
+  display_handler.println("Hello world!");
+  display_handler.display();
+}
+
+
+void getWaveForm(){
+
+  long startTime = millis();
+
+  for(int i = 0; i < SAMPLE; i++){
+    Waveform[i] =  analogRead(AIN_PIN) - 200.00;
+  }
+  elapsed_time = millis() - startTime;
+}
+
+void CreateRefWaves() {
+
+  double onekHzT = SAMPLE/(double)elapsed_time;
+  for(int i = 0; i < 2*SAMPLE;i++){
+    onekHz[i] = sin(i* TWO_PI/onekHzT);       // Generate the 1khz and 10khz waveforms that  
+    tenkHz[i] = sin(i * 10 * TWO_PI/onekHzT); // are twice as long as sample of voltage signal
+  }
+
+}
+
+
+void CrossCorrelate() {
+
+  for(int k = 0; k < SAMPLE; k++ ){
+    onekcorr[k] = 0;
+    tenkcorr[k] = 0;
+    for(int i = 0; i < SAMPLE; i++){
+      onekcorr[k] += Waveform[i] * onekHz[k+i]; //Cross correlate the waveform
+      tenkcorr[k] += Waveform[i] * tenkHz[k+i]; //With the 1 and 10 k reference signals
+    }
+  }
+
+  max_one = 0;
+  max_ten = 0;
+  for(int i = 0; i < SAMPLE; i++){
+    if(onekcorr[i]>max_one) max_one = onekcorr[i];
+    if(tenkcorr[i]>max_ten) max_ten = tenkcorr[i];
+
+  }
+
+}
+
+
+void displayValues() {
+
+  display_handler.clearDisplay();
+  display_handler.setTextSize(1);
+  display_handler.setTextColor(SSD1306_WHITE);
+  display_handler.setCursor(0,0);
+  display_handler.print("1khz corr:  ");
+  display_handler.println(max_one);
+  display_handler.println();
+  display_handler.print("10khz corr:  ");
+  display_handler.println(max_ten);
+  display_handler.display();
+}
+
+// void displayWave() {
+//   for (int i = 0; i < SAMPLE; i++ ){
+//     display_handler.clearDisplay();
+//     display_handler.setTextSize(1);
+//     display_handler.setTextColor(SSD1306_WHITE);
+//     display_handler.setCursor(0,0);
+//     display_handler.print("Analog wave reading:  ");
+//     display_handler.println(Waveform[i]);
+//     display_handler.display();
+//   }
+// }
+
+
+void loop(){
+
+  getWaveForm();
+  CreateRefWaves();
+  CrossCorrelate();
+  displayValues();
+  // displayWave();
+  delay(100);
+}
+
+
+
+
+
+
+// /**
+//  * @brief Read the value of the analog-in pin and set the timing for the LED
+//  *    	blink period depending on this value.
+//  * @param none
+//  * @retval none
+//  */
+// void loop()
+// {
+//   //Output a PWM signal
+//   uint32_t frequency_Hz = 100000;
+//   uint32_t dutycycle = 50;
+//   pwm_start(AOUT_PIN_PWM, frequency_Hz, dutycycle,
+//         	TimerCompareFormat_t::PERCENT_COMPARE_FORMAT);
+//   //Read the PWM signal as analog in
+//   value = analogRead(AIN_PIN);
+
+//   //Display the read signal's raw value (12 bit: 0 to 4096)
+//   display_handler.clearDisplay();
+//   display_handler.setCursor(0, 0);
+//   display_handler.println(loop_counter++);
+//   display_handler.print(value, DEC);
+//   display_handler.display();
+
+//   delay(500);
+// }
