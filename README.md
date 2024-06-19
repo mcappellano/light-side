@@ -21,6 +21,7 @@
   - Install this file and run the exe
 
 **3. Repository structure:**
-  - The actual code we will be using is located in ``ESP32 Test2 Bidirectional``
-  - Any sample code that we have written that isn't currently being used, but don't want to lose goes in ``Sample Code``
-  - Ignore ``ESP32 Test1``
+  - The actual code we will be using is located in ``main`` (previously ``ESP32 Test2 Bidirectional``)
+  - Each source (.cpp) file in ``src`` has a corresponding header (.h) file in ``lib``. The header file contains define statements (eg. ``#define SWITCH PA3``), variable definitions, and function definitions. Take a look at ``main.h`` and ``main.cpp`` as an example. At the top of source files we type ``#include "xxxx.h"``, and then we have access to all the functions and variables we made in ``xxxx.cpp``.
+  - Any code that we have written that isn't currently being used, but don't want to lose goes in ``referencecode`` (previously ``Sample Code``)
+  - Ignore ``esp32test1``
