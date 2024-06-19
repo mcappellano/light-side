@@ -1,7 +1,18 @@
 ## LIGHT SIDE - README updated: June 19, 2024
 
 
-**1. To setup GitHub on VSCode, follow the instructions here:** https://code.visualstudio.com/docs/sourcecontrol/github
+**1. To setup GitHub on VSCode**:
+  - Install the VSCode extension available here: https://code.visualstudio.com/docs/sourcecontrol/github
+  - Click on windows search and open up "terminal"
+  - Navigate to the folder where you want to put the repository files on your computer. Right click on the folder and select "copy as path".
+    In terminal, enter "cd" (change directory) followed by the path. I typed in:
+    ``cd "C:\Users\jorda\OneDrive\Documents\Robot Summer"``.
+    Then press enter.
+  - To clone the repository, type ``git clone https://github.com/mcappellano/light-side.git``, then enter.
+  - You can now double check that a folder called "light-side" exists in the specified folder. Inside it should include a ".git" folder, in addition to the other files.
+  - Open VSCode and remove the previous folders you had in your workspace.
+  - Select open folder, and navigate to the new "light-side" folder and open it.
+  - You are all done. To commit, push, pull, and use all the other Git features, you can play around with it or check the same website as before: https://code.visualstudio.com/docs/sourcecontrol/github
 
 **2. Before running code, install ESP32 Drivers:**
   - CP210x USB to UART Bridge VCP Drivers from silicon labs: https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers
