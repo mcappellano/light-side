@@ -1,6 +1,6 @@
 ## LIGHT SIDE - README updated: June 19, 2024
 
-**1. To setup GitHub on VSCode**:
+**1. GitHub setup on VSCode**:
 
 - Install the VSCode extension available here: https://code.visualstudio.com/docs/sourcecontrol/github
 - Click on windows search and open up "terminal"
@@ -14,14 +14,23 @@
 - Select open folder, and navigate to the new "light-side" folder and open it.
 - You are all done. To commit, push, pull, and use all the other Git features, you can play around with it or check the same website as before: https://code.visualstudio.com/docs/sourcecontrol/github
 
-**2. Before running code, install ESP32 Drivers:**
+**2. PlatformIO setup**
+
+- If the include statements are giving an error, it is likely PlatformIO is not set up properly. To fix, follow the steps below.
+- Select the alien-looking PlatformIO icon on the left side, then click Open Project
+- Navigate to the light-side folder, and inside it click on the folder main, then select open.
+- Back in VSCode, select Source Control from the left side.
+- Select the light-side Git repository
+- If you see a dialog box asking something open Git and parent files, select yes.
+
+**3. Install ESP32 Drivers:**
 
 - CP210x USB to UART Bridge VCP Drivers from silicon labs: https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers
 - Select: Downloads -> FILE: CP210x Windows Drivers
 - Make sure you dont install the universal driver
 - Install this file and run the exe
 
-**3. Repository structure:**
+**4. IMPORTANT INFO - Repository structure:**
 
 - The actual code we will be using is located in `main` (previously `ESP32 Test2 Bidirectional`)
 - Each source (.cpp) file in `src` has a corresponding header (.h) file in `include`. The header file contains define statements (eg. `#define SWITCH PA3`), variable definitions, and function definitions. Take a look at `main.h` and `main.cpp` as an example. At the top of source files we type `#include "xxxx.h"`, and then we have access to all the functions and variables we made in `xxxx.cpp`.
