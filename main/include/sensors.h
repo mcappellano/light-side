@@ -8,7 +8,6 @@
 #define SWITCH PA4
 #define DIGITAL_REFLECTANCE PA1
 
-
 // OLED display
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
