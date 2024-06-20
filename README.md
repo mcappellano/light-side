@@ -1,11 +1,11 @@
-## LIGHT SIDE - README updated: June 19, 2024
+## LIGHT SIDE - README updated: June 20, 2024
 
 **1. GitHub setup on VSCode**:
 
 - Install the VSCode extension available here: https://code.visualstudio.com/docs/sourcecontrol/github
 - Click on windows search and open up "terminal"
-- Navigate to the folder where you want to put the repository files on your computer. Right click on the folder and select "copy as path".
-  In terminal, enter "cd" (change directory) followed by the path. I typed in:
+- Separately, in file explorer, navigate to the folder where you want to put the repository files on your computer. Right click on the folder and select "copy as path".
+  In terminal, enter "cd" (change directory) followed by the path. As an example, I entered:
   `cd "C:\Users\jorda\OneDrive\Documents\Robot Summer"`.
   Then press enter.
 - To clone the repository, type `git clone https://github.com/mcappellano/light-side.git`, then enter.
