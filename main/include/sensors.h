@@ -3,16 +3,11 @@
 
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
+#include <Arduino.h>
 
 // Pin definitions
-#define SWITCH PA4
-#define DIGITAL_REFLECTANCE PA1
-
-// OLED display
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 64
-#define OLED_RESET -1
-inline Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+#define SWITCH 4
+#define DIGITAL_REFLECTANCE 1
 
 // Function declarations
 void handle_interrupt();

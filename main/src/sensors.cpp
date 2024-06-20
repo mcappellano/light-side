@@ -1,3 +1,4 @@
+#include "main.h"
 #include "sensors.h"
 
 void checkSwitch()
