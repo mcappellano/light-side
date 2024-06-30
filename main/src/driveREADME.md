@@ -2,7 +2,7 @@ Overview
 
 This README outlines how the code in the drive.cpp file will enable the robots to navigate between any two food stations. The overall premise is as follows: if necessary, the robot will cross over to the other counter by driving up or down (denoted U and D in the diagrams below). It will stop at approximately halfway between the two counters, rotate 180 degrees, and then continue the rest of the distance to the other counter. Next, it will drive forwards or backwards (F or B) until it reaches the desired node (which is the only step if the robot is already at the desired counter - meaning we should try to minimize crossing). Each node is denoted by a different number, and notice that not every node is a food station.
 
-![Node diagram](images/full_node_diagram.jpg)
+![Node diagram](../images/full_node_diagram.jpg)
 
 Crossing to the Other Counter
 
@@ -12,11 +12,11 @@ Traversing Along a Counter
 
 Once we are on right side, we will arrive at the desired node by counting the number of tape pieces the robot crosses as it drives along the counter. This part differs very slightly for the two robots, so I will address the bottom bot first, referencing the following diagram.
 
-![Node diagram](images/bottom_node_diagram.jpg)
+![Bottom node diagram](../images/bottom_node_diagram.jpg)
 
 As you can see, every node on the middle counter has a tape piece. This makes it simple; the difference between the number of the node the bottom bot is at and the one it is travelling to is equal to the number of tape pieces it must cross. On the bottom counter, not every node has a tape piece. This time, we can say that if the node number is greater than our current node, we must move forwards by one tape piece, and if it less than our current node, we must move backwards by one tape piece.
 
-![Node diagram](images/top_node_diagram.jpg)
+![Top node diagram](../images/top_node_diagram.jpg)
 
 The top bot is more complicated, as the food stations on either side never line up with each other. This introduces many more nodes, however both sides can be dealt with the same way. We take the difference between nodes numbers, divide by two, and round up. This gives us the number of tape pieces away the desired node is. For example, if we are moving from 11 to 16, we calculate: 16 - 11 = 5, 5 / 2 = 2 (this is how division works with integers), 2 + 1 = 3 (the +1 is the “rounding”). Therefore the third tape piece we reach in the forward direction (forward because 16 > 11) marks the desired node.
 
