@@ -1,13 +1,17 @@
 #include "main.h"
 #include "sensors.h"
+#include "drive.h"
+#include "reflectance.h"
 
+int currentNode = START_POSITION;
+int nextNode = PLATES; // For top bot code, replace this with BUNS
+int tapeCounter = 0;
 
 void setup()
 {
-    pinMode(SWITCH, INPUT_PULLUP);
-    pinMode(DIGITAL_REFLECTANCE, INPUT);
+    pinMode(REFLECTANCE, INPUT);
 
-    attachInterrupt(digitalPinToInterrupt(SWITCH), handle_interrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(REFLECTANCE), tapeInterrupt, RISING);
 
     display_handler.begin(SSD1306_SWITCHCAPVCC, 0x3C);
     // display_handler.display();

@@ -1,15 +1,15 @@
-void driveForward(int stations)
-{
-}
+#ifndef DRIVE_H
+#define DRIVE_H
 
-void driveBackward(int stations)
-{
-}
+// Variables
 
-void driveRight()
-{
-}
+// Function declarations
+void goNextNode();
+void driveForward();
+void driveBackward();
+void crossUp();
+void crossDown();
+void spinAround();
+void centreOnTape();
 
-void driveLeft()
-{
-}
+#endif // DRIVE_H
