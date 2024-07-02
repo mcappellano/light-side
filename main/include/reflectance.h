@@ -5,5 +5,6 @@
 
 // Function declarations
 void tapeInterrupt();
+void centreOnTape();
 
 #endif // REFLECTANCE_H

@@ -4,7 +4,8 @@
 #include "reflectance.h"
 
 int currentNode = START_POSITION;
-int nextNode = PLATES; // For top bot code, replace this with BUNS
+int nextNode = PLATES;       // For top bot code, replace this with BUNS
+int nextNextNode = EXCHANGE; // Same for top bot
 int tapeCounter = 0;
 
 void setup()

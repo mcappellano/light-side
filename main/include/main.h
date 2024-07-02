@@ -35,6 +35,7 @@ extern Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED
 // Variables
 extern int currentNode;
 extern int nextNode;
+extern int nextNextNode;
 extern int tapeCounter;
 
 // Function declarations
