@@ -3,8 +3,14 @@
 
 // Variables
 
+// Pin definitions
+#define REFLEC1 0
+#define REFLEC2 4
+
 // Function declarations
-void tapeInterrupt();
+void tapeInterrupt1();
+void tapeInterrupt2();
 void centreOnTape();
+void getReflectance();
 
 #endif // REFLECTANCE_H

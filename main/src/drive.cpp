@@ -6,6 +6,13 @@ Note that this code is specific to the bottom robot. */
 #include "reflectance.h"
 #include "main.h"
 
+int tapeToSee = 0;
+uint32_t freqHz = 50;
+int resolution = 8;
+uint8_t dcQuarter = 63;
+uint8_t dcHalf = 127;
+uint8_t dcMax = 255;
+
 void goNextNode()
 {
     // Cross to the other counter if necessary
@@ -21,66 +28,143 @@ void goNextNode()
     else
         tapeToSee = 1;
 
+    // TO DO: wait until the robot has finished crossing
+
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextNode > currentNode && currentNode < 10) || nextNode < currentNode && nextNode >= 10)
-        driveForward();
+        traverseForward();
     else if ((nextNode < currentNode && currentNode < 10) || nextNode > currentNode && currentNode >= 10)
-        driveBackward();
+        traverseBackward();
 }
 
-void driveForward()
+void traverseForward()
 {
     // TO DO: start spinning the motors in one direction
 
-    while (tapeCounter < tapeToSee)
-        delay(1);
+    // while (tapeCounter < tapeToSee)
+    //     delay(1);
 
     // TO DO: spin motors in opposite direction at slower speed
 
-    centreOnTape();
+    // centreOnTape();
 
-    currentNode = nextNode;
-    nextNode = nextNextNode;
+    // currentNode = nextNode;
+    // nextNode = nextNextNode;
 }
 
-void driveBackward()
+void traverseBackward()
 {
     // TO DO: start spinning the motors in the other direction
 
-    while (tapeCounter < tapeToSee)
-        delay(1);
+    // while (tapeCounter < tapeToSee)
+    //     delay(1);
 
     // TO DO: spin motors in opposite direction at slower speed
 
-    centreOnTape();
+    // centreOnTape();
 
-    currentNode = nextNode;
-    nextNode = nextNextNode;
+    // currentNode = nextNode;
+    // nextNode = nextNextNode;
 }
 
 void crossUp()
 {
     // TO DO: drive up halfway
 
-    spinAround();
+    // spinAround();
 
     // TO DO: drive up the rest of the way
 
-    currentNode -= 10;
+    // currentNode -= 10;
 }
 
 void crossDown()
 {
     // TO DO: drive down halfway
 
-    spinAround();
+    // spinAround();
 
     // TO DO: drive down the rest of the way
 
-    currentNode += 10;
+    // currentNode += 10;
 }
 
 void spinAround()
 {
     // TO DO: rotate 180 degrees
+}
+
+void motorsForward(uint8_t dutyCycle)
+{
+    ledcWrite(motor1F, dutyCycle);
+    ledcWrite(motor1B, 0);
+
+    ledcWrite(motor2F, dutyCycle);
+    ledcWrite(motor2B, 0);
+
+    ledcWrite(motor3F, dutyCycle);
+    ledcWrite(motor3B, 0);
+
+    ledcWrite(motor4F, dutyCycle);
+    ledcWrite(motor4B, 0);
+}
+
+void motorsBackward(uint8_t dutyCycle)
+{
+    ledcWrite(motor1F, 0);
+    ledcWrite(motor1B, dutyCycle);
+
+    ledcWrite(motor2F, 0);
+    ledcWrite(motor2B, dutyCycle);
+
+    ledcWrite(motor3F, 0);
+    ledcWrite(motor3B, dutyCycle);
+
+    ledcWrite(motor4F, 0);
+    ledcWrite(motor4B, dutyCycle);
+}
+
+void motorsUpwards(uint8_t dutyCycle)
+{
+    ledcWrite(motor1F, dutyCycle);
+    ledcWrite(motor1B, 0);
+
+    ledcWrite(motor2F, 0);
+    ledcWrite(motor2B, dutyCycle);
+
+    ledcWrite(motor3F, 0);
+    ledcWrite(motor3B, dutyCycle);
+
+    ledcWrite(motor4F, dutyCycle);
+    ledcWrite(motor4B, 0);
+}
+
+void motorsDownwards(uint8_t dutyCycle)
+{
+    ledcWrite(motor1F, 0);
+    ledcWrite(motor1B, dutyCycle);
+
+    ledcWrite(motor2F, dutyCycle);
+    ledcWrite(motor2B, 0);
+
+    ledcWrite(motor3F, dutyCycle);
+    ledcWrite(motor3B, 0);
+
+    ledcWrite(motor4F, 0);
+    ledcWrite(motor4B, dutyCycle);
+}
+
+void stopMotors()
+{
+    ledcWrite(motor1F, 0);
+    ledcWrite(motor1B, 0);
+
+    ledcWrite(motor2F, 0);
+    ledcWrite(motor2B, 0);
+
+    ledcWrite(motor3F, 0);
+    ledcWrite(motor3B, 0);
+
+    ledcWrite(motor4F, 0);
+    ledcWrite(motor4B, 0);
 }

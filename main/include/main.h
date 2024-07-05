@@ -3,15 +3,14 @@
 
 #include <Wire.h>
 #include <Adafruit_SSD1306.h>
-
-// Pin definitions
-#define REFLECTANCE 1
+#include <Arduino.h>
+#include <driver/ledc.h>
 
 // OLED display
 #define SCREEN_WIDTH 128 // OLED display width, in pixels
 #define SCREEN_HEIGHT 64 // OLED display height, in pixels
 #define OLED_RESET -1    // This display does not have a reset pin accessible
-extern Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+extern Adafruit_SSD1306 display_handler;
 
 // Food stations - BOTTOM ROBOT SPECIFIC
 #define START_POSITION -1
