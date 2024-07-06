@@ -8,7 +8,7 @@ Note that this code is specific to the bottom robot. */
 
 int tapeToSee = 0;
 uint32_t freqHz = 50;
-int resolution = 8;
+uint8_t resolution = 8;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
 uint8_t dcMax = 255;
@@ -96,75 +96,84 @@ void spinAround()
 
 void motorsForward(uint8_t dutyCycle)
 {
-    ledcWrite(motor1F, dutyCycle);
-    ledcWrite(motor1B, 0);
+    analogWrite(motor1F, dutyCycle);
+    analogWrite(motor1B, 0);
 
-    ledcWrite(motor2F, dutyCycle);
-    ledcWrite(motor2B, 0);
+    analogWrite(motor2F, dutyCycle);
+    analogWrite(motor2B, 0);
 
-    ledcWrite(motor3F, dutyCycle);
-    ledcWrite(motor3B, 0);
+    analogWrite(motor3F, dutyCycle);
+    analogWrite(motor3B, 0);
 
-    ledcWrite(motor4F, dutyCycle);
-    ledcWrite(motor4B, 0);
+    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4B, 0);
 }
 
 void motorsBackward(uint8_t dutyCycle)
 {
-    ledcWrite(motor1F, 0);
-    ledcWrite(motor1B, dutyCycle);
 
-    ledcWrite(motor2F, 0);
-    ledcWrite(motor2B, dutyCycle);
+//digitalWrite(motor1F, LOW);
+//digitalWrite(motor1B, LOW);
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, dutyCycle);
 
-    ledcWrite(motor3F, 0);
-    ledcWrite(motor3B, dutyCycle);
+//digitalWrite(motor2F, LOW);
+//digitalWrite(motor2B, LOW);
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, dutyCycle);
 
-    ledcWrite(motor4F, 0);
-    ledcWrite(motor4B, dutyCycle);
+//digitalWrite(motor3F, LOW);
+//digitalWrite(motor3B, LOW);
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, dutyCycle);
+
+//digitalWrite(motor4F, LOW);
+//digitalWrite(motor4B, LOW);
+    analogWrite(motor4F, 0);
+    analogWrite(motor4B, dutyCycle);
 }
 
 void motorsUpwards(uint8_t dutyCycle)
 {
-    ledcWrite(motor1F, dutyCycle);
-    ledcWrite(motor1B, 0);
+    // ledcWrite(motor1F, dutyCycle);
+    // ledcWrite(motor1B, 0);
 
-    ledcWrite(motor2F, 0);
-    ledcWrite(motor2B, dutyCycle);
+    // ledcWrite(motor2F, 0);
+    // ledcWrite(motor2B, dutyCycle);
 
-    ledcWrite(motor3F, 0);
-    ledcWrite(motor3B, dutyCycle);
+    // ledcWrite(motor3F, 0);
+    // ledcWrite(motor3B, dutyCycle);
 
-    ledcWrite(motor4F, dutyCycle);
-    ledcWrite(motor4B, 0);
+    // ledcWrite(motor4F, dutyCycle);
+    // ledcWrite(motor4B, 0);
 }
 
 void motorsDownwards(uint8_t dutyCycle)
 {
-    ledcWrite(motor1F, 0);
-    ledcWrite(motor1B, dutyCycle);
+    // ledcWrite(motor1F, 0);
+    // ledcWrite(motor1B, dutyCycle);
 
-    ledcWrite(motor2F, dutyCycle);
-    ledcWrite(motor2B, 0);
+    // ledcWrite(motor2F, dutyCycle);
+    // ledcWrite(motor2B, 0);
 
-    ledcWrite(motor3F, dutyCycle);
-    ledcWrite(motor3B, 0);
+    // ledcWrite(motor3F, dutyCycle);
+    // ledcWrite(motor3B, 0);
 
-    ledcWrite(motor4F, 0);
-    ledcWrite(motor4B, dutyCycle);
+    // ledcWrite(motor4F, 0);
+    // ledcWrite(motor4B, dutyCycle);
 }
 
 void stopMotors()
 {
-    ledcWrite(motor1F, 0);
-    ledcWrite(motor1B, 0);
+    // ledcWrite(motor1F, 0);
+    // ledcWrite(motor1B, 0);
 
-    ledcWrite(motor2F, 0);
-    ledcWrite(motor2B, 0);
+    // ledcWrite(motor2F, 0);
+    // ledcWrite(motor2B, 0);
 
-    ledcWrite(motor3F, 0);
-    ledcWrite(motor3B, 0);
+    // ledcWrite(motor3F, 0);
+    // ledcWrite(motor3B, 0);
 
-    ledcWrite(motor4F, 0);
-    ledcWrite(motor4B, 0);
+    // ledcWrite(motor4F, 0);
+    // ledcWrite(motor4B, 0);
 }

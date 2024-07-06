@@ -2,9 +2,9 @@
 #define MAIN_H
 
 #include <Wire.h>
-#include <Adafruit_SSD1306.h>
 #include <Arduino.h>
 #include <driver/ledc.h>
+#include <Adafruit_SSD1306.h>
 
 // OLED display
 #define SCREEN_WIDTH 128 // OLED display width, in pixels

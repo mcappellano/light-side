@@ -11,6 +11,5 @@
 void tapeInterrupt1();
 void tapeInterrupt2();
 void centreOnTape();
-void getReflectance();
 
 #endif // REFLECTANCE_H

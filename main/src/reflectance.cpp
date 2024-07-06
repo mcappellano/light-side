@@ -17,11 +17,3 @@ void centreOnTape()
 {
     // TO DO: turn off motors when both reflectance sensors see black tape
 }
-
-void getReflectance()
-{
-    if (digitalRead(REFLEC1))
-        display_handler.println("BLACK TAPE");
-    else
-        display_handler.println("WHITE FLOOR");
-}
