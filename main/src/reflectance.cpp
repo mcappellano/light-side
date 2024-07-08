@@ -3,17 +3,17 @@
 
 void tapeInterrupt1()
 {
-    // enclose increment in an if statement for when the first TCRT is the first to cross the tape
-    tapeCounter++;
+    if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
+        tapeCounter++;
 }
 
 void tapeInterrupt2()
 {
-    // enclose increment in an if statement for when the second TCRT is the first to cross the tape
-    tapeCounter++;
+    if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
+        tapeCounter++;
 }
 
-void centreOnTape()
-{
-    // TO DO: turn off motors when both reflectance sensors see black tape
-}
+// void centreOnTape()
+// {
+//     // TO DO: turn off motors when both reflectance sensors see black tape
+// }

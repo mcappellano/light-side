@@ -8,7 +8,7 @@ Note that this code is specific to the bottom robot. */
 
 int tapeToSee = 0;
 uint32_t freqHz = 50;
-uint8_t resolution = 8;
+uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
 uint8_t dcMax = 255;
@@ -32,21 +32,25 @@ void goNextNode()
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
-        traverseForward();
-    else if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
         traverseBackward();
+    else if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
+        traverseForward();
 }
 
 void traverseForward()
 {
-    // TO DO: start spinning the motors in one direction
+    tapeCounter = 0; // for testing
+    tapeToSee = 1;   // for testing
 
-    // while (tapeCounter < tapeToSee)
-    //     delay(1);
+    motorsForward(dcMax);
+    while (tapeCounter < tapeToSee)
+        delay(1);
 
-    // TO DO: spin motors in opposite direction at slower speed
+    motorsBackward(dcEighth);
+    while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
+        delay(1);
 
-    // centreOnTape();
+    stopMotors();
 
     // currentNode = nextNode;
     // nextNode = nextNextNode;
@@ -109,10 +113,10 @@ void motorsForward(uint8_t dutyCycle)
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle);
+    analogWrite(motor2F, dutyCycle - 3); // minus 3 steers it slightly into the wall
     analogWrite(motor2B, 0);
 
-    analogWrite(motor3F, dutyCycle);
+    analogWrite(motor3F, dutyCycle - 3);
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, dutyCycle);
@@ -122,7 +126,7 @@ void motorsForward(uint8_t dutyCycle)
 void motorsBackward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle);
+    analogWrite(motor1B, dutyCycle - 3); // minus 3 steers it slightly into the wall
 
     analogWrite(motor2F, 0);
     analogWrite(motor2B, dutyCycle);
@@ -131,7 +135,7 @@ void motorsBackward(uint8_t dutyCycle)
     analogWrite(motor3B, dutyCycle);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle);
+    analogWrite(motor4B, dutyCycle - 3);
 }
 
 void motorsUpwards(uint8_t dutyCycle)
