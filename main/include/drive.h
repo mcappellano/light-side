@@ -9,8 +9,8 @@
 #define motor1B 21
 #define motor2F 8
 #define motor2B 19
-#define motor3F 7
-#define motor3B 5
+#define motor3F 5
+#define motor3B 7
 #define motor4F 10
 #define motor4B 9
 

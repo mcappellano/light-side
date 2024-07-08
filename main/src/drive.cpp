@@ -97,11 +97,11 @@ void spinAround(uint8_t dutyCycle)
     analogWrite(motor2F, 0);
     analogWrite(motor2B, dutyCycle);
 
-    analogWrite(motor3F, dutyCycle);
-    analogWrite(motor3B, 0);
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, dutyCycle);
 
-    analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle);
+    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4B, 0);
 }
 
 void motorsForward(uint8_t dutyCycle)
@@ -136,11 +136,11 @@ void motorsBackward(uint8_t dutyCycle)
 
 void motorsUpwards(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, dutyCycle);
-    analogWrite(motor1B, 0);
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, dutyCycle);
 
-    analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle);
+    analogWrite(motor2F, dutyCycle);
+    analogWrite(motor2B, 0);
 
     analogWrite(motor3F, 0);
     analogWrite(motor3B, dutyCycle);
@@ -151,11 +151,11 @@ void motorsUpwards(uint8_t dutyCycle)
 
 void motorsDownwards(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle);
+    analogWrite(motor1F, dutyCycle);
+    analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle);
-    analogWrite(motor2B, 0);
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, dutyCycle);
 
     analogWrite(motor3F, dutyCycle);
     analogWrite(motor3B, 0);

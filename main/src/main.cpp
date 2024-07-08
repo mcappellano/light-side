@@ -40,7 +40,8 @@ void setup()
     // display_handler.setTextSize(1);
     // display_handler.setTextColor(SSD1306_WHITE);
 
-    motorsForward(dcHalf);
+    //motorsForward(dcMax);
+    motorsUpwards(dcQuarter);
 }
 
 void loop()
