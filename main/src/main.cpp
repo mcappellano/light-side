@@ -30,8 +30,11 @@ void setup()
 
     analogWriteFrequency(freqHz);
 
-    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt1, RISING); // might have to be FALLING
-    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt2, RISING); // might have to be FALLING
+    tapeTimer = timerBegin(0, 80, true);
+    timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
+
+    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING); // might have to be FALLING
+    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING); // might have to be FALLING
 
     /*
     For testing:

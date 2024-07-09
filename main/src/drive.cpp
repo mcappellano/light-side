@@ -77,11 +77,22 @@ void traverseBackward()
 
 void crossCounters()
 {
-    motorsUpward(dcHalf);
-    // delay until we have left wall sufficiently
-    // spinAround();
-    // delay
+    /*
+    FIRST OPTION:
+    motorsUpward(dcHalf); // might have to switch this to be downward, and below to be upward (careful on first test)
+    delay until we have left wall sufficiently
+    spinAround();
+    delay
     motorsDownward(dcHalf);
+    */
+
+    /*
+    BETTER OPTION:
+    Find the perfect combination of motors speeds
+    so that the robot moves counter to counter
+    while simulatenously rotating 180 degrees
+    (consult image I found online and add the vectors to the two motions we want)
+    */
 
     if (currentNode >= 10)
         currentNode -= 10;

@@ -1,15 +1,22 @@
 #ifndef REFLECTANCE_H
 #define REFLECTANCE_H
 
-// Variables
+// Includes
+// #include <driver/timer.h>
+#include <Arduino.h>
 
 // Pin definitions
 #define REFLEC1 4
 #define REFLEC2 15
 
+// Variables
+extern hw_timer_t *tapeTimer;
+extern volatile bool alreadySeen;
+const unsigned long tapedelay_ms = 100;
+
 // Function declarations
-void tapeInterrupt1();
-void tapeInterrupt2();
-// void centreOnTape();
+void tapeInterrupt();
+void tapeTimerInterrupt();
+// void tapeInterrupt2();
 
 #endif // REFLECTANCE_H

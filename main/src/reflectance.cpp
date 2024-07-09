@@ -1,19 +1,30 @@
 #include "reflectance.h"
 #include "main.h"
 
-void tapeInterrupt1()
+hw_timer_t *tapeTimer = NULL;
+volatile bool alreadySeen = false;
+
+void tapeInterrupt()
 {
-    if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
+    if (!alreadySeen)
+    {
         tapeCounter++;
+        alreadySeen = true;
+        timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
+        timerAlarmEnable(tapeTimer);
+    }
 }
 
-void tapeInterrupt2()
+void IRAM_ATTR tapeTimerInterrupt()
 {
-    if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
-        tapeCounter++;
+    alreadySeen = false;
+    timerAlarmDisable(tapeTimer);
 }
 
-// void centreOnTape()
+// void tapeInterrupt2()
 // {
-//     // TO DO: turn off motors when both reflectance sensors see black tape
+//     if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
+//         tapeCounter++;
 // }
+
+// For the first one: if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
