@@ -24,14 +24,13 @@ extern uint8_t dcMax;
 void goNextNode();
 void traverseForward();
 void traverseBackward();
-void crossUp();
-void crossDown();
+void crossCounters();
 void spinAround();
 
 void motorsForward(uint8_t dutyCycle);
 void motorsBackward(uint8_t dutyCycle);
-void motorsUpwards(uint8_t dutyCycle);
-void motorsDownwards(uint8_t dutyCycle);
+void motorsUpward(uint8_t dutyCycle);
+void motorsDownward(uint8_t dutyCycle);
 void stopMotors();
 
 #endif // DRIVE_H

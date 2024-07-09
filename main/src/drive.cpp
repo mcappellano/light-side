@@ -16,10 +16,8 @@ uint8_t dcMax = 255;
 void goNextNode()
 {
     // Cross to the other counter if necessary
-    if (nextNode >= currentNode + 10)
-        crossDown();
-    else if (nextNode <= currentNode - 10)
-        crossUp();
+    if (nextNode >= currentNode + 10 || nextNode <= currentNode - 10)
+        crossCounters();
 
     // Get ready to cross the correct number of tape pieces
     tapeCounter = 0;
@@ -47,6 +45,7 @@ void traverseForward()
         delay(1);
 
     motorsBackward(dcEighth);
+    delay(10);
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);
 
@@ -58,39 +57,36 @@ void traverseForward()
 
 void traverseBackward()
 {
-    // TO DO: start spinning the motors in the other direction
+    tapeCounter = 0; // for testing
+    tapeToSee = 1;   // for testing
 
-    // while (tapeCounter < tapeToSee)
-    //     delay(1);
+    motorsBackward(dcMax);
+    while (tapeCounter < tapeToSee)
+        delay(1);
 
-    // TO DO: spin motors in opposite direction at slower speed
+    motorsForward(dcEighth);
+    delay(10);
+    while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
+        delay(1);
 
-    // centreOnTape();
+    stopMotors();
 
     // currentNode = nextNode;
     // nextNode = nextNextNode;
 }
 
-void crossUp()
+void crossCounters()
 {
-    // TO DO: drive up halfway
-
+    motorsUpward(dcHalf);
+    // delay until we have left wall sufficiently
     // spinAround();
+    // delay
+    motorsDownward(dcHalf);
 
-    // TO DO: drive up the rest of the way
-
-    // currentNode -= 10;
-}
-
-void crossDown()
-{
-    // TO DO: drive down halfway
-
-    // spinAround();
-
-    // TO DO: drive down the rest of the way
-
-    // currentNode += 10;
+    if (currentNode >= 10)
+        currentNode -= 10;
+    else
+        currentNode += 10;
 }
 
 void spinAround(uint8_t dutyCycle)
@@ -138,7 +134,7 @@ void motorsBackward(uint8_t dutyCycle)
     analogWrite(motor4B, dutyCycle - 3);
 }
 
-void motorsUpwards(uint8_t dutyCycle)
+void motorsUpward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, 0);
     analogWrite(motor1B, dutyCycle);
@@ -153,7 +149,7 @@ void motorsUpwards(uint8_t dutyCycle)
     analogWrite(motor4B, 0);
 }
 
-void motorsDownwards(uint8_t dutyCycle)
+void motorsDownward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);

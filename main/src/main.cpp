@@ -1,6 +1,8 @@
 #include "main.h"
 #include "drive.h"
 #include "reflectance.h"
+#include "elevator.h"
+#include "sweeper.h"
 
 int currentNode = START_POSITION;
 int nextNode = PLATES;       // For top bot code, replace this with BUNS
@@ -13,6 +15,9 @@ void setup()
 
     pinMode(REFLEC1, INPUT);
     pinMode(REFLEC2, INPUT);
+
+    pinMode(ELEV_SWITCH, INPUT_PULLUP); // LOW means switch is pressed. Connect C to the proper ESP pin, NO to ESP GND, and NC to nothing.
+    pinMode(SWEEP_SWITCH, INPUT_PULLUP);
 
     pinMode(motor1F, OUTPUT);
     pinMode(motor1B, OUTPUT);
@@ -28,9 +33,12 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt1, RISING); // might have to be FALLING
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt2, RISING); // might have to be FALLING
 
+    /*
+    For testing:
     currentNode = 3;
     nextNode = 2;
     traverseForward();
+    */
 }
 
 void loop()
