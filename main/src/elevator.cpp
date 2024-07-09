@@ -1,13 +1,15 @@
 #include "elevator.h"
 #include "main.h"
 
-int platformHeight = MAX_HEIGHT;
+double platformHeight = MAX_HEIGHT;
+double previousHeight = MAX_HEIGHT;
+double previousFoodHeight = 0;
 
-void raisePlatform()
+void raisePlatform(uint8_t dutyCycle)
 {
 }
 
-void lowerPlatform()
+void lowerPlatform(uint8_t dutyCycle)
 {
 }
 

@@ -3,11 +3,11 @@
 
 int sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
 
-void motorsExtend()
+void extendSweeper(uint8_t dutyCycle)
 {
 }
 
-void motorsRetract()
+void retractSweeper(uint8_t dutyCycle)
 {
 }
 

@@ -27,10 +27,9 @@ extern volatile bool arrived;
 void arrivalCheckInterrupt();
 
 void goNextNode();
-void traverseForward();
-void traverseBackward();
+void traverseCounter(bool forward); // Enter true to go forwards, false to go backwards
 void crossCounters();
-void spinAround();
+void spinAround(); // Won't need this if we incorporate it into the lateral movement
 
 void driveForward(uint8_t dutyCycle);
 void driveBackward(uint8_t dutyCycle);

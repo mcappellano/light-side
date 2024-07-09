@@ -43,10 +43,10 @@ void setup()
 
     /*
     For testing:
-    currentNode = 3;
-    nextNode = 1;
-    traverseForward();
     */
+    currentNode = 3;
+    nextNode = 2;
+    traverseCounter(true);
 }
 
 void loop()

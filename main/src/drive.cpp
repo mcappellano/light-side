@@ -41,9 +41,9 @@ void goNextNode()
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
-        traverseBackward();
+        traverseCounter(false);
     else if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
-        traverseForward();
+        traverseCounter(true);
 }
 
 /*
@@ -52,14 +52,18 @@ While traversing forward/backward, we will also be extending the arm out, and lo
 At some point we must consider the edge cases of there being only a counter crossing movement and no traversing,
 and that of moving to and from the serving area!
 */
-void traverseForward()
+void traverseCounter(bool forward)
 {
     tapeCounter = 0; // for testing
-    tapeToSee = 2;   // for testing
+    tapeToSee = 1;   // for testing
 
-    driveForward(dcMax);
-    extendSweeper();
-    lowerPlatform();
+    if (forward == true)
+        driveForward(dcHalf);
+    else
+        driveBackward(dcHalf);
+
+    extendSweeper(dcEighth);
+    lowerPlatform(dcEighth);
 
     while (!arrived) // The motions of the sweeper and elevator must happen faster than the time it takes to traverse from two adjacent food stations
     {
@@ -72,27 +76,16 @@ void traverseForward()
         }
     }
 
-    driveBackward(dcEighth);
-    delay(10);
-    while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
-        delay(1);
+    stopSweeper();                   // In case it doesn't finish before making it to the tape
+    stopPlatform();                  // Also in case
+    previousHeight = platformHeight; // Also
 
-    stopDriving();
+    // Now back up until we centre exactly on the tape
+    if (forward == true)
+        driveBackward(dcEighth);
+    else
+        driveForward(dcEighth);
 
-    // currentNode = nextNode;
-    // nextNode = nextNextNode;
-}
-
-void traverseBackward()
-{
-    tapeCounter = 0; // for testing
-    tapeToSee = 1;   // for testing
-
-    driveBackward(dcMax);
-    while (tapeCounter < tapeToSee)
-        delay(1);
-
-    driveForward(dcEighth);
     delay(10);
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);

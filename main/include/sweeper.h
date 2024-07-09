@@ -2,11 +2,14 @@
 #define SWEEPER_H
 
 // Library includes
+#include <cmath>
 
-// Pin definitions
-#define SWEEP_SWITCH 66  // change this value
-#define SWEEP_ENCODER 77 // change this value
-#define SWEEP_MOTOR 100  // change this value
+// Pin definitions - not necessarily finalized
+#define SWEEP_SWITCH 25
+#define SWEEP_ENCODER_1 14
+#define SWEEP_ENCODER_2 12
+#define SWEEP_MOTOR_OUT 38
+#define SWEEP_MOTOR_BACK 37
 
 // Sweeper Constants - ALL distances in centimetres, measured with 0 being fully retracted, and calibrated using the switch at the fully extended position
 #define EXTEND_POS 66             // VALUE NOT FINALIZED - The "reset" position
@@ -18,8 +21,8 @@
 extern int sweeperPosition; // Using the rotary encoder, determine
 
 // Function declarations
-void extendSweeper();
-void retractSweeper();
+void extendSweeper(uint8_t dutyCycle);
+void retractSweeper(uint8_t dutyCycle);
 void stopSweeper();
 void sweepSwitchInterrupt();
 
