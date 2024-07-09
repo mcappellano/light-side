@@ -5,13 +5,23 @@ Note that this code is specific to the bottom robot. */
 #include "drive.h"
 #include "reflectance.h"
 #include "main.h"
+#include "sweeper.h"
+#include "elevator.h"
 
+hw_timer_t *arrivalCheckTimer = NULL;
 int tapeToSee = 0;
 uint32_t freqHz = 50;
 uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
 uint8_t dcMax = 255;
+volatile bool arrived = false;
+
+void arrivalCheckInterrupt()
+{
+    if (tapeCounter >= tapeToSee)
+        arrived = true;
+}
 
 void goNextNode()
 {
@@ -20,13 +30,14 @@ void goNextNode()
         crossCounters();
 
     // Get ready to cross the correct number of tape pieces
+    arrived = false;
     tapeCounter = 0;
     if (currentNode <= 10)
         tapeToSee = abs(nextNode - currentNode);
     else
         tapeToSee = 1;
 
-    // TO DO: wait until the robot has finished crossing
+    // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
@@ -35,21 +46,38 @@ void goNextNode()
         traverseForward();
 }
 
+/*
+IMPORTANT:
+While traversing forward/backward, we will also be extending the arm out, and lowering the platform.
+At some point we must consider the edge cases of there being only a counter crossing movement and no traversing,
+and that of moving to and from the serving area!
+*/
 void traverseForward()
 {
     tapeCounter = 0; // for testing
-    tapeToSee = 1;   // for testing
+    tapeToSee = 2;   // for testing
 
-    motorsForward(dcMax);
-    while (tapeCounter < tapeToSee)
-        delay(1);
+    driveForward(dcMax);
+    extendSweeper();
+    lowerPlatform();
 
-    motorsBackward(dcEighth);
+    while (!arrived) // The motions of the sweeper and elevator must happen faster than the time it takes to traverse from two adjacent food stations
+    {
+        if (sweeperPosition >= EXTEND_POS)
+            stopSweeper();
+        if (platformHeight <= previousHeight - previousFoodHeight)
+        {
+            stopPlatform();
+            previousHeight = platformHeight;
+        }
+    }
+
+    driveBackward(dcEighth);
     delay(10);
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);
 
-    stopMotors();
+    stopDriving();
 
     // currentNode = nextNode;
     // nextNode = nextNextNode;
@@ -60,16 +88,16 @@ void traverseBackward()
     tapeCounter = 0; // for testing
     tapeToSee = 1;   // for testing
 
-    motorsBackward(dcMax);
+    driveBackward(dcMax);
     while (tapeCounter < tapeToSee)
         delay(1);
 
-    motorsForward(dcEighth);
+    driveForward(dcEighth);
     delay(10);
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);
 
-    stopMotors();
+    stopDriving();
 
     // currentNode = nextNode;
     // nextNode = nextNextNode;
@@ -115,7 +143,7 @@ void spinAround(uint8_t dutyCycle)
     analogWrite(motor4B, 0);
 }
 
-void motorsForward(uint8_t dutyCycle)
+void driveForward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
@@ -130,7 +158,7 @@ void motorsForward(uint8_t dutyCycle)
     analogWrite(motor4B, 0);
 }
 
-void motorsBackward(uint8_t dutyCycle)
+void driveBackward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, 0);
     analogWrite(motor1B, dutyCycle - 3); // minus 3 steers it slightly into the wall
@@ -145,7 +173,7 @@ void motorsBackward(uint8_t dutyCycle)
     analogWrite(motor4B, dutyCycle - 3);
 }
 
-void motorsUpward(uint8_t dutyCycle)
+void driveUpward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, 0);
     analogWrite(motor1B, dutyCycle);
@@ -160,7 +188,7 @@ void motorsUpward(uint8_t dutyCycle)
     analogWrite(motor4B, 0);
 }
 
-void motorsDownward(uint8_t dutyCycle)
+void driveDownward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
@@ -175,7 +203,7 @@ void motorsDownward(uint8_t dutyCycle)
     analogWrite(motor4B, dutyCycle);
 }
 
-void stopMotors()
+void stopDriving()
 {
     analogWrite(motor1F, 0);
     analogWrite(motor1B, 0);

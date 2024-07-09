@@ -1,18 +1,21 @@
 #include "sweeper.h"
 #include "main.h"
 
-void fullyExtend()
+int sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
+
+void motorsExtend()
 {
 }
 
-void sweepIn()
+void motorsRetract()
 {
 }
 
-void fullyRetract()
+void stopSweeper()
 {
 }
 
-void pushPlate()
+void sweepSwitchInterrupt()
 {
+    sweeperPosition = EXTEND_POS;
 }

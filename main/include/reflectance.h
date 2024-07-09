@@ -2,7 +2,6 @@
 #define REFLECTANCE_H
 
 // Includes
-// #include <driver/timer.h>
 #include <Arduino.h>
 
 // Pin definitions

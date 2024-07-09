@@ -1,18 +1,29 @@
 #include "elevator.h"
 #include "main.h"
 
-void raiseToTop()
+int platformHeight = MAX_HEIGHT;
+
+void raisePlatform()
 {
 }
 
-void lowerPlatform(int height)
+void lowerPlatform()
 {
 }
 
-void dropBurger()
+void stopPlatform()
 {
 }
 
-void returnPlatform()
+void swingOut()
 {
+}
+
+void swingIn()
+{
+}
+
+void elevSwitchInterrupt()
+{
+    platformHeight = MAX_HEIGHT;
 }

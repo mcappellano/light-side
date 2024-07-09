@@ -32,20 +32,30 @@ void setup()
 
     tapeTimer = timerBegin(0, 80, true);
     timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
+    arrivalCheckTimer = timerBegin(0, 80, true);
+    timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
 
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING); // might have to be FALLING
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING); // might have to be FALLING
 
+    attachInterrupt(digitalPinToInterrupt(SWEEP_SWITCH), sweepSwitchInterrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(ELEV_SWITCH), elevSwitchInterrupt, FALLING);
+
     /*
     For testing:
     currentNode = 3;
-    nextNode = 2;
+    nextNode = 1;
     traverseForward();
     */
 }
 
 void loop()
 {
+    /*
+    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextNode().
+    So this loop determine the next food station we must go to, assign that to nextNode or maybe nextNextNode, call goNextNode(), and loop back to the beginning.
+    We must ensure that goNextNode() is not called again until we are ready to move to the next food station.
+    */
 }
 
 /*
