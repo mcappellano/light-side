@@ -7,12 +7,10 @@
 int currentNode = START_POSITION;
 int nextNode = PLATES;       // For top bot code, replace this with BUNS
 int nextNextNode = EXCHANGE; // Same for top bot
-int tapeCounter = 0;
 
 void setup()
 {
     Serial.begin(115200);
-
     pinMode(REFLEC1, INPUT);
     pinMode(REFLEC2, INPUT);
 
@@ -30,23 +28,32 @@ void setup()
 
     analogWriteFrequency(freqHz);
 
-    tapeTimer = timerBegin(0, 80, true);
-    timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
-    arrivalCheckTimer = timerBegin(0, 80, true);
-    timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
-
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING); // might have to be FALLING
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING); // might have to be FALLING
 
     attachInterrupt(digitalPinToInterrupt(SWEEP_SWITCH), sweepSwitchInterrupt, FALLING);
     attachInterrupt(digitalPinToInterrupt(ELEV_SWITCH), elevSwitchInterrupt, FALLING);
 
-    /*
-    For testing:
-    */
+    tapeTimer = timerBegin(0, 80, true);
+    timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
+    timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
+
+    // arrivalCheckTimer = timerBegin(0, 80, true);
+    // timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
+    // timerAlarmWrite(arrivalCheckTimer, 2000, true);
+    // timerAlarmEnable(arrivalCheckTimer);
+
+    Serial.println("");
+    Serial.println("Setup");
+
+    // /*
+    // For testing:
+    // */
     currentNode = 3;
     nextNode = 2;
-    traverseCounter(true);
+    // traverseCounter(true);
+    // driveForward(dcQuarter);
+    // driveUpward(dcEighth);
 }
 
 void loop()
@@ -56,6 +63,8 @@ void loop()
     So this loop determine the next food station we must go to, assign that to nextNode or maybe nextNextNode, call goNextNode(), and loop back to the beginning.
     We must ensure that goNextNode() is not called again until we are ready to move to the next food station.
     */
+    // Serial.println("Loop");
+    // delay(500);
 }
 
 /*

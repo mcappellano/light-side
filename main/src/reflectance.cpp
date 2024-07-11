@@ -1,16 +1,21 @@
 #include "reflectance.h"
 #include "main.h"
+#include "drive.h"
 
 hw_timer_t *tapeTimer = NULL;
 volatile bool alreadySeen = false;
 
-void tapeInterrupt()
+void IRAM_ATTR tapeInterrupt()
 {
     if (!alreadySeen)
     {
         tapeCounter++;
         alreadySeen = true;
-        timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
+        if (tapeCounter >= tapeToSee)
+        {
+            arrived = true;
+        }
+        timerWrite(tapeTimer, 0);
         timerAlarmEnable(tapeTimer);
     }
 }

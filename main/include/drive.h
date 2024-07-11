@@ -16,15 +16,20 @@
 #define motor4B 9
 
 // Variables
+extern volatile bool arrived;
+extern volatile int tapeCounter;
+extern int tapeToSee;
+// extern hw_timer_t *arrivalCheckTimer;
 extern uint32_t freqHz;
+extern uint8_t dcThirtieth;
+extern uint8_t dcSixteenth;
+extern uint8_t dcEighth;
 extern uint8_t dcQuarter;
 extern uint8_t dcHalf;
 extern uint8_t dcMax;
-extern hw_timer_t *arrivalCheckTimer;
-extern volatile bool arrived;
 
 // Function declarations
-void arrivalCheckInterrupt();
+// void arrivalCheckInterrupt();
 
 void goNextNode();
 void traverseCounter(bool forward); // Enter true to go forwards, false to go backwards

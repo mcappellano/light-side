@@ -27,7 +27,6 @@
 extern int currentNode;
 extern int nextNode;
 extern int nextNextNode;
-extern int tapeCounter;
 
 // Function declarations
 void setup();

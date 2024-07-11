@@ -4,7 +4,7 @@
 // Library includes
 #include <cmath>
 
-// Pin definitions - not necessarily finalized
+// Pin definitions - not necessarily finalized - also need to add the servos!
 #define ELEV_SWITCH 39
 #define ELEV_ENCODER_1 26
 #define ELEV_ENCODER_2 27
@@ -14,7 +14,7 @@
 // Elevator Constants - ALL heights/distances in centimetres, measuring how far the platform is below the max height in which the switch is pressed
 #define MAX_HEIGHT 50           // VALUE NOT FINALIZED - The "reset" position, other values are meaured from this point
 #define MIN_HEIGHT 0            // As a safety, this will prevent the platform from trying to lower further than possible
-#define ELEV_PULSE_DISTANCE 0.1 // VALUE NOT FINALIZED - The distance that the platform moves for every pulse sent by the rotary encoder
+#define ELEV_PULSE_DISTANCE 6.25/24 // VALUE NOT FINALIZED - The distance that the platform moves for every pulse sent by the rotary encoder
 #define PATTY_HEIGHT 1
 #define TOMATO_HEIGHT 0.45
 #define CHEESE_HEIGHT 0.43

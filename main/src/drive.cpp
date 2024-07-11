@@ -8,20 +8,26 @@ Note that this code is specific to the bottom robot. */
 #include "sweeper.h"
 #include "elevator.h"
 
-hw_timer_t *arrivalCheckTimer = NULL;
+// hw_timer_t *arrivalCheckTimer = NULL;
+volatile int tapeCounter = 0;
+volatile bool arrived = false;
 int tapeToSee = 0;
+
 uint32_t freqHz = 50;
+uint8_t dcThirtieth = 7;
+uint8_t dcSixteenth = 15;
 uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
 uint8_t dcMax = 255;
-volatile bool arrived = false;
 
-void arrivalCheckInterrupt()
-{
-    if (tapeCounter >= tapeToSee)
-        arrived = true;
-}
+uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty cycle by which we would like to increase/decrease select motors
+
+// void IRAM_ATTR arrivalCheckInterrupt()
+// {
+//     if (tapeCounter >= tapeToSee)
+//         arrived = true;
+// }
 
 void goNextNode()
 {
@@ -54,19 +60,24 @@ and that of moving to and from the serving area!
 */
 void traverseCounter(bool forward)
 {
+    arrived = false; // for testing
     tapeCounter = 0; // for testing
-    tapeToSee = 1;   // for testing
+    tapeToSee = 2;   // for testing
 
     if (forward == true)
-        driveForward(dcHalf);
+        driveForward(dcEighth);
     else
-        driveBackward(dcHalf);
+        driveBackward(dcEighth);
 
     extendSweeper(dcEighth);
     lowerPlatform(dcEighth);
 
+    delay(20); // Might need these two lines of code to prevent counting the tape we are driving off of from counting
+    tapeCounter = 0;
+
     while (!arrived) // The motions of the sweeper and elevator must happen faster than the time it takes to traverse from two adjacent food stations
     {
+        Serial.println(tapeCounter);
         if (sweeperPosition >= EXTEND_POS)
             stopSweeper();
         if (platformHeight <= previousHeight - previousFoodHeight)
@@ -75,6 +86,11 @@ void traverseCounter(bool forward)
             previousHeight = platformHeight;
         }
     }
+
+    // while (true)
+    // {
+    //     Serial.println(tapeCounter);
+    // }
 
     stopSweeper();                   // In case it doesn't finish before making it to the tape
     stopPlatform();                  // Also in case
@@ -86,7 +102,6 @@ void traverseCounter(bool forward)
     else
         driveForward(dcEighth);
 
-    delay(10);
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);
 
@@ -138,13 +153,16 @@ void spinAround(uint8_t dutyCycle)
 
 void driveForward(uint8_t dutyCycle)
 {
+    uint8_t dutyCycleIncreased = dutyCycle + dutyCycle * dcIncreasePercentage; // Using these allows the duty cycle to change and not mess up the calibrations
+    uint8_t dutyCycleDecreased = dutyCycle - dutyCycle * dcIncreasePercentage; // We would have to add these two lines of code to all the driving functions
+
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle - 3); // minus 3 steers it slightly into the wall
+    analogWrite(motor2F, dutyCycle + 7); // Alternatively, for only a specific duty cycle, you could directly add or subtract a number
     analogWrite(motor2B, 0);
 
-    analogWrite(motor3F, dutyCycle - 3);
+    analogWrite(motor3F, dutyCycleIncreased); // Using one of the variables above
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, dutyCycle);
@@ -154,16 +172,16 @@ void driveForward(uint8_t dutyCycle)
 void driveBackward(uint8_t dutyCycle)
 {
     analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle - 3); // minus 3 steers it slightly into the wall
+    analogWrite(motor1B, dutyCycle);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle);
+    analogWrite(motor2B, dutyCycle + 7);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle);
+    analogWrite(motor3B, dutyCycle + 7);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle - 3);
+    analogWrite(motor4B, dutyCycle);
 }
 
 void driveUpward(uint8_t dutyCycle)
@@ -177,7 +195,7 @@ void driveUpward(uint8_t dutyCycle)
     analogWrite(motor3F, 0);
     analogWrite(motor3B, dutyCycle);
 
-    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4F, dutyCycle + 7);
     analogWrite(motor4B, 0);
 }
 
