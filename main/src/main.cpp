@@ -16,8 +16,8 @@ void setup()
     pinMode(REFLEC1, INPUT);
     pinMode(REFLEC2, INPUT);
 
-    pinMode(ELEV_SWITCH, INPUT_PULLUP); // LOW means switch is pressed. Connect C to the proper ESP pin, NO to ESP GND, and NC to nothing.
-    pinMode(SWEEP_SWITCH, INPUT_PULLUP);
+    pinMode(ELEV_SWITCH, INPUT); // LOW means switch is pressed. Connect C to the proper ESP pin, NO to ESP GND, and NC to nothing.
+    pinMode(SWEEP_SWITCH, INPUT);
 
     pinMode(ELEV_ENCODER_1, INPUT);
     pinMode(ELEV_ENCODER_2, INPUT);
@@ -69,6 +69,12 @@ void setup()
 
 void loop()
 {
+  delay (200);
+  Serial.println( "sweep:" );
+  Serial.println(digitalRead(SWEEP_SWITCH));
+
+  Serial.println( "elev:" );
+  Serial.println(digitalRead(ELEV_SWITCH));
     /*
     This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextNode().
     So this loop determine the next food station we must go to, assign that to nextNode or maybe nextNextNode, call goNextNode(), and loop back to the beginning.

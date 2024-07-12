@@ -5,7 +5,7 @@
 #include <cmath>
 
 // Pin definitions - not necessarily finalized
-#define SWEEP_SWITCH 25
+#define SWEEP_SWITCH 36
 #define SWEEP_ENCODER_1 32
 #define SWEEP_ENCODER_2 33
 #define SWEEP_MOTOR_OUT 38
