@@ -11,11 +11,18 @@ int nextNextNode = EXCHANGE; // Same for top bot
 void setup()
 {
     Serial.begin(115200);
+
+    // Pin setups
     pinMode(REFLEC1, INPUT);
     pinMode(REFLEC2, INPUT);
 
     pinMode(ELEV_SWITCH, INPUT_PULLUP); // LOW means switch is pressed. Connect C to the proper ESP pin, NO to ESP GND, and NC to nothing.
     pinMode(SWEEP_SWITCH, INPUT_PULLUP);
+
+    pinMode(ELEV_ENCODER_1, INPUT);
+    pinMode(ELEV_ENCODER_2, INPUT);
+    pinMode(SWEEP_ENCODER_1, INPUT);
+    pinMode(SWEEP_ENCODER_2, INPUT);
 
     pinMode(motor1F, OUTPUT);
     pinMode(motor1B, OUTPUT);
@@ -26,14 +33,20 @@ void setup()
     pinMode(motor4F, OUTPUT);
     pinMode(motor4B, OUTPUT);
 
+    // Set our PWM frequency (50 Hz)
     analogWriteFrequency(freqHz);
 
+    // Interrupts
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING); // might have to be FALLING
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING); // might have to be FALLING
 
-    attachInterrupt(digitalPinToInterrupt(SWEEP_SWITCH), sweepSwitchInterrupt, FALLING);
-    attachInterrupt(digitalPinToInterrupt(ELEV_SWITCH), elevSwitchInterrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);
 
+    attachInterrupt(digitalPinToInterrupt(ELEV_SWITCH), elevSwitchInterrupt, FALLING);
+    attachInterrupt(digitalPinToInterrupt(SWEEP_SWITCH), sweepSwitchInterrupt, FALLING);
+
+    // Timers
     tapeTimer = timerBegin(0, 80, true);
     timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
     timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
@@ -46,15 +59,13 @@ void setup()
     Serial.println("");
     Serial.println("Setup");
 
-    // /*
-    // For testing:
-    // */
-    currentNode = 3;
-    nextNode = 2;
+    // TESTING:
+    // currentNode = 3;
+    // nextNode = 2;
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-}
+  }
 
 void loop()
 {

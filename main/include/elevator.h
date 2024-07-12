@@ -6,8 +6,8 @@
 
 // Pin definitions - not necessarily finalized - also need to add the servos!
 #define ELEV_SWITCH 39
-#define ELEV_ENCODER_1 26
-#define ELEV_ENCODER_2 27
+#define ELEV_ENCODER_1 25
+#define ELEV_ENCODER_2 26
 #define ELEV_MOTOR_UP 35
 #define ELEV_MOTOR_DOWN 34
 
@@ -22,6 +22,7 @@
 #define BOTTOM_BUN_HEIGHT 1.5 // No need for top bun height, as it is the last burger item
 
 // Variables - Measured the same way as the constants above (except for previousFoodHeight)
+extern int elevCounter;
 extern double platformHeight;
 extern double previousHeight;
 extern double previousFoodHeight; // For the plate, this height is the distance between the two platforms, not the height of the plate
@@ -33,5 +34,6 @@ void stopPlatform(); // stop moving the platform up or down
 void swingOut();
 void swingIn(); // bring the platform back from the swung out position
 void elevSwitchInterrupt();
+void elevEncoderInterrupt();
 
 #endif // ELEVATOR_H

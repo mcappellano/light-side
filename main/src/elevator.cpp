@@ -5,6 +5,8 @@ double platformHeight = MAX_HEIGHT;
 double previousHeight = MAX_HEIGHT;
 double previousFoodHeight = 0;
 
+int elevCounter = 0;
+
 // The following three functions will have to be adjusted if the motor needs a constant rpm to not fall down the rail.
 void raisePlatform(uint8_t dutyCycle)
 {
@@ -39,4 +41,12 @@ void swingIn()
 void elevSwitchInterrupt()
 {
     platformHeight = MAX_HEIGHT;
+}
+
+void elevEncoderInterrupt()
+{
+     if (digitalRead(ELEV_ENCODER_2) != digitalRead(ELEV_ENCODER_1))
+       elevCounter++;
+     else
+       elevCounter--;
 }

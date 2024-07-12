@@ -1,7 +1,8 @@
 #include "sweeper.h"
 #include "main.h"
 
-int sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
+double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
+int sweepCounter = 0;
 
 void extendSweeper(uint8_t dutyCycle)
 {
@@ -24,4 +25,12 @@ void stopSweeper()
 void sweepSwitchInterrupt()
 {
     sweeperPosition = EXTEND_POS;
+}
+
+void sweepEncoderInterrupt()
+{
+     if (digitalRead(SWEEP_ENCODER_2) != digitalRead(SWEEP_ENCODER_1))
+       sweepCounter++;
+     else
+       sweepCounter--;
 }

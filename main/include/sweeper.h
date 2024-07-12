@@ -6,8 +6,8 @@
 
 // Pin definitions - not necessarily finalized
 #define SWEEP_SWITCH 25
-#define SWEEP_ENCODER_1 14
-#define SWEEP_ENCODER_2 12
+#define SWEEP_ENCODER_1 32
+#define SWEEP_ENCODER_2 33
 #define SWEEP_MOTOR_OUT 38
 #define SWEEP_MOTOR_BACK 37
 
@@ -18,12 +18,14 @@
 #define SWITCH_PULSE_DISTANCE 0.1 // VALUE NOT FINALIZED - The distance that the sweeper moves for every pulse sent by the rotary encoder
 
 // Variables
-extern int sweeperPosition; // Using the rotary encoder, determine
+extern double sweeperPosition;
+extern int sweepCounter;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);
 void retractSweeper(uint8_t dutyCycle);
 void stopSweeper();
 void sweepSwitchInterrupt();
+void sweepEncoderInterrupt();
 
 #endif // SWEEPER_H
