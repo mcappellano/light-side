@@ -55,7 +55,7 @@ void elevEncoderInterrupt()
 
 void testElevator()
 {
-    raisePlatform(50);
+    raisePlatform(100);
 
     delay(250);
     stopPlatform();
@@ -64,6 +64,17 @@ void testElevator()
     // {
     //     Serial.println(elevCounter);
     //     if (platformHeight == MAX_HEIGHT)
+    //     {
     //         stopPlatform();
+    //         break;
+    //     }
     // }
+
+    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
+    Serial.println("");
+    Serial.println("Number of ticks:");
+    Serial.println(elevCounter);
+    Serial.println("");
+    Serial.println("Distance moved:");
+    Serial.println(distanceMoved);
 }
