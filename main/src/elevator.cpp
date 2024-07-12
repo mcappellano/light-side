@@ -1,6 +1,8 @@
 #include "elevator.h"
 #include "main.h"
 
+const float ELEV_PULSE_DISTANCE = 6.25 / 24;
+
 double platformHeight = MAX_HEIGHT;
 double previousHeight = MAX_HEIGHT;
 double previousFoodHeight = 0;
@@ -45,8 +47,23 @@ void elevSwitchInterrupt()
 
 void elevEncoderInterrupt()
 {
-     if (digitalRead(ELEV_ENCODER_2) != digitalRead(ELEV_ENCODER_1))
-       elevCounter++;
-     else
-       elevCounter--;
+    if (digitalRead(ELEV_ENCODER_2) != digitalRead(ELEV_ENCODER_1))
+        elevCounter++;
+    else
+        elevCounter--;
+}
+
+void testElevator()
+{
+    raisePlatform(50);
+
+    delay(250);
+    stopPlatform();
+
+    // while (true)
+    // {
+    //     Serial.println(elevCounter);
+    //     if (platformHeight == MAX_HEIGHT)
+    //         stopPlatform();
+    // }
 }

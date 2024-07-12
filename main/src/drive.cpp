@@ -19,15 +19,9 @@ uint8_t dcSixteenth = 15;
 uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
-uint8_t dcMax = 255;
+uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at doesn't spin. But 245 works (96%).
 
 uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty cycle by which we would like to increase/decrease select motors
-
-// void IRAM_ATTR arrivalCheckInterrupt()
-// {
-//     if (tapeCounter >= tapeToSee)
-//         arrived = true;
-// }
 
 void goNextNode()
 {
@@ -86,11 +80,6 @@ void traverseCounter(bool forward)
             previousHeight = platformHeight;
         }
     }
-
-    // while (true)
-    // {
-    //     Serial.println(tapeCounter);
-    // }
 
     stopSweeper();                   // In case it doesn't finish before making it to the tape
     stopPlatform();                  // Also in case
@@ -153,16 +142,16 @@ void spinAround(uint8_t dutyCycle)
 
 void driveForward(uint8_t dutyCycle)
 {
-    uint8_t dutyCycleIncreased = dutyCycle + dutyCycle * dcIncreasePercentage; // Using these allows the duty cycle to change and not mess up the calibrations
-    uint8_t dutyCycleDecreased = dutyCycle - dutyCycle * dcIncreasePercentage; // We would have to add these two lines of code to all the driving functions
+    // uint8_t dutyCycleIncreased = dutyCycle + dutyCycle * dcIncreasePercentage; // Using these allows the duty cycle to change and not mess up the calibrations
+    // uint8_t dutyCycleDecreased = dutyCycle - dutyCycle * dcIncreasePercentage; // We would have to add these two lines of code to all the driving functions
 
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle + 7); // Alternatively, for only a specific duty cycle, you could directly add or subtract a number
+    analogWrite(motor2F, dutyCycle);
     analogWrite(motor2B, 0);
 
-    analogWrite(motor3F, dutyCycleIncreased); // Using one of the variables above
+    analogWrite(motor3F, dutyCycle);
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, dutyCycle);
@@ -228,3 +217,12 @@ void stopDriving()
     analogWrite(motor4F, 0);
     analogWrite(motor4B, 0);
 }
+
+/*
+For the unused timer:
+void IRAM_ATTR arrivalCheckInterrupt()
+{
+    if (tapeCounter >= tapeToSee)
+        arrived = true;
+}
+*/

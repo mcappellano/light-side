@@ -51,21 +51,17 @@ void setup()
     timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
     timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
 
-    // arrivalCheckTimer = timerBegin(0, 80, true);
-    // timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
-    // timerAlarmWrite(arrivalCheckTimer, 2000, true);
-    // timerAlarmEnable(arrivalCheckTimer);
-
     Serial.println("");
     Serial.println("Setup");
 
-    // TESTING:
+    // GENERAL TESTING:
     // currentNode = 3;
     // nextNode = 2;
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-  }
+    testElevator();
+}
 
 void loop()
 {
@@ -91,4 +87,38 @@ display_handler.setTextColor(SSD1306_WHITE);
 
 In loop:
 display_handler.display();
+*/
+
+/*
+H-BRIDGE TESTING:
+driveForward(dcQuarter);
+delay(1000);
+driveForward(dcHalf);
+delay(1000);
+driveForward(dcHalf * 1.5);
+delay(1000);
+driveForward(dcMax);
+delay(1000);
+
+stopDriving();
+delay(1000);
+
+driveBackward(dcMax);
+delay(1000);
+driveBackward(dcHalf * 1.5);
+delay(1000);
+driveBackward(dcHalf);
+delay(1000);
+driveBackward(dcQuarter);
+delay(1000);
+
+stopDriving();
+*/
+
+/*
+UNUSED TIMER:
+arrivalCheckTimer = timerBegin(0, 80, true);
+timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
+timerAlarmWrite(arrivalCheckTimer, 2000, true);
+timerAlarmEnable(arrivalCheckTimer);
 */
