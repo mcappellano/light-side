@@ -8,17 +8,17 @@
 #define ELEV_SWITCH 39
 #define ELEV_ENCODER_1 25
 #define ELEV_ENCODER_2 26
-#define ELEV_MOTOR_UP 35
-#define ELEV_MOTOR_DOWN 34
+#define ELEV_MOTOR_UP 27
+#define ELEV_MOTOR_DOWN 14
 
-// Elevator Constants - ALL heights/distances in centimetres, measuring how far the platform is below the max height in which the switch is pressed
-#define MAX_HEIGHT 50 // VALUE NOT FINALIZED - The "reset" position, other values are meaured from this point
-#define MIN_HEIGHT 0  // As a safety, this will prevent the platform from trying to lower further than possible
+// Elevator Constants - ALL heights/distances in MILLIMITRES, measuring how far the platform is below the max height in which the switch is pressed
+#define MAX_HEIGHT 500 // VALUE NOT FINALIZED - The "reset" position, other values are meaured from this point
+#define MIN_HEIGHT 0   // As a safety, this will prevent the platform from trying to lower further than possible
 #define PATTY_HEIGHT 1
-#define TOMATO_HEIGHT 0.45
-#define CHEESE_HEIGHT 0.43
-#define LETTUCE_HEIGHT 0.43
-#define BOTTOM_BUN_HEIGHT 1.5 // No need for top bun height, as it is the last burger item
+#define TOMATO_HEIGHT 4.5
+#define CHEESE_HEIGHT 4.3
+#define LETTUCE_HEIGHT 4.3
+#define BOTTOM_BUN_HEIGHT 15 // No need for top bun height, as it is the last burger item
 
 // Variables - Measured the same way as the constants above (except for previousFoodHeight)
 extern const float ELEV_PULSE_DISTANCE; // VALUE NOT FINALIZED - The distance that the platform moves for every pulse sent by the rotary encoder
@@ -35,7 +35,5 @@ void swingOut();
 void swingIn(); // bring the platform back from the swung out position
 void elevSwitchInterrupt();
 void elevEncoderInterrupt();
-
-void testElevator();
 
 #endif // ELEVATOR_H

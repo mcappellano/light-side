@@ -29,8 +29,8 @@ void sweepSwitchInterrupt()
 
 void sweepEncoderInterrupt()
 {
-     if (digitalRead(SWEEP_ENCODER_2) != digitalRead(SWEEP_ENCODER_1))
-       sweepCounter++;
-     else
-       sweepCounter--;
+    if (digitalRead(SWEEP_ENCODER_2) != digitalRead(SWEEP_ENCODER_1))
+        sweepCounter++;
+    else
+        sweepCounter--;
 }

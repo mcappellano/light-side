@@ -1,13 +1,11 @@
 #include "elevator.h"
 #include "main.h"
 
-const float ELEV_PULSE_DISTANCE = 6.25 / 24;
-
+const float ELEV_PULSE_DISTANCE = 1.63625; // all in mm
+int elevCounter = 0;
 double platformHeight = MAX_HEIGHT;
 double previousHeight = MAX_HEIGHT;
 double previousFoodHeight = 0;
-
-int elevCounter = 0;
 
 // The following three functions will have to be adjusted if the motor needs a constant rpm to not fall down the rail.
 void raisePlatform(uint8_t dutyCycle)
@@ -51,30 +49,4 @@ void elevEncoderInterrupt()
         elevCounter++;
     else
         elevCounter--;
-}
-
-void testElevator()
-{
-    raisePlatform(100);
-
-    delay(250);
-    stopPlatform();
-
-    // while (true)
-    // {
-    //     Serial.println(elevCounter);
-    //     if (platformHeight == MAX_HEIGHT)
-    //     {
-    //         stopPlatform();
-    //         break;
-    //     }
-    // }
-
-    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
-    Serial.println("");
-    Serial.println("Number of ticks:");
-    Serial.println(elevCounter);
-    Serial.println("");
-    Serial.println("Distance moved:");
-    Serial.println(distanceMoved);
 }

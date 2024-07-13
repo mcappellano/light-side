@@ -3,6 +3,7 @@
 #include "reflectance.h"
 #include "elevator.h"
 #include "sweeper.h"
+#include "tests.h"
 
 int currentNode = START_POSITION;
 int nextNode = PLATES;       // For top bot code, replace this with BUNS
@@ -60,7 +61,8 @@ void setup()
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-    testElevator();
+    // testElevator();
+    testSweeper();
 }
 
 void loop()
@@ -74,20 +76,20 @@ void loop()
     // delay(500);
 }
 
-/*
-Unneeded OLED code:
-Before setup:
-Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+// analogWrite(35, 100);
+// analogWrite(34, 100);
+// analogWrite(38, 100);
+// analogWrite(37, 100);
 
-At end of setup:
-display_handler.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-display_handler.clearDisplay();
-display_handler.setTextSize(1);
-display_handler.setTextColor(SSD1306_WHITE);
+// analogWrite(22, 100);
+// analogWrite(21, 100);
+// analogWrite(19, 100);
+// analogWrite(8, 100);
 
-In loop:
-display_handler.display();
-*/
+// analogWrite(7, 100);
+// analogWrite(5, 100);
+// analogWrite(10, 100);
+// analogWrite(9, 100);
 
 /*
 H-BRIDGE TESTING:
@@ -121,4 +123,19 @@ arrivalCheckTimer = timerBegin(0, 80, true);
 timerAttachInterrupt(arrivalCheckTimer, &arrivalCheckInterrupt, true);
 timerAlarmWrite(arrivalCheckTimer, 2000, true);
 timerAlarmEnable(arrivalCheckTimer);
+*/
+
+/*
+Unneeded OLED code:
+Before setup:
+Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+
+At end of setup:
+display_handler.begin(SSD1306_SWITCHCAPVCC, 0x3C);
+display_handler.clearDisplay();
+display_handler.setTextSize(1);
+display_handler.setTextColor(SSD1306_WHITE);
+
+In loop:
+display_handler.display();
 */
