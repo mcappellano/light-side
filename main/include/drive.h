@@ -31,7 +31,7 @@ extern uint8_t dcMax;
 // Function declarations
 // void arrivalCheckInterrupt();
 
-void goNextNode();
+void goNextStation();
 void traverseCounter(bool forward); // Enter true to go forwards, false to go backwards
 void crossCounters();
 void spinAround(); // Won't need this if we incorporate it into the lateral movement

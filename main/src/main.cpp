@@ -5,9 +5,22 @@
 #include "sweeper.h"
 #include "tests.h"
 
-int currentNode = START_POSITION;
-int nextNode = PLATES;       // For top bot code, replace this with BUNS
-int nextNextNode = EXCHANGE; // Same for top bot
+Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
+
+Station start(-1, 0, 0);
+Station tomatoes(0, 4.5, 198); // All measurements in mm
+Station exchange(1, 15, 191);  // Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 10, 195);   // Only height of patty matters; fries are not being stacked
+Station plates(3, 40, 150);    // VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station cheese(10, 4.3, 198);
+Station lettuce(13, 4.3, 201);
+Station servingArea(99, 0, 0); // May or may not need this, may or may not need to change the num value
+
+Station currentStation = start;
+Station nextStation = plates;       // For top bot code, replace this with buns
+Station nextNextStation = exchange; // Same for top bot
+
+std::map<int, Station> numsToStation = {{0, tomatoes}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
 void setup()
 {
@@ -38,8 +51,8 @@ void setup()
     analogWriteFrequency(freqHz);
 
     // Interrupts
-    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING); // might have to be FALLING
-    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING); // might have to be FALLING
+    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
 
     attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
     attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);
@@ -55,9 +68,12 @@ void setup()
     Serial.println("");
     Serial.println("Setup");
 
+    // Begin by going to the plate station
+    // TO DO: send the robot to the plate station
+
     // GENERAL TESTING:
     // currentNode = 3;
-    // nextNode = 2;
+    // nextStation = 2;
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
@@ -68,28 +84,13 @@ void setup()
 void loop()
 {
     /*
-    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextNode().
-    So this loop determine the next food station we must go to, assign that to nextNode or maybe nextNextNode, call goNextNode(), and loop back to the beginning.
-    We must ensure that goNextNode() is not called again until we are ready to move to the next food station.
+    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
+    So this loop determine the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(), and loop back to the beginning.
+    We must ensure that goNextStation() is not called again until we are ready to move to the next station.
     */
     // Serial.println("Loop");
     // delay(500);
 }
-
-// analogWrite(35, 100);
-// analogWrite(34, 100);
-// analogWrite(38, 100);
-// analogWrite(37, 100);
-
-// analogWrite(22, 100);
-// analogWrite(21, 100);
-// analogWrite(19, 100);
-// analogWrite(8, 100);
-
-// analogWrite(7, 100);
-// analogWrite(5, 100);
-// analogWrite(10, 100);
-// analogWrite(9, 100);
 
 /*
 H-BRIDGE TESTING:

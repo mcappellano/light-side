@@ -3,30 +3,26 @@
 
 #include <Wire.h>
 #include <Arduino.h>
+#include <iostream>
+#include <map>
+#include <string>
 
-// Food stations - BOTTOM ROBOT SPECIFIC
-#define START_POSITION -1
-#define TOMATO 0
-#define EXCHANGE 1
-#define COOKTOP 2
-#define PLATES 3
-#define CHEESE 10
-#define LETTUCE 13
+// Class
+class Station
+{
+public:
+    Station(int num, double height, int sweepLength);
 
-// Food stations - TOP ROBOT SPECIFIC (replace the above defines with these for the top robot code)
-// #define START_POSITION -1
-// #define PATTIES 1
-// #define BUNS 3
-// #define POTATOES 5
-// #define TOMATO 10
-// #define EXCHANGE 12
-// #define COOKTOP 14
-// #define PLATES 16
+    int num;
+    double height;
+    int sweepLength;
+};
 
 // Variables
-extern int currentNode;
-extern int nextNode;
-extern int nextNextNode;
+extern Station currentStation;
+extern Station nextStation;
+extern Station nextNextStation;
+extern std::map<int, Station> numsToStation;
 
 // Function declarations
 void setup();

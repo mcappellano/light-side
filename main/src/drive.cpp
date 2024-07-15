@@ -23,26 +23,31 @@ uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at do
 
 uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty cycle by which we would like to increase/decrease select motors
 
-void goNextNode()
+void goNextStation()
 {
     // Cross to the other counter if necessary
-    if (nextNode >= currentNode + 10 || nextNode <= currentNode - 10)
+    if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
         crossCounters();
 
     // Get ready to cross the correct number of tape pieces
     arrived = false;
     tapeCounter = 0;
-    if (currentNode <= 10)
-        tapeToSee = abs(nextNode - currentNode);
+    if (currentStation.num <= 10)
+        tapeToSee = abs(nextStation.num - currentStation.num);
     else
         tapeToSee = 1;
+
+    // If we cross a counter directly onto a piece of tape, we can't count it (otherwise it will count too many)
+    alreadySeen = true;
+    timerWrite(tapeTimer, 0);
+    timerAlarmEnable(tapeTimer);
 
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
-    if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
+    if ((nextStation.num > currentStation.num && currentStation.num < 10) || (nextStation.num < currentStation.num && nextStation.num >= 10))
         traverseCounter(false);
-    else if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))
+    else if ((nextStation.num < currentStation.num && currentStation.num < 10) || (nextStation.num > currentStation.num && currentStation.num >= 10))
         traverseCounter(true);
 }
 
@@ -96,8 +101,8 @@ void traverseCounter(bool forward)
 
     stopDriving();
 
-    // currentNode = nextNode;
-    // nextNode = nextNextNode;
+    // currentStation = nextStation;
+    // nextStation = nextnextStation;
 }
 
 void crossCounters()
@@ -119,10 +124,16 @@ void crossCounters()
     (consult image I found online and add the vectors to the two motions we want)
     */
 
-    if (currentNode >= 10)
-        currentNode -= 10;
+    if (currentStation.num >= 10)
+    {
+        auto it = numsToStation.find(currentStation.num - 10);
+        currentStation = it->second;
+    }
     else
-        currentNode += 10;
+    {
+        auto it = numsToStation.find(currentStation.num + 10);
+        currentStation = it->second;
+    }
 }
 
 void spinAround(uint8_t dutyCycle)

@@ -14,7 +14,7 @@
 // Elevator Constants - ALL heights/distances in MILLIMITRES, measuring how far the platform is below the max height in which the switch is pressed
 #define MAX_HEIGHT 500 // VALUE NOT FINALIZED - The "reset" position, other values are meaured from this point
 #define MIN_HEIGHT 0   // As a safety, this will prevent the platform from trying to lower further than possible
-#define PATTY_HEIGHT 1
+#define PATTY_HEIGHT 10
 #define TOMATO_HEIGHT 4.5
 #define CHEESE_HEIGHT 4.3
 #define LETTUCE_HEIGHT 4.3
