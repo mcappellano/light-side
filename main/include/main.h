@@ -19,10 +19,19 @@ public:
 };
 
 // Variables
+extern std::map<int, Station> numsToStation;
+extern Station start;
+extern Station tomatoes;
+extern Station exchange;
+extern Station cooktop;
+extern Station plates;
+extern Station cheese;
+extern Station lettuce;
+extern Station servingArea;
 extern Station currentStation;
 extern Station nextStation;
 extern Station nextNextStation;
-extern std::map<int, Station> numsToStation;
+extern int node;
 
 // Function declarations
 void setup();

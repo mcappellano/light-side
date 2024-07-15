@@ -1,11 +1,17 @@
 #include "sweeper.h"
 #include "main.h"
 
-double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
+// double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
+const float SWEEP_PULSE_DISTANCE = 0.1; // VALUE NOT FINALIZED - The distance that the sweeper moves for every pulse sent by the rotary encoder
 int sweepCounter = 0;
+volatile bool extending = false; // Make sure to set this variable back to false after extending the sweeper when pushing the plate off
+                                 // Use a delay for the approximate right amount of time - doesn't have to be perfect
+                                 // Delay is fine because nothing else is happening while pushing off
+volatile bool readyToLeave = false;
 
 void extendSweeper(uint8_t dutyCycle)
 {
+    extending = true;
     analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
     analogWrite(SWEEP_MOTOR_BACK, 0);
 }
@@ -24,7 +30,8 @@ void stopSweeper()
 
 void sweepSwitchInterrupt()
 {
-    sweeperPosition = EXTEND_POS;
+    stopSweeper();
+    extending = false;
 }
 
 void sweepEncoderInterrupt()
@@ -33,4 +40,10 @@ void sweepEncoderInterrupt()
         sweepCounter++;
     else
         sweepCounter--;
+
+    if (!extending && (abs(sweepCounter) >= currentStation.sweepLength / SWEEP_PULSE_DISTANCE))
+    {
+        stopSweeper();
+        readyToLeave = true;
+    }
 }

@@ -7,18 +7,17 @@
 
 void testElevator()
 {
-    // GO TO THE TOP UNTIL SWITCH IS PRESSED
-    platformHeight = 0;
-    raisePlatform(100);
+    elevCounter = 0;
+    raisePlatform(dcQuarter);
 
-    while (true)
-    {
-        if (platformHeight == MAX_HEIGHT)
-        {
-            stopPlatform();
-            break;
-        }
-    }
+    // while (true)
+    // {
+    //     if (platformHeight == MAX_HEIGHT)
+    //     {
+    //         stopPlatform();
+    //         break;
+    //     }
+    // }
 
     // print encoder info
     float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
@@ -34,17 +33,17 @@ void testElevator()
     /*
     // MOVE DOWN BY THE HEIGHT OF A BOTTOM BUN
     elevCounter = 0;
-    lowerPlatform(70);
-    while (true)
-    {
-        if (abs(elevCounter) >= BOTTOM_BUN_HEIGHT / ELEV_PULSE_DISTANCE)
-        {
-            stopPlatform();
-            break;
-        }
-    }
+    previousFoodHeight = exchange.height;
+    lowerPlatform(dcQuarter);
+    // while (true)
+    // {
+    //     if (abs(elevCounter) >= currentStation.height / ELEV_PULSE_DISTANCE)
+    //     {
+    //         stopPlatform();
+    //         break;
+    //     }
+    // }
 
-    delay(2000);
 
     // print encoder info
     float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
@@ -55,17 +54,14 @@ void testElevator()
     Serial.println("Distance moved (mm):");
     Serial.println(distanceMoved);
 
+    delay(2000);
+    */
+
+    /*
     // MOVE DOWN BY THE HEIGHT OF A TOMATO
     elevCounter = 0;
-    lowerPlatform(70);
-    while (true)
-    {
-        if (abs(elevCounter) >= TOMATO_HEIGHT / ELEV_PULSE_DISTANCE)
-        {
-            stopPlatform();
-            break;
-        }
-    }
+    previousFoodHeight = tomatoes.height;
+    lowerPlatform(dcQuarter);
 
     // print encoder info
     distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
@@ -78,18 +74,14 @@ void testElevator()
     */
 }
 
+// DETERMINE SWEEP_PULSE_DISTANCE BEFORE RUNNING THIS TEST
 void testSweeper()
 {
-    extendSweeper(45);
+    extendSweeper(45); // Should stop when it hits the switch
 
-    while (true)
-    {
-        if (sweeperPosition == EXTEND_POS)
-        {
-            stopSweeper();
-            break;
-        }
-    }
+    sweepCounter = 0;
+    currentStation = cheese;
+    retractSweeper(45);
 
     /*
     Task list for sweeper:

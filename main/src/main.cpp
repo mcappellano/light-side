@@ -22,6 +22,8 @@ Station nextNextStation = exchange; // Same for top bot
 
 std::map<int, Station> numsToStation = {{0, tomatoes}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
+int node = -1;
+
 void setup()
 {
     Serial.begin(115200);
@@ -47,6 +49,11 @@ void setup()
     pinMode(motor4F, OUTPUT);
     pinMode(motor4B, OUTPUT);
 
+    pinMode(ELEV_MOTOR_UP, OUTPUT);
+    pinMode(ELEV_MOTOR_DOWN, OUTPUT);
+    pinMode(SWEEP_MOTOR_OUT, OUTPUT);
+    pinMode(SWEEP_MOTOR_BACK, OUTPUT);
+
     // Set our PWM frequency (50 Hz)
     analogWriteFrequency(freqHz);
 
@@ -68,28 +75,32 @@ void setup()
     Serial.println("");
     Serial.println("Setup");
 
-    // Begin by going to the plate station
-    // TO DO: send the robot to the plate station
-
     // GENERAL TESTING:
     // currentNode = 3;
     // nextStation = 2;
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-    // testElevator();
-    testSweeper();
+    testElevator();
+    // testSweeper(); // DETERMINE SWEEP_PULSE_DISTANCE BEFORE RUNNING THIS TEST
 }
 
 void loop()
 {
     /*
-    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
-    So this loop determine the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(), and loop back to the beginning.
-    We must ensure that goNextStation() is not called again until we are ready to move to the next station.
+    if (currentStation.num == start.num)
+    {
+        // GO TO PLATE STATION, RAISE PLATFORM, EXTEND SWEEPER
+    }
     */
-    // Serial.println("Loop");
-    // delay(500);
+
+    /*
+    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
+    So this loop determine the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(),
+    call retractSweeper() (make sure to set sweepCounter to 0 beforehand), and loop back to the beginning.
+    We must ensure that goNextStation() is not called again until we are ready to move to the next station. Do this by checking
+    until the variable readyToLeave is true, while making sure to set it back to false afterwards.
+    */
 }
 
 /*

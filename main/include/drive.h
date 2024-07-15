@@ -32,7 +32,7 @@ extern uint8_t dcMax;
 // void arrivalCheckInterrupt();
 
 void goNextStation();
-void traverseCounter(bool forward); // Enter true to go forwards, false to go backwards
+void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed); // Enter true to go forwards, false to go backwards
 void crossCounters();
 void spinAround(); // Won't need this if we incorporate it into the lateral movement
 
