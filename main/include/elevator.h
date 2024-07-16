@@ -22,6 +22,7 @@
 // Variables - Measured the same way as the constants above (except for previousFoodHeight)
 extern const float ELEV_PULSE_DISTANCE; // The distance that the platform moves for every pulse sent by the rotary encoder
 extern int elevCounter;
+extern volatile bool raising;
 extern volatile bool maxHeight;
 // extern double platformHeight;
 // extern double previousHeight;

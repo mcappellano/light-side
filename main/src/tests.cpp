@@ -7,20 +7,13 @@
 
 void testElevator()
 {
-    elevCounter = 0;
     raisePlatform(dcQuarter);
 
-    // while (true)
-    // {
-    //     if (platformHeight == MAX_HEIGHT)
-    //     {
-    //         stopPlatform();
-    //         break;
-    //     }
-    // }
+    delay(4000);
+
+    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
 
     // print encoder info
-    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
     Serial.println("");
     Serial.println("TO THE TOP");
     Serial.println("Number of ticks:");
@@ -28,40 +21,13 @@ void testElevator()
     Serial.println("Distance moved (mm):");
     Serial.println(distanceMoved);
 
-    delay(2000);
+    delay(1000);
 
-    /*
     // MOVE DOWN BY THE HEIGHT OF A BOTTOM BUN
-    elevCounter = 0;
     previousFoodHeight = exchange.height;
-    lowerPlatform(dcQuarter);
-    // while (true)
-    // {
-    //     if (abs(elevCounter) >= currentStation.height / ELEV_PULSE_DISTANCE)
-    //     {
-    //         stopPlatform();
-    //         break;
-    //     }
-    // }
-
-
-    // print encoder info
-    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
-    Serial.println("");
-    Serial.println("DOWN BY BOTTOM BUN HEIGHT");
-    Serial.println("Number of ticks:");
-    Serial.println(elevCounter);
-    Serial.println("Distance moved (mm):");
-    Serial.println(distanceMoved);
+    lowerPlatform(dcEighth);
 
     delay(2000);
-    */
-
-    /*
-    // MOVE DOWN BY THE HEIGHT OF A TOMATO
-    elevCounter = 0;
-    previousFoodHeight = tomatoes.height;
-    lowerPlatform(dcQuarter);
 
     // print encoder info
     distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
@@ -71,17 +37,61 @@ void testElevator()
     Serial.println(elevCounter);
     Serial.println("Distance moved (mm):");
     Serial.println(distanceMoved);
-    */
+
+    delay(1000);
+
+    // MOVE DOWN BY THE HEIGHT OF A TOMATO
+    previousFoodHeight = tomatoes.height;
+    lowerPlatform(dcEighth);
+
+    delay(2000);
+
+    // print encoder info
+    distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
+    Serial.println("");
+    Serial.println("DOWN BY TOMATO HEIGHT");
+    Serial.println("Number of ticks:");
+    Serial.println(elevCounter);
+    Serial.println("Distance moved (mm):");
+    Serial.println(distanceMoved);
 }
 
 // DETERMINE SWEEP_PULSE_DISTANCE BEFORE RUNNING THIS TEST
 void testSweeper()
 {
-    extendSweeper(45); // Should stop when it hits the switch
+    extendSweeper(45);
 
-    sweepCounter = 0;
-    currentStation = cheese;
+    delay(2000);
+
+    currentStation = plates;
     retractSweeper(45);
+    float distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+
+    delay(4000);
+
+    Serial.println("");
+    Serial.println("PLATE SWEEP");
+    Serial.println("Number of ticks:");
+    Serial.println(sweepCounter);
+    Serial.println("Distance moved (mm):");
+    Serial.println(distanceMoved);
+
+    extendSweeper(45);
+
+    delay(2000);
+
+    currentStation = exchange;
+    retractSweeper(45);
+
+    delay(4000);
+
+    distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    Serial.println("");
+    Serial.println("BUN SWEEP");
+    Serial.println("Number of ticks:");
+    Serial.println(sweepCounter);
+    Serial.println("Distance moved (mm):");
+    Serial.println(distanceMoved);
 
     /*
     Task list for sweeper:
@@ -96,4 +106,10 @@ void testSweeper()
         - Implement it in code
         - Test it
     */
+}
+
+// Drive to a tape line (on the same counter) while extending arm and lowering platform, then sweep in
+void majorTest1()
+{
+    raisePlatform(dcQuarter);
 }

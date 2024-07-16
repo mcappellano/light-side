@@ -8,10 +8,10 @@
 Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
 
 Station start(-1, 0, 0);
-Station tomatoes(0, 4.5, 198); // All measurements in mm
-Station exchange(1, 15, 191);  // Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 10, 195);   // Only height of patty matters; fries are not being stacked
-Station plates(3, 40, 150);    // VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station tomatoes(0, 4.4, 198);  // All measurements in mm
+Station exchange(1, 15, 191);   // Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 10, 195);    // Only height of patty matters; fries are not being stacked
+Station plates(3, 23.175, 149); // VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
 Station cheese(10, 4.3, 198);
 Station lettuce(13, 4.3, 201);
 Station servingArea(99, 0, 0); // May or may not need this, may or may not need to change the num value
@@ -60,6 +60,8 @@ void setup()
     // Interrupts
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
+
+    elevEncoderInterrupt();
 
     attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
     attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);

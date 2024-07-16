@@ -10,5 +10,6 @@
 // Function declarations
 void testElevator();
 void testSweeper();
+void majorTest1();
 
 #endif // TESTS_H
