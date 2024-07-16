@@ -61,37 +61,47 @@ void testSweeper()
 {
     extendSweeper(45);
 
-    delay(2000);
+    delay(4000);
 
-    currentStation = plates;
-    retractSweeper(45);
     float distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
-
-    delay(4000);
-
     Serial.println("");
-    Serial.println("PLATE SWEEP");
+    Serial.println("EXTENDING");
     Serial.println("Number of ticks:");
     Serial.println(sweepCounter);
     Serial.println("Distance moved (mm):");
     Serial.println(distanceMoved);
 
-    extendSweeper(45);
+    // currentStation = plates;
+    // retractSweeper(45);
 
-    delay(2000);
+    // delay(500);
 
-    currentStation = exchange;
-    retractSweeper(45);
+    // stopSweeper();
 
-    delay(4000);
+    // distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    // Serial.println("");
+    // Serial.println("PLATE SWEEP");
+    // Serial.println("Number of ticks:");
+    // Serial.println(sweepCounter);
+    // Serial.println("Distance moved (mm):");
+    // Serial.println(distanceMoved);
 
-    distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
-    Serial.println("");
-    Serial.println("BUN SWEEP");
-    Serial.println("Number of ticks:");
-    Serial.println(sweepCounter);
-    Serial.println("Distance moved (mm):");
-    Serial.println(distanceMoved);
+    // extendSweeper(45);
+
+    // delay(4000);
+
+    // currentStation = exchange;
+    // retractSweeper(45);
+
+    // delay(4000);
+
+    // distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    // Serial.println("");
+    // Serial.println("BUN SWEEP");
+    // Serial.println("Number of ticks:");
+    // Serial.println(sweepCounter);
+    // Serial.println("Distance moved (mm):");
+    // Serial.println(distanceMoved);
 
     /*
     Task list for sweeper:
@@ -112,4 +122,6 @@ void testSweeper()
 void majorTest1()
 {
     raisePlatform(dcQuarter);
+
+    traverseCounter(true, dcQuarter, dcEighth);
 }

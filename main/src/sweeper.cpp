@@ -46,7 +46,7 @@ void sweepEncoderInterrupt()
     else
         sweepCounter--;
 
-    if (!extending && (abs(sweepCounter) >= currentStation.sweepLength / SWEEP_PULSE_DISTANCE))
+    if (!extending && (sweepCounter >= currentStation.sweepLength / SWEEP_PULSE_DISTANCE - 1)) // Unless sweepCounter goes negative when retracting?
     {
         stopSweeper();
         readyToLeave = true;

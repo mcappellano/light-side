@@ -83,8 +83,15 @@ void setup()
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-    testElevator();
-    // testSweeper(); // DETERMINE SWEEP_PULSE_DISTANCE BEFORE RUNNING THIS TEST
+    // testSweeper(); // DON'T FORGET TO UPDATE SWEEP_PULSE_DISTANCE FOR THE NEW GEARS
+
+    analogWrite(SWEEP_MOTOR_OUT, 45);
+    analogWrite(SWEEP_MOTOR_BACK, 0);
+
+    delay(500);
+
+    analogWrite(SWEEP_MOTOR_OUT, 0);
+    analogWrite(SWEEP_MOTOR_BACK, 0);
 }
 
 void loop()

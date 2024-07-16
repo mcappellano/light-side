@@ -67,7 +67,6 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     extendSweeper(dcEighth);  // Modify sweeper speed here
     lowerPlatform(dcQuarter); // Modify platform speed here
-    elevCounter = 0;
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     timerWrite(tapeTimer, 0);
