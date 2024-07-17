@@ -32,14 +32,17 @@ void stopPlatform()
     analogWrite(ELEV_MOTOR_DOWN, 0);
 }
 
+// With premove!
 void swingOut()
 {
-    // TO DO
+    // analogWrite(SERVO_PLATFORM, X);
+    // delay(Y);
+    // analogWrite(Z);
 }
 
 void swingIn()
 {
-    // TO DO
+    // analogWrite(X);
 }
 
 void elevSwitchInterrupt()

@@ -4,6 +4,7 @@
 #include "sweeper.h"
 #include "elevator.h"
 #include "reflectance.h"
+#include "nav.h"
 
 void testElevator()
 {
@@ -121,11 +122,9 @@ void majorTest1()
 {
     raisePlatform(dcQuarter);
 
-    delay(2000);
+    delay(3000);
 
     traverseCounter(true, dcQuarter, dcEighth);
-
-    previousFoodHeight = exchange.height;
 
     retractSweeper(dcEighth);
 }

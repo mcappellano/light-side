@@ -4,10 +4,11 @@
 #include "elevator.h"
 #include "sweeper.h"
 #include "tests.h"
+#include "nav.h"
 
 Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
 
-Station start(-1, 0, 149);      // Same sweep distance as plates (just for testing)
+Station start(-1, 15, 149);     // Same sweep distance as plates and height as bottom buns (just for testing)
 Station tomatoes(0, 4.4, 176);  // 198... All measurements in mm
 Station exchange(1, 15, 169);   // 191... Only buns are being exchanged here. Top bun height doesn't matter
 Station cooktop(2, 10, 173);    // 195.. Only height of patty matters; fries are not being stacked
@@ -97,14 +98,24 @@ void setup()
     // stopDriving();
 
     // 2
-    traverseCounter(true, dcQuarter, dcEighth);
+    // traverseCounter(true, dcQuarter, dcEighth);
 
     // 3 - Make sure to uncomment the 2 lines in traverseCounter
     // majorTest1();
+
+    raisePlatform(dcQuarter);
+    delay(2500);
+    lowerPlatform(dcEighth);
 }
 
 void loop()
 {
+    while (true)
+    {
+        Serial.println(elevCounter);
+        delay(10);
+    }
+
     /*
     if (currentStation.num == start.num)
     {

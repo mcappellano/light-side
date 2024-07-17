@@ -1,6 +1,6 @@
 #include "reflectance.h"
 #include "main.h"
-#include "drive.h"
+#include "nav.h"
 
 hw_timer_t *tapeTimer = NULL;
 volatile bool alreadySeen = false;

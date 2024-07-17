@@ -16,9 +16,6 @@
 #define motor4B 10
 
 // Variables
-extern volatile bool arrived;
-extern volatile int tapeCounter;
-extern int tapeToSee;
 extern uint32_t freqHz;
 extern uint8_t dcThirtieth;
 extern uint8_t dcSixteenth;
@@ -28,8 +25,6 @@ extern uint8_t dcHalf;
 extern uint8_t dcMax;
 
 // Function declarations
-void goNextStation();
-void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed); // Enter true to go forwards, false to go backwards
 void crossCounters();
 void changingPWMs(uint8_t motor1Start, uint8_t motor1End, bool forw1, uint8_t motor2Start, uint8_t motor2End, bool forw2, uint8_t motor3Start, uint8_t motor3End, bool forw3, uint8_t motor4Start, uint8_t motor4End, bool forw4, int loops);
 uint8_t *calibrateDutyCycle(uint8_t dutyCycle);
