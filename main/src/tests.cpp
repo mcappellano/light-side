@@ -119,13 +119,13 @@ void testSweeper()
 // Drive to a tape line (on the same counter) while extending arm and lowering platform, then sweep in
 void majorTest1()
 {
-    previousFoodHeight = exchange.height;
-
     raisePlatform(dcQuarter);
 
     delay(2000);
 
     traverseCounter(true, dcQuarter, dcEighth);
+
+    previousFoodHeight = exchange.height;
 
     retractSweeper(dcEighth);
 }

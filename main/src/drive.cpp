@@ -8,7 +8,6 @@ Note that this code is specific to the bottom robot. */
 #include "sweeper.h"
 #include "elevator.h"
 
-// hw_timer_t *arrivalCheckTimer = NULL;
 volatile int tapeCounter = 0;
 volatile bool arrived = false;
 int tapeToSee = 0;
@@ -43,7 +42,7 @@ void goNextStation()
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextStation.num > currentStation.num && currentStation.num < 10) || (nextStation.num < currentStation.num && nextStation.num >= 10))
-        traverseCounter(false, dcQuarter, dcEighth);
+        traverseCounter(false, dcQuarter, dcEighth); // DOUBLE CHECK DIRECTIONS
     else if ((nextStation.num < currentStation.num && currentStation.num < 10) || (nextStation.num > currentStation.num && currentStation.num >= 10))
         traverseCounter(true, dcQuarter, dcEighth);
 }
@@ -62,13 +61,13 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Start driving along the counter
     if (forward == true)
-        driveForward(driveSpeed);
-    else
         driveBackward(driveSpeed);
+    else
+        driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    // extendSweeper(dcEighth);  // Modify sweeper speed here
-    // lowerPlatform(dcQuarter); // Modify platform speed here
+    extendSweeper(dcEighth);  // Modify sweeper speed here
+    lowerPlatform(dcQuarter); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     timerWrite(tapeTimer, 0);
@@ -91,9 +90,11 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Now back up until centred exactly on the tape
     if (forward == true)
-        driveBackward(reverseSpeed);
-    else
         driveForward(reverseSpeed);
+    else
+        driveBackward(reverseSpeed);
+
+    delay(100);
 
     while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
         delay(1);
@@ -118,17 +119,88 @@ void crossCounters()
     */
 
     /*
-    BETTER OPTION:
+    BETTER OPTION (see below):
     Find the perfect combination of motors speeds
     so that the robot moves counter to counter
     while simulatenously rotating 180 degrees
     (consult image I found online and add the vectors to the two motions we want)
     */
 
+    // IMPORTANT NOTE: double duty cycle is not necessarily double RPM
+    changingPWMs(dcQuarter, dcEighth, false, dcQuarter, dcQuarter, true, 0, dcEighth, true, 0, 0, true, 10);
+    changingPWMs(dcEighth, 0, false, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, true, 0, 0, true, 10);
+    changingPWMs(0, 0, false, dcQuarter, dcEighth, true, dcQuarter, dcQuarter, true, 0, dcEighth, false, 10);
+    changingPWMs(0, 0, false, dcEighth, 0, true, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, false, 10);
+
     if (currentStation.num >= 10)
         node -= 10;
     else
         node += 10;
+}
+
+void changingPWMs(uint8_t motor1Start, uint8_t motor1End, bool forw1, uint8_t motor2Start, uint8_t motor2End, bool forw2, uint8_t motor3Start, uint8_t motor3End, bool forw3, uint8_t motor4Start, uint8_t motor4End, bool forw4, int loops)
+{
+    uint8_t motor1Speed = motor1Start;
+    uint8_t motor2Speed = motor2Start;
+    uint8_t motor3Speed = motor3Start;
+    uint8_t motor4Speed = motor4Start;
+
+    stopDriving();
+
+    for (int i = 0; i < loops; i++)
+    {
+        if (forw1)
+            analogWrite(motor1F, motor1Speed);
+        else
+            analogWrite(motor1B, motor1Speed);
+
+        if (forw2)
+            analogWrite(motor2F, motor2Speed);
+        else
+            analogWrite(motor2B, motor2Speed);
+
+        if (forw3)
+            analogWrite(motor3F, motor3Speed);
+        else
+            analogWrite(motor3B, motor3Speed);
+
+        if (forw4)
+            analogWrite(motor4F, motor4Speed);
+        else
+            analogWrite(motor4B, motor4Speed);
+
+        motor1Speed -= (motor1Start - motor1End) / loops; // This will cause slight rounding errors. Hopefully not enough to notice.
+        motor2Speed -= (motor2Start - motor2End) / loops;
+        motor3Speed -= (motor3Start - motor3End) / loops;
+        motor4Speed -= (motor4Start - motor4End) / loops;
+        delay(75); // change the number of loops and the delay to get the timing right
+    }
+}
+
+uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
+{
+    uint8_t motor1;
+    uint8_t motor2;
+    uint8_t motor3;
+    uint8_t motor4;
+
+    if (abs(dutyCycle - dcQuarter) < 15)
+    {
+        motor1 = dutyCycle * 0.7; // These constants are what we have to determine while calibrating
+        motor2 = dutyCycle * 0.7;
+        motor3 = dutyCycle * 0.7;
+        motor4 = dutyCycle * 0.7;
+    }
+    else if (abs(dutyCycle - dcEighth) < 5)
+    {
+        motor1 = dutyCycle * 0.7; // These constants are what we have to determine while calibrating
+        motor2 = dutyCycle * 0.7;
+        motor3 = dutyCycle * 0.7;
+        motor4 = dutyCycle * 0.7;
+    }
+
+    uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
+    return calibrated;
 }
 
 void spinAround(uint8_t dutyCycle)
@@ -170,10 +242,25 @@ void driveBackward(uint8_t dutyCycle)
     analogWrite(motor1B, dutyCycle);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle + 7);
+    analogWrite(motor2B, dutyCycle + 15);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle + 7);
+    analogWrite(motor3B, dutyCycle + 15);
+
+    analogWrite(motor4F, 0);
+    analogWrite(motor4B, dutyCycle);
+}
+
+void driveDiagonal(uint8_t dutyCycle)
+{
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, dutyCycle * 0.8);
+
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, dutyCycle);
+
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, dutyCycle * 0.8);
 
     analogWrite(motor4F, 0);
     analogWrite(motor4B, dutyCycle);
@@ -190,7 +277,7 @@ void driveUpward(uint8_t dutyCycle)
     analogWrite(motor3F, 0);
     analogWrite(motor3B, dutyCycle);
 
-    analogWrite(motor4F, dutyCycle + 7);
+    analogWrite(motor4F, dutyCycle);
     analogWrite(motor4B, 0);
 }
 
@@ -223,12 +310,3 @@ void stopDriving()
     analogWrite(motor4F, 0);
     analogWrite(motor4B, 0);
 }
-
-/*
-For the unused timer:
-void IRAM_ATTR arrivalCheckInterrupt()
-{
-    if (tapeCounter >= tapeToSee)
-        arrived = true;
-}
-*/

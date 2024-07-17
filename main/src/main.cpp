@@ -88,18 +88,16 @@ void setup()
     // GENERAL TESTING:
     // currentNode = 3;
     // nextStation = 2;
-    // traverseCounter(true);
-    // driveUpward(dcEighth);
     // testSweeper();
     // retractSweeper(dcQuarter);
 
     // 1
-    driveForward(dcQuarter);
-    delay(2500);
-    stopDriving();
+    // driveBackward(dcQuarter);
+    // delay(2500);
+    // stopDriving();
 
     // 2
-    // traverseCounter(true, dcQuarter, dcEighth);
+    traverseCounter(true, dcQuarter, dcEighth);
 
     // 3 - Make sure to uncomment the 2 lines in traverseCounter
     // majorTest1();
