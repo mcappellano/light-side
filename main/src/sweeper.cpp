@@ -2,17 +2,20 @@
 #include "main.h"
 
 // double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
-const float SWEEP_PULSE_DISTANCE = 2.618; // VALUE NOT FINALIZED - The distance that the sweeper moves for every pulse sent by the rotary encoder
-int sweepCounter = 0;
+const double SWEEP_PULSE_DISTANCE = 0.6545; // previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
+volatile int sweepCounter = 0;
 volatile bool extending = false; // Make sure to set this variable back to false after extending the sweeper when pushing the plate off
                                  // Use a delay for the approximate right amount of time - doesn't have to be perfect
                                  // Delay is fine because nothing else is happening while pushing off
 volatile bool readyToLeave = false;
+volatile bool sweepStopped = true;
+int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
 {
     sweepCounter = 0;
     extending = true;
+    sweepStopped = false;
     analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
     analogWrite(SWEEP_MOTOR_BACK, 0);
 }
@@ -20,6 +23,7 @@ void extendSweeper(uint8_t dutyCycle)
 void retractSweeper(uint8_t dutyCycle)
 {
     sweepCounter = 0;
+    sweepStopped = false;
     analogWrite(SWEEP_MOTOR_OUT, 0);
     analogWrite(SWEEP_MOTOR_BACK, dutyCycle);
 }
@@ -41,14 +45,23 @@ void sweepSwitchInterrupt()
 
 void sweepEncoderInterrupt()
 {
-    if (digitalRead(SWEEP_ENCODER_2) != digitalRead(SWEEP_ENCODER_1))
+    int MSB = digitalRead(SWEEP_ENCODER_1);
+    int LSB = digitalRead(SWEEP_ENCODER_2);
+
+    int updatedEncoder = (MSB << 1) | LSB;
+    int full = (updatedEncoder << 2) | sweepPrevious;
+
+    if ((full == 0b0001) || (full == 0b1000) || (full == 0b0111) || (full == 0b1110))
         sweepCounter++;
-    else
+    else if ((full == 0b0010) || (full == 0b0100) || (full == 0b1011) || (full == 0b1101))
         sweepCounter--;
 
-    if (!extending && (sweepCounter >= currentStation.sweepLength / SWEEP_PULSE_DISTANCE - 1)) // Unless sweepCounter goes negative when retracting?
+    sweepPrevious = updatedEncoder;
+
+    if (!extending && !sweepStopped && (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 8)) // Unless sweepCounter goes negative when retracting?
     {
         stopSweeper();
-        readyToLeave = true;
+        readyToLeave = 1;
+        sweepStopped = true;
     }
 }

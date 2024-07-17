@@ -1,18 +1,19 @@
 #include "elevator.h"
 #include "main.h"
 
-const float ELEV_PULSE_DISTANCE = 1.63625; // millimitres
+const double ELEV_PULSE_DISTANCE = 0.40906; // millimitres - previously 1.63625 (4x)
 int elevCounter = 0;
 volatile bool maxHeight = false;
 volatile bool raising = false;
-// double platformHeight = MAX_HEIGHT;
-// double previousHeight = MAX_HEIGHT;
+volatile bool elevStopped = true;
 double previousFoodHeight = 23.175; // The distance between the two platforms
+int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle)
 {
     elevCounter = 0;
     raising = true;
+    elevStopped = false;
     analogWrite(ELEV_MOTOR_UP, dutyCycle);
     analogWrite(ELEV_MOTOR_DOWN, 0);
 }
@@ -20,6 +21,7 @@ void raisePlatform(uint8_t dutyCycle)
 void lowerPlatform(uint8_t dutyCycle)
 {
     elevCounter = 0;
+    elevStopped = false;
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, dutyCycle);
 }
@@ -52,11 +54,22 @@ void elevSwitchInterrupt()
 // IF EACH TIME WE GO DOWN WE GO 1 MM EXTRA, WE MAY HAVE TO ACCOUNT FOR THIS (by the end it could be 0.5 cm off)
 void elevEncoderInterrupt()
 {
-    if (digitalRead(ELEV_ENCODER_2) != digitalRead(ELEV_ENCODER_1))
+    int MSB = digitalRead(ELEV_ENCODER_1);
+    int LSB = digitalRead(ELEV_ENCODER_2);
+
+    int updatedEncoder = (MSB << 1) | LSB;
+    int full = (updatedEncoder << 2) | elevPrevious;
+
+    if ((full == 0b0001) || (full == 0b1000) || (full == 0b0111) || (full == 0b1110))
         elevCounter++;
-    else
+    else if ((full == 0b0010) || (full == 0b0100) || (full == 0b1011) || (full == 0b1101))
         elevCounter--;
 
-    if (!raising && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + 1)) // ADD 1 TO ACCOUNT FOR MOTOR STOPPING TIME (adding a positive makes a negative number "smaller") - MAY CHANGE WITH LOAD ADDED
+    elevPrevious = updatedEncoder;
+
+    if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + 4))
+    {
         stopPlatform();
+        elevStopped = true;
+    }
 }

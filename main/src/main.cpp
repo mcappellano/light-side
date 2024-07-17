@@ -7,14 +7,14 @@
 
 Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
 
-Station start(-1, 0, 0);
-Station tomatoes(0, 4.4, 198);  // All measurements in mm
-Station exchange(1, 15, 191);   // Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 10, 195);    // Only height of patty matters; fries are not being stacked
-Station plates(3, 23.175, 149); // VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
-Station cheese(10, 4.3, 198);
-Station lettuce(13, 4.3, 201);
-Station servingArea(99, 0, 0); // May or may not need this, may or may not need to change the num value
+Station start(-1, 0, 149);      // Same sweep distance as plates (just for testing)
+Station tomatoes(0, 4.4, 176);  // 198... All measurements in mm
+Station exchange(1, 15, 169);   // 191... Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 10, 173);    // 195.. Only height of patty matters; fries are not being stacked
+Station plates(3, 23.175, 149); // 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station cheese(10, 4.3, 176);   // 198...
+Station lettuce(13, 4.3, 179);  // 201...
+Station servingArea(99, 0, 0);  // May or may not need this, may or may not need to change the num value
 
 Station currentStation = start;
 Station nextStation = plates;       // For top bot code, replace this with buns
@@ -61,11 +61,17 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
 
-    elevEncoderInterrupt();
+    // Previously:
+    // attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
+    // attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);
 
-    attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
-    attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);
+    // New:
+    attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_2), elevEncoderInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_2), sweepEncoderInterrupt, CHANGE);
 
+    // Switches
     attachInterrupt(digitalPinToInterrupt(ELEV_SWITCH), elevSwitchInterrupt, FALLING);
     attachInterrupt(digitalPinToInterrupt(SWEEP_SWITCH), sweepSwitchInterrupt, FALLING);
 
@@ -77,25 +83,36 @@ void setup()
     Serial.println("");
     Serial.println("Setup");
 
+    delay(1000);
+
     // GENERAL TESTING:
     // currentNode = 3;
     // nextStation = 2;
     // traverseCounter(true);
     // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-    // testSweeper(); // DON'T FORGET TO UPDATE SWEEP_PULSE_DISTANCE FOR THE NEW GEARS
-
-    analogWrite(SWEEP_MOTOR_OUT, 45);
-    analogWrite(SWEEP_MOTOR_BACK, 0);
-
-    delay(500);
-
-    analogWrite(SWEEP_MOTOR_OUT, 0);
-    analogWrite(SWEEP_MOTOR_BACK, 0);
+    testSweeper();
+    // retractSweeper(dcQuarter);
 }
 
 void loop()
 {
+    // retractSweeper(dcQuarter);
+
+    // delay(1000);
+
+    // stopSweeper();
+
+    // delay(1000);
+
+    // extendSweeper(dcQuarter);
+
+    // delay(1000);
+
+    // stopSweeper();
+
+    // delay(1000);
+
     /*
     if (currentStation.num == start.num)
     {

@@ -6,8 +6,8 @@
 
 // Pin definitions - not necessarily finalized
 #define SWEEP_SWITCH 36
-#define SWEEP_ENCODER_1 32
-#define SWEEP_ENCODER_2 33
+#define SWEEP_ENCODER_1 25
+#define SWEEP_ENCODER_2 26
 #define SWEEP_MOTOR_OUT 12
 #define SWEEP_MOTOR_BACK 13
 
@@ -17,10 +17,13 @@
 #define FULLY_RETRACT_POS 0 // The distance when the sweeper is in the fully retracted position
 
 // Variables
-extern const float SWEEP_PULSE_DISTANCE;
+extern const double SWEEP_PULSE_DISTANCE;
 extern double sweeperPosition;
-extern int sweepCounter;
+extern volatile int sweepCounter;
 extern volatile bool readyToLeave;
+extern volatile bool extending;
+
+extern volatile bool sweepStopped;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);
