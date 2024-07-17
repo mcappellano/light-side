@@ -25,6 +25,8 @@ uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty
 
 void goNextStation()
 {
+    previousFoodHeight = currentStation.height;
+
     // Cross to the other counter if necessary
     if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
         crossCounters();
@@ -65,8 +67,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveBackward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    extendSweeper(dcEighth);  // Modify sweeper speed here
-    lowerPlatform(dcQuarter); // Modify platform speed here
+    // extendSweeper(dcEighth);  // Modify sweeper speed here
+    // lowerPlatform(dcQuarter); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     timerWrite(tapeTimer, 0);
@@ -102,7 +104,6 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     currentStation = nextStation;
     node = currentStation.num;
     nextStation = nextNextStation;
-    previousFoodHeight = currentStation.height;
 }
 
 void crossCounters()

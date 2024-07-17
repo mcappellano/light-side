@@ -89,30 +89,24 @@ void setup()
     // currentNode = 3;
     // nextStation = 2;
     // traverseCounter(true);
-    // driveForward(dcQuarter);
     // driveUpward(dcEighth);
-    testSweeper();
+    // testSweeper();
     // retractSweeper(dcQuarter);
+
+    // 1
+    driveForward(dcQuarter);
+    delay(2500);
+    stopDriving();
+
+    // 2
+    // traverseCounter(true, dcQuarter, dcEighth);
+
+    // 3 - Make sure to uncomment the 2 lines in traverseCounter
+    // majorTest1();
 }
 
 void loop()
 {
-    // retractSweeper(dcQuarter);
-
-    // delay(1000);
-
-    // stopSweeper();
-
-    // delay(1000);
-
-    // extendSweeper(dcQuarter);
-
-    // delay(1000);
-
-    // stopSweeper();
-
-    // delay(1000);
-
     /*
     if (currentStation.num == start.num)
     {
