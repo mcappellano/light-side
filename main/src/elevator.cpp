@@ -6,7 +6,7 @@ int elevCounter = 0;
 volatile bool maxHeight = false;
 volatile bool raising = false;
 volatile bool elevStopped = true;
-double previousFoodHeight = 23.175; // The distance between the two platforms
+double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
 int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle)

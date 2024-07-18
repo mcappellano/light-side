@@ -8,7 +8,7 @@
 
 Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
 
-Station start(-1, 15, 149);     // Same sweep distance as plates and height as bottom buns (just for testing)
+Station start(0, 0, 149);       // Same sweep distance as plates and same number as tomatoes (for technicalities of the start sequence)
 Station tomatoes(0, 4.4, 176);  // 198... All measurements in mm
 Station exchange(1, 15, 169);   // 191... Only buns are being exchanged here. Top bun height doesn't matter
 Station cooktop(2, 10, 173);    // 195.. Only height of patty matters; fries are not being stacked
@@ -97,7 +97,7 @@ void setup()
     // delay(1500);
     // stopDriving();
 
-    // 2 - See if the sweeper can sweep in and stop on its own (suddenly stopped working previous evening). Troubleshoot as necessary
+    // 2 - See if the sweeper can sweep in and stop on its own (suddenly stopped working previous evening). Troubleshoot as necessary (note that I tried to modify the code to have it slow down when it gets within 9cm of the stopping position)
     // extendSweeper(dcQuarter);
     // delay(2500);
     // retractSweeper(dcEighth);
@@ -107,24 +107,32 @@ void setup()
 
     // 4 - Calibrate motors, adjust constants in calibrateDutyCycle function, modify other functions to use its output
 
-    // 5 - Test driving straight and sideways, test driveDiagonal (for staying along the counter), test crossCounters
+    // 5 - Test driving straight and sideways, test driveDiagonal (for staying along the counter), test crossCounters and determine if it is worth trying to get working
 }
 
 void loop()
 {
     /*
-    if (currentStation.num == start.num)
+    // If we are just starting from the start position, execute a different sequence to get set up
+    if (currentStation.num == start.num && currentStation == start.height)
     {
-        // GO TO PLATE STATION, RAISE PLATFORM, EXTEND SWEEPER
+        raisePlatform(dcQuarter);
+        driveUpward(dcHalf); // might have to be downward
+        delay(1500); // VALUE NOT FINALIZED - should be enough time that we get to the counter without quite touching it
+        goNextNode(); // From here it will go to plates and act as normal. It won't lower the platform at all since there is a special condition in traverseCounters()
+    }
+    else
+    {
+     // Everything else (see description below)
     }
     */
 
     /*
     This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
-    So this loop determine the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(),
-    call retractSweeper() (make sure to set sweepCounter to 0 beforehand), and loop back to the beginning.
+    So this loop determines the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(),
+    and loop back to the beginning.
     We must ensure that goNextStation() is not called again until we are ready to move to the next station. Do this by checking
-    until the variable readyToLeave is true, while making sure to set it back to false afterwards.
+    until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
     */
 }
 
@@ -163,7 +171,7 @@ timerAlarmEnable(arrivalCheckTimer);
 */
 
 /*
-Unneeded OLED code:
+Old code for OLED:
 Before setup:
 Adafruit_SSD1306 display_handler(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
