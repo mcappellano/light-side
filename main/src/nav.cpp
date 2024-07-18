@@ -52,12 +52,17 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Start driving along the counter
     if (forward == true)
-        driveBackward(driveSpeed);
+        driveBackward2(driveSpeed);
     else
-        driveForward(driveSpeed);
+        driveForward2(driveSpeed);
 
     // Move sweeper and platform to ready positions
     extendSweeper(dcEighth); // Modify sweeper speed here
+
+    // JUST FOR TESTING ->
+    currentStation = plates;
+    // JUST FOR TESTING <-
+
     if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
         lowerPlatform(dcEighth); // Modify platform speed here
 
@@ -83,9 +88,9 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Now back up until centred exactly on the tape
     if (forward == true)
-        driveForward(reverseSpeed);
+        driveForward2(reverseSpeed);
     else
-        driveBackward(reverseSpeed);
+        driveBackward2(reverseSpeed);
 
     delay(100);
 
@@ -118,7 +123,7 @@ void goServe()
     lowerPlatform(dcQuarter);
 
     currentStation = servingArea;
-    retractSweeper(dcEighth); // VALUE NOT FINALIZED - In main.cpp, change the third entry of the servingArea station object to the distance in mm that the sweeper has to retract from the position after sweeping a fry or salad item to fully retracted.
+    retractSweeper(dcEighth, true); // VALUE NOT FINALIZED - In main.cpp, change the third entry of the servingArea station object to the distance in mm that the sweeper has to retract from the position after sweeping a fry or salad item to fully retracted.
 
     // Enter cross correlation code, call stopDriving() once we detect enough of a signal
 

@@ -22,12 +22,11 @@ extern double sweeperPosition;
 extern volatile int sweepCounter;
 extern volatile bool readyToLeave;
 extern volatile bool extending;
-
 extern volatile bool sweepStopped;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);
-void retractSweeper(uint8_t dutyCycle);
+void retractSweeper(uint8_t dutyCycle, bool reset);
 void stopSweeper();
 void sweepSwitchInterrupt();
 void sweepEncoderInterrupt();

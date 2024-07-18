@@ -73,7 +73,7 @@ void testSweeper()
     Serial.println(distanceMoved);
 
     currentStation = plates;
-    retractSweeper(dcQuarter);
+    retractSweeper(dcQuarter, true);
 
     delay(3000);
 
@@ -90,7 +90,7 @@ void testSweeper()
     delay(3000);
 
     currentStation = exchange;
-    retractSweeper(dcQuarter);
+    retractSweeper(dcQuarter, true);
 
     delay(3000);
 
@@ -124,7 +124,7 @@ void majorTest1()
 
     delay(2000);
 
-    traverseCounter(true, dcHalf, dcEighth);
+    traverseCounter(true, dcHalf, dcMin);
 
-    retractSweeper(dcQuarter);
+    retractSweeper(dcQuarter, true);
 }

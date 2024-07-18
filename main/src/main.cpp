@@ -89,21 +89,23 @@ void setup()
     // TESTING FOR JULY 18TH
 
     // 1 - Test gradual speeding up; see if burger still slips, make adjustments as necessary. Determine if we have to slow down more gradually also
-    driveBackward2(dcQuarter);
-    delay(1500);
-    stopDriving();
-    // delay(1500);
-    // driveForward2(dcThreeQs);
-    // delay(1500);
+    // driveForward2(dcQuarter);
+    // delay(1000);
     // stopDriving();
+    // delay(1500);
+    // driveBackward(dcQuarter);
+    // delay(1000);
+    // stopDriving();
+    // Conclusion: It definitely makes the burger slip less - it is worth the miniscule time loss
 
     // 2 - See if the sweeper can sweep in and stop on its own (suddenly stopped working previous evening). Troubleshoot as necessary (note that I tried to modify the code to have it slow down when it gets within 9cm of the stopping position)
     // extendSweeper(dcQuarter);
     // delay(2500);
-    // retractSweeper(dcEighth);
+    // retractSweeper(dcQuarter, true);
+    // Conclusion: The issue fixed itself... it is unclear how. Trying to sweep it back slowly at the end kind of breaks. Will revisit later if it is deemed necessary.
 
     // 3 - Run it all together and see if accuracy has improved
-    // majorTest1();
+    majorTest1();
 
     // 4 - Calibrate motors, adjust constants in calibrateDutyCycle function, modify other functions to use its output
 
@@ -112,6 +114,8 @@ void setup()
 
 void loop()
 {
+    Serial.println(sweepCounter);
+    delay(10);
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
     if (currentStation.num == start.num && currentStation == start.height)

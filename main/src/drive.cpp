@@ -2,8 +2,8 @@
 #include "main.h"
 
 uint32_t freqHz = 50;
-uint8_t dcThirtieth = 7;
 uint8_t dcSixteenth = 15;
+uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
@@ -156,10 +156,10 @@ void driveBackward(uint8_t dutyCycle)
     analogWrite(motor1B, dutyCycle);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle + 16);
+    analogWrite(motor2B, dutyCycle + 12);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle + 16);
+    analogWrite(motor3B, dutyCycle + 12);
 
     analogWrite(motor4F, 0);
     analogWrite(motor4B, dutyCycle);

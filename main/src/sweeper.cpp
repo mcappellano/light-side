@@ -9,7 +9,7 @@ volatile bool extending = false; // Make sure to set this variable back to false
                                  // Use a delay for the approximate right amount of time - doesn't have to be perfect
                                  // Delay is fine because nothing else is happening while pushing off
 volatile bool readyToLeave = false;
-volatile bool sweepStopped = true;
+volatile bool sweepStopped = false; // true, don't forget to PUT THIS BACK!!!
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
@@ -21,9 +21,11 @@ void extendSweeper(uint8_t dutyCycle)
     analogWrite(SWEEP_MOTOR_BACK, 0);
 }
 
-void retractSweeper(uint8_t dutyCycle)
+void retractSweeper(uint8_t dutyCycle, bool reset)
 {
-    sweepCounter = 0;
+    if (reset)
+        sweepCounter = 0;
+
     sweepStopped = false;
     analogWrite(SWEEP_MOTOR_OUT, 0);
     analogWrite(SWEEP_MOTOR_BACK, dutyCycle);
@@ -59,14 +61,15 @@ void sweepEncoderInterrupt()
 
     sweepPrevious = updatedEncoder;
 
-    if (!extending && !sweepStopped && (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 8)) // Unless sweepCounter goes negative when retracting?
+    if (!extending && !sweepStopped)
     {
-        stopSweeper();
-        readyToLeave = 1;
-        sweepStopped = true;
-    }
-    else if (!extending && !sweepStopped && (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 22)) // 22 - 8 = 14 ticks before turning off (~9cm) the speed is reduced
-    {
-        retractSweeper(dcEighth);
+        if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 8) // Unless sweepCounter goes negative when retracting?
+        {
+            stopSweeper();
+            readyToLeave = 1;
+            sweepStopped = true;
+        }
+        // else if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 100)
+        //     stopSweeper();
     }
 }

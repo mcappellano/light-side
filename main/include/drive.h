@@ -17,8 +17,8 @@
 
 // Variables
 extern uint32_t freqHz;
-extern uint8_t dcThirtieth;
 extern uint8_t dcSixteenth;
+extern uint8_t dcMin;
 extern uint8_t dcEighth;
 extern uint8_t dcQuarter;
 extern uint8_t dcHalf;
