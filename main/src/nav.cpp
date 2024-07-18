@@ -88,7 +88,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     delay(100);
 
-    while (digitalRead(REFLEC1) == LOW || digitalRead(REFLEC2) == LOW)
+    while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) // PREVIOUSLY || (not &&)
         delay(1);
 
     stopDriving();
@@ -99,6 +99,33 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     nextStation = nextNextStation;
 }
 
+// At this point we have already dropped the burger onto the plate, and then collected salad and fries.
+// We are now going from either lettuce, tomato, or cooktop to the serving area.
+// WAIT ---------------- IT WOULD BE SMART TO GET SALAD LETTUCE ALWAYS LAST - SAVES TIME and means we don't have to make two separate cases for this part of the code
 void goServe()
 {
+    if (node < 10)
+        crossCounters();
+
+    if (node <= 11)
+        driveBackward2(dcHalf);
+    else if (node >= 12)
+        driveForward2(dcHalf);
+
+    // DO THIS: If we make the crossCounters timing use a timer instead of delays, we will be able to lower and retract while crossing counters
+    previousFoodHeight = 50; // VALUE NOT FINALIZED - THE HEIGHT IN MM TO LOWER TO GET THE TOP OF THE BURGER OUT OF THE WAY FOR THE SWEEPER (it's the distance from the rim of the plate to the top of the burger)
+    lowerPlatform(dcQuarter);
+
+    currentStation = servingArea;
+    retractSweeper(dcEighth); // VALUE NOT FINALIZED - In main.cpp, change the third entry of the servingArea station object to the distance in mm that the sweeper has to retract from the position after sweeping a fry or salad item to fully retracted.
+
+    // Enter cross correlation code, call stopDriving() once we detect enough of a signal
+
+    raisePlatform(dcQuarter);
+    delay(2000);
+    extendSweeper(dcQuarter);
+    delay(2000);
+    swingIn();
+
+    // Ready to go to nextStation, which should be set to the plates station
 }

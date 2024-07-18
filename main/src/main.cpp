@@ -15,7 +15,7 @@ Station cooktop(2, 10, 173);    // 195.. Only height of patty matters; fries are
 Station plates(3, 23.175, 149); // 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
 Station cheese(10, 4.3, 176);   // 198...
 Station lettuce(13, 4.3, 179);  // 201...
-Station servingArea(99, 0, 0);  // May or may not need this, may or may not need to change the num value
+Station servingArea(11, 0, 100);
 
 Station currentStation = start;
 Station nextStation = plates;       // For top bot code, replace this with buns
@@ -86,26 +86,28 @@ void setup()
 
     delay(1000);
 
-    // GENERAL TESTING:
-    // currentNode = 3;
-    // nextStation = 2;
-    // testSweeper();
-    // retractSweeper(dcQuarter);
+    // TESTING FOR JULY 18TH
 
-    // 1
-    // driveBackward(dcThreeQs);
+    // 1 - Test gradual speeding up; see if burger still slips, make adjustments as necessary. Determine if we have to slow down more gradually also
+    driveBackward2(dcQuarter);
+    delay(1500);
+    stopDriving();
     // delay(1500);
-    // stopDriving();
-    // delay(1500);
-    // driveForward(dcThreeQs);
+    // driveForward2(dcThreeQs);
     // delay(1500);
     // stopDriving();
 
-    // 2
-    // traverseCounter(true, dcQuarter, dcEighth);
+    // 2 - See if the sweeper can sweep in and stop on its own (suddenly stopped working previous evening). Troubleshoot as necessary
+    // extendSweeper(dcQuarter);
+    // delay(2500);
+    // retractSweeper(dcEighth);
 
-    // 3 - Make sure to uncomment the 2 lines in traverseCounter
+    // 3 - Run it all together and see if accuracy has improved
     // majorTest1();
+
+    // 4 - Calibrate motors, adjust constants in calibrateDutyCycle function, modify other functions to use its output
+
+    // 5 - Test driving straight and sideways, test driveDiagonal (for staying along the counter), test crossCounters
 }
 
 void loop()

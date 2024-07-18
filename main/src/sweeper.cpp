@@ -1,5 +1,6 @@
 #include "sweeper.h"
 #include "main.h"
+#include "drive.h"
 
 // double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
 const double SWEEP_PULSE_DISTANCE = 0.6545; // previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
@@ -63,5 +64,9 @@ void sweepEncoderInterrupt()
         stopSweeper();
         readyToLeave = 1;
         sweepStopped = true;
+    }
+    else if (!extending && !sweepStopped && (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 22)) // 22 - 8 = 14 ticks before turning off (~9cm) the speed is reduced
+    {
+        retractSweeper(dcEighth);
     }
 }

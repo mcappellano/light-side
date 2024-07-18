@@ -10,8 +10,6 @@ uint8_t dcHalf = 127;
 uint8_t dcThreeQs = 191;
 uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at doesn't spin. But 245 works (96%).
 
-uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty cycle by which we would like to increase/decrease select motors
-
 void crossCounters()
 {
     /*
@@ -89,16 +87,30 @@ uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
     uint8_t motor3;
     uint8_t motor4;
 
-    if (abs(dutyCycle - dcQuarter) < 15)
+    if (abs(dutyCycle - dcThreeQs) < 15) // Driving at or near 3/4 duty cycle
     {
         motor1 = dutyCycle * 0.7; // These constants are what we have to determine while calibrating
         motor2 = dutyCycle * 0.7;
         motor3 = dutyCycle * 0.7;
         motor4 = dutyCycle * 0.7;
     }
-    else if (abs(dutyCycle - dcEighth) < 5)
+    else if (abs(dutyCycle - dcHalf) < 15) // Driving at or near 1/2 duty cycle
     {
-        motor1 = dutyCycle * 0.7; // These constants are what we have to determine while calibrating
+        motor1 = dutyCycle * 0.7;
+        motor2 = dutyCycle * 0.7;
+        motor3 = dutyCycle * 0.7;
+        motor4 = dutyCycle * 0.7;
+    }
+    else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle
+    {
+        motor1 = dutyCycle * 0.7;
+        motor2 = dutyCycle * 0.7;
+        motor3 = dutyCycle * 0.7;
+        motor4 = dutyCycle * 0.7;
+    }
+    else if (abs(dutyCycle - dcEighth) < 5) // Driving at or near 1/8 duty cycle
+    {
+        motor1 = dutyCycle * 0.7;
         motor2 = dutyCycle * 0.7;
         motor3 = dutyCycle * 0.7;
         motor4 = dutyCycle * 0.7;
@@ -125,9 +137,6 @@ void spinAround(uint8_t dutyCycle)
 
 void driveForward(uint8_t dutyCycle)
 {
-    // uint8_t dutyCycleIncreased = dutyCycle + dutyCycle * dcIncreasePercentage; // Using these allows the duty cycle to change and not mess up the calibrations
-    // uint8_t dutyCycleDecreased = dutyCycle - dutyCycle * dcIncreasePercentage; // We would have to add these two lines of code to all the driving functions
-
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
 
@@ -154,6 +163,31 @@ void driveBackward(uint8_t dutyCycle)
 
     analogWrite(motor4F, 0);
     analogWrite(motor4B, dutyCycle);
+}
+
+// Speeds up more gradually
+void driveForward2(uint8_t dutyCycle)
+{
+    uint8_t gradualDC = dutyCycle * 2 / 10;
+
+    for (int i = 0; i < 8; i++)
+    {
+        driveForward(gradualDC);
+        gradualDC += dutyCycle / 10;
+        delay(50);
+    }
+}
+
+void driveBackward2(uint8_t dutyCycle)
+{
+    uint8_t gradualDC = dutyCycle * 2 / 10;
+
+    for (int i = 0; i < 8; i++)
+    {
+        driveBackward(gradualDC);
+        gradualDC += dutyCycle / 10;
+        delay(50);
+    }
 }
 
 void driveDiagonal(uint8_t dutyCycle)

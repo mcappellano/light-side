@@ -33,6 +33,8 @@ void spinAround(); // Won't need this if we incorporate it into the lateral move
 
 void driveForward(uint8_t dutyCycle);
 void driveBackward(uint8_t dutyCycle);
+void driveForward2(uint8_t dutyCycle);
+void driveBackward2(uint8_t dutyCycle);
 void driveUpward(uint8_t dutyCycle);
 void driveDownward(uint8_t dutyCycle);
 void stopDriving();

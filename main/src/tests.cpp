@@ -126,5 +126,5 @@ void majorTest1()
 
     traverseCounter(true, dcHalf, dcEighth);
 
-    retractSweeper(dcEighth);
+    retractSweeper(dcQuarter);
 }
