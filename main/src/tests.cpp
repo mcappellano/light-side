@@ -122,9 +122,9 @@ void majorTest1()
 {
     raisePlatform(dcQuarter);
 
-    delay(3000);
+    delay(2000);
 
-    traverseCounter(true, dcQuarter, dcEighth);
+    traverseCounter(true, dcHalf, dcEighth);
 
     retractSweeper(dcEighth);
 }

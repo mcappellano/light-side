@@ -93,8 +93,12 @@ void setup()
     // retractSweeper(dcQuarter);
 
     // 1
-    // driveBackward(dcQuarter);
-    // delay(2500);
+    // driveBackward(dcThreeQs);
+    // delay(1500);
+    // stopDriving();
+    // delay(1500);
+    // driveForward(dcThreeQs);
+    // delay(1500);
     // stopDriving();
 
     // 2
@@ -102,20 +106,10 @@ void setup()
 
     // 3 - Make sure to uncomment the 2 lines in traverseCounter
     // majorTest1();
-
-    raisePlatform(dcQuarter);
-    delay(2500);
-    lowerPlatform(dcEighth);
 }
 
 void loop()
 {
-    while (true)
-    {
-        Serial.println(elevCounter);
-        delay(10);
-    }
-
     /*
     if (currentStation.num == start.num)
     {

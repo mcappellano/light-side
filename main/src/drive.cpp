@@ -7,6 +7,7 @@ uint8_t dcSixteenth = 15;
 uint8_t dcEighth = 31;
 uint8_t dcQuarter = 63;
 uint8_t dcHalf = 127;
+uint8_t dcThreeQs = 191;
 uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at doesn't spin. But 245 works (96%).
 
 uint8_t dcIncreasePercentage = 0.2; // This is the percentage of the chosen duty cycle by which we would like to increase/decrease select motors
@@ -130,10 +131,10 @@ void driveForward(uint8_t dutyCycle)
     analogWrite(motor1F, dutyCycle);
     analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle);
+    analogWrite(motor2F, dutyCycle + 16);
     analogWrite(motor2B, 0);
 
-    analogWrite(motor3F, dutyCycle);
+    analogWrite(motor3F, dutyCycle + 16);
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, dutyCycle);
@@ -146,10 +147,10 @@ void driveBackward(uint8_t dutyCycle)
     analogWrite(motor1B, dutyCycle);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle + 35);
+    analogWrite(motor2B, dutyCycle + 16);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle + 35);
+    analogWrite(motor3B, dutyCycle + 16);
 
     analogWrite(motor4F, 0);
     analogWrite(motor4B, dutyCycle);

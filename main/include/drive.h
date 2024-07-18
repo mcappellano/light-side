@@ -22,6 +22,7 @@ extern uint8_t dcSixteenth;
 extern uint8_t dcEighth;
 extern uint8_t dcQuarter;
 extern uint8_t dcHalf;
+extern uint8_t dcThreeQs;
 extern uint8_t dcMax;
 
 // Function declarations
