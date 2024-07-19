@@ -62,11 +62,6 @@ void setup()
     attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
     attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
 
-    // Previously:
-    // attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, RISING);
-    // attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, RISING);
-
-    // New:
     attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_1), elevEncoderInterrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ELEV_ENCODER_2), elevEncoderInterrupt, CHANGE);
     attachInterrupt(digitalPinToInterrupt(SWEEP_ENCODER_1), sweepEncoderInterrupt, CHANGE);
@@ -80,6 +75,14 @@ void setup()
     tapeTimer = timerBegin(0, 80, true);
     timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
     timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
+
+    accelTimer = timerBegin(1, 80, true);
+    timerAttachInterrupt(accelTimer, &accelTimerInterrupt, true);
+    timerAlarmWrite(accelTimer, 50 * 1000, true);
+
+    slowDownTimer = timerBegin(2, 80, true);
+    timerAttachInterrupt(slowDownTimer, &slowDownTimerInterrupt, true);
+    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
 
     Serial.println("");
     Serial.println("Setup");

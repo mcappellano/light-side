@@ -1,6 +1,11 @@
 #include "drive.h"
 #include "main.h"
 
+hw_timer_t *accelTimer = NULL;
+uint8_t currentDutyCycle = 0;
+volatile int loopNum = 0;
+bool accelForward = true;
+
 uint32_t freqHz = 50;
 uint8_t dcSixteenth = 15;
 uint8_t dcMin = 24;
@@ -10,25 +15,28 @@ uint8_t dcHalf = 127;
 uint8_t dcThreeQs = 191;
 uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at doesn't spin. But 245 works (96%).
 
-void crossCounters()
+void crossCounters(uint8_t driveSpeed, uint8_t spinSpeed)
 {
-    /*
-    FIRST OPTION:
-    motorsUpward(dcHalf); // might have to switch this to be downward, and below to be upward (careful on first test)
-    delay until we have left wall sufficiently
-    spinAround();
-    delay
-    motorsDownward(dcHalf);
-    */
+    driveUpward(driveSpeed); // might have to switch this to be downward, and below to be upward (careful on first test)
+    delay(500);
+    spinAround(spinSpeed);
+    delay(500);
+    driveDownward(driveSpeed);
+    delay(500);
+    stopDriving();
 
-    /*
-    BETTER OPTION (see below):
-    Find the perfect combination of motors speeds
-    so that the robot moves counter to counter
-    while simulatenously rotating 180 degrees
-    (consult image I found online and add the vectors to the two motions we want)
-    */
+    if (currentStation.num >= 10)
+        node -= 10;
+    else
+        node += 10;
+}
 
+/* Find the perfect combination of motors speeds
+so that the robot moves counter to counter
+while simulatenously rotating 180 degrees
+(consult image I found online and add the vectors to the two motions we want) */
+void crossCountersCool()
+{
     // IMPORTANT NOTE: double duty cycle is not necessarily double RPM
     changingPWMs(dcQuarter, dcEighth, false, dcQuarter, dcQuarter, true, 0, dcEighth, true, 0, 0, true, 10);
     changingPWMs(dcEighth, 0, false, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, true, 0, 0, true, 10);
@@ -168,26 +176,33 @@ void driveBackward(uint8_t dutyCycle)
 // Speeds up more gradually
 void driveForward2(uint8_t dutyCycle)
 {
-    uint8_t gradualDC = dutyCycle * 2 / 10;
-
-    for (int i = 0; i < 8; i++)
-    {
-        driveForward(gradualDC);
-        gradualDC += dutyCycle / 10;
-        delay(50);
-    }
+    loopNum = 0;
+    accelForward = true;
+    currentDutyCycle = dutyCycle;
+    timerWrite(accelTimer, 0);
+    timerAlarmEnable(accelTimer);
 }
 
 void driveBackward2(uint8_t dutyCycle)
 {
-    uint8_t gradualDC = dutyCycle * 2 / 10;
+    loopNum = 0;
+    accelForward = false;
+    currentDutyCycle = dutyCycle;
+    timerWrite(accelTimer, 0);
+    timerAlarmEnable(accelTimer);
+}
 
-    for (int i = 0; i < 8; i++)
-    {
+void IRAM_ATTR accelTimerInterrupt()
+{
+    uint8_t gradualDC = currentDutyCycle * ((2 + loopNum) / 10);
+    if (accelForward)
+        driveForward(gradualDC);
+    else
         driveBackward(gradualDC);
-        gradualDC += dutyCycle / 10;
-        delay(50);
-    }
+
+    loopNum++;
+    if (2 + loopNum >= 10)
+        timerAlarmDisable(accelTimer);
 }
 
 void driveDiagonal(uint8_t dutyCycle)

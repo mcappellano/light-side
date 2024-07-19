@@ -16,6 +16,5 @@ const unsigned long tapedelay_ms = 250;
 // Function declarations
 void tapeInterrupt();
 void tapeTimerInterrupt();
-// void tapeInterrupt2();
 
 #endif // REFLECTANCE_H

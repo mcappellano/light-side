@@ -25,11 +25,3 @@ void IRAM_ATTR tapeTimerInterrupt()
     alreadySeen = false;
     timerAlarmDisable(tapeTimer);
 }
-
-// void tapeInterrupt2()
-// {
-//     if ((nextNode > currentNode && currentNode < 10) || (nextNode < currentNode && nextNode >= 10))
-//         tapeCounter++;
-// }
-
-// For the first one: if ((nextNode < currentNode && currentNode < 10) || (nextNode > currentNode && currentNode >= 10))

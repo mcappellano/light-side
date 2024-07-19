@@ -12,6 +12,10 @@ Note that this code is specific to the bottom robot. */
 volatile int tapeCounter = 0;
 volatile bool arrived = false;
 int tapeToSee = 0;
+bool adjusted = false;
+bool forward = true;
+
+hw_timer_t *slowDownTimer = NULL;
 
 void goNextStation()
 {
@@ -19,10 +23,11 @@ void goNextStation()
 
     // Cross to the other counter if necessary
     if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
-        crossCounters();
+        crossCounters(dcQuarter, dcQuarter);
 
     // Get ready to cross the correct number of tape pieces
     arrived = false;
+    adjusted = false;
     tapeCounter = 0;
     if (node <= 10)
         tapeToSee = abs(nextStation.num - node);
@@ -44,11 +49,14 @@ While traversing forward/backward, we will also be extending the arm out, and lo
 At some point we must consider the edge cases of there being only a counter crossing movement and no traversing,
 and that of moving to and from the serving area!
 */
-void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
+void traverseCounter(bool forward2, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
-    arrived = false; // for testing
-    tapeCounter = 0; // for testing
-    tapeToSee = 2;   // for testing
+    // JUST FOR TESTING ->
+    forward = forward2;
+    arrived = false;
+    tapeCounter = 0;
+    tapeToSee = 2;
+    // JUST FOR TESTING <-
 
     // Start driving along the counter
     if (forward == true)
@@ -57,7 +65,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward2(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    extendSweeper(dcEighth); // Modify sweeper speed here
+    extendSweeper(dcQuarter); // Modify sweeper speed here
 
     // JUST FOR TESTING ->
     currentStation = plates;
@@ -77,6 +85,46 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     The platform and sweeper are stopped at the right height/length by the encoder interrupts. */
     while (!arrived)
     {
+        // Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
+        if (!adjusted)
+        {
+            int next = nextStation.num;
+            if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
+            {
+                if (forward == true)
+                    driveBackward(dcEighth);
+                else
+                    driveForward(dcEighth);
+
+                adjusted = true;
+            }
+            if (next == 10)
+            {
+                if (node == 11)
+                    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+                else if (node == 12)
+                    timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
+                else if (node == 13)
+                    timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+
+                timerWrite(slowDownTimer, 0);
+                timerAlarmEnable(slowDownTimer);
+                adjusted = true;
+            }
+            if (next == 13)
+            {
+                if (node == 12)
+                    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+                else if (node == 11)
+                    timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
+                else if (node == 10)
+                    timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+
+                timerWrite(slowDownTimer, 0);
+                timerAlarmEnable(slowDownTimer);
+                adjusted = true;
+            }
+        }
     }
 
     // In case they don't finish before making it to the food station
@@ -111,7 +159,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 void goServe()
 {
     if (node < 10)
-        crossCounters();
+        crossCounters(dcQuarter, dcQuarter);
 
     if (node <= 11)
         driveBackward2(dcHalf);
@@ -134,4 +182,14 @@ void goServe()
     swingIn();
 
     // Ready to go to nextStation, which should be set to the plates station
+}
+
+void IRAM_ATTR slowDownTimerInterrupt()
+{
+    if (forward == true)
+        driveBackward(dcEighth);
+    else
+        driveForward(dcEighth);
+
+    timerAlarmDisable(slowDownTimer);
 }
