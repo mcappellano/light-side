@@ -7,22 +7,25 @@ volatile int loopNum = 0;
 bool accelForward = true;
 
 uint32_t freqHz = 50;
-uint8_t dcSixteenth = 15;
-uint8_t dcMin = 24;
+// uint8_t dcSixteenth = 15;
+// uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
+uint8_t dc316 = 48;
 uint8_t dcQuarter = 63;
-uint8_t dcHalf = 127;
+// uint8_t dcHalf = 127;
 uint8_t dcThreeQs = 191;
-uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% at doesn't spin. But 245 works (96%).
+// uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% and doesn't spin. But 245 works (96%).
 
-void crossCounters(uint8_t driveSpeed, uint8_t spinSpeed)
+void crossCounters()
 {
-    driveUpward(driveSpeed); // might have to switch this to be downward, and below to be upward (careful on first test)
-    delay(500);
-    spinAround(spinSpeed);
-    delay(500);
-    driveDownward(driveSpeed);
-    delay(500);
+    driveDownward(dcQuarter);
+    delay(400);
+    spinAround(dc316);
+    delay(650);
+    stopDriving();
+    delay(250);
+    driveUpward(dcQuarter);
+    delay(520);
     stopDriving();
 
     if (currentStation.num >= 10)
@@ -38,10 +41,10 @@ while simulatenously rotating 180 degrees
 void crossCountersCool()
 {
     // IMPORTANT NOTE: double duty cycle is not necessarily double RPM
-    changingPWMs(dcQuarter, dcEighth, false, dcQuarter, dcQuarter, true, 0, dcEighth, true, 0, 0, true, 10);
-    changingPWMs(dcEighth, 0, false, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, true, 0, 0, true, 10);
-    changingPWMs(0, 0, false, dcQuarter, dcEighth, true, dcQuarter, dcQuarter, true, 0, dcEighth, false, 10);
-    changingPWMs(0, 0, false, dcEighth, 0, true, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, false, 10);
+    changingPWMs(dcQuarter, dcEighth, false, dcQuarter, dcQuarter, true, 0, dcEighth, true, 0, 0, true, 5);
+    changingPWMs(dcEighth, 0, false, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, true, 0, 0, true, 5);
+    changingPWMs(0, 0, false, dcQuarter, dcEighth, true, dcQuarter, dcQuarter, true, 0, dcEighth, false, 5);
+    changingPWMs(0, 0, false, dcEighth, 0, true, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, false, 5);
 
     if (currentStation.num >= 10)
         node -= 10;
@@ -90,87 +93,93 @@ void changingPWMs(uint8_t motor1Start, uint8_t motor1End, bool forw1, uint8_t mo
 
 uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
 {
-    uint8_t motor1;
-    uint8_t motor2;
-    uint8_t motor3;
-    uint8_t motor4;
+    uint8_t motor1 = 0;
+    uint8_t motor2 = 0;
+    uint8_t motor3 = 0;
+    uint8_t motor4 = 0;
 
-    if (abs(dutyCycle - dcThreeQs) < 15) // Driving at or near 3/4 duty cycle
+    if (abs(dutyCycle - dcEighth) < 5) // Driving at or near 1/8 duty cycle - 162 RPM
     {
-        motor1 = dutyCycle * 0.7; // These constants are what we have to determine while calibrating
-        motor2 = dutyCycle * 0.7;
-        motor3 = dutyCycle * 0.7;
-        motor4 = dutyCycle * 0.7;
+        motor1 = dutyCycle * 1;
+        motor2 = dutyCycle * 0.96;
+        motor3 = dutyCycle * 1.088;
+        motor4 = dutyCycle * 0.88;
     }
-    else if (abs(dutyCycle - dcHalf) < 15) // Driving at or near 1/2 duty cycle
+    else if (abs(dutyCycle - dc316) < 5) // Driving at or near 3/16 duty cycle - 220 RPM
     {
-        motor1 = dutyCycle * 0.7;
-        motor2 = dutyCycle * 0.7;
-        motor3 = dutyCycle * 0.7;
-        motor4 = dutyCycle * 0.7;
+        motor1 = dutyCycle * 0.987;
+        motor2 = dutyCycle * 1.013;
+        motor3 = dutyCycle * 1.094;
+        motor4 = dutyCycle * 0.823;
     }
-    else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle
+    else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle - 264 RPM
     {
-        motor1 = dutyCycle * 0.7;
-        motor2 = dutyCycle * 0.7;
-        motor3 = dutyCycle * 0.7;
-        motor4 = dutyCycle * 0.7;
+        motor1 = dutyCycle * 1.412;
+        motor2 = dutyCycle * 1.44;
+        motor3 = dutyCycle * 1.48;
+        motor4 = dutyCycle * 1;
     }
-    else if (abs(dutyCycle - dcEighth) < 5) // Driving at or near 1/8 duty cycle
+    else if (abs(dutyCycle - dcThreeQs) < 15) // Driving at or near 3/4 duty cycle - 288 RPM
     {
-        motor1 = dutyCycle * 0.7;
-        motor2 = dutyCycle * 0.7;
-        motor3 = dutyCycle * 0.7;
-        motor4 = dutyCycle * 0.7;
+        motor1 = dutyCycle * 1.186;
+        motor2 = dutyCycle * 1.333;
+        motor3 = dutyCycle * 1.26;
+        motor4 = dutyCycle * 0.56;
     }
 
-    uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
+    static uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
     return calibrated;
 }
 
 void spinAround(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, dutyCycle);
+    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+
+    analogWrite(motor1F, speeds[0]);
     analogWrite(motor1B, 0);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle);
+    analogWrite(motor2B, speeds[1]);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle);
+    analogWrite(motor3B, speeds[2]);
 
-    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4F, speeds[3]);
     analogWrite(motor4B, 0);
 }
 
 void driveForward(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, dutyCycle);
+    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+
+    analogWrite(motor1F, speeds[0]);
     analogWrite(motor1B, 0);
 
-    analogWrite(motor2F, dutyCycle + 16);
+    analogWrite(motor2F, speeds[1]);
     analogWrite(motor2B, 0);
 
-    analogWrite(motor3F, dutyCycle + 16);
+    analogWrite(motor3F, speeds[2]);
     analogWrite(motor3B, 0);
 
-    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4F, speeds[3]);
     analogWrite(motor4B, 0);
 }
 
 void driveBackward(uint8_t dutyCycle)
 {
+    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+
     analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle);
+    analogWrite(motor1B, speeds[0]);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle + 12);
+    analogWrite(motor2B, speeds[1]);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle + 12);
+    analogWrite(motor3B, speeds[2]);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle);
+    analogWrite(motor4B, speeds[3]);
 }
 
 // Speeds up more gradually
@@ -222,32 +231,36 @@ void driveDiagonal(uint8_t dutyCycle)
 
 void driveUpward(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle);
+    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
 
-    analogWrite(motor2F, dutyCycle);
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, speeds[0] - 25);
+
+    analogWrite(motor2F, speeds[1] - 45);
     analogWrite(motor2B, 0);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle);
+    analogWrite(motor3B, speeds[2]);
 
-    analogWrite(motor4F, dutyCycle);
+    analogWrite(motor4F, speeds[3]);
     analogWrite(motor4B, 0);
 }
 
 void driveDownward(uint8_t dutyCycle)
 {
-    analogWrite(motor1F, dutyCycle);
+    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+
+    analogWrite(motor1F, speeds[0] - 25);
     analogWrite(motor1B, 0);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle);
+    analogWrite(motor2B, speeds[1] - 45);
 
-    analogWrite(motor3F, dutyCycle);
+    analogWrite(motor3F, speeds[2]);
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle);
+    analogWrite(motor4B, speeds[3]);
 }
 
 void stopDriving()

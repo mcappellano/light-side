@@ -108,17 +108,16 @@ void setup()
     // Conclusion: The issue fixed itself... it is unclear how. Trying to sweep it back slowly at the end kind of breaks. Will revisit later if it is deemed necessary.
 
     // 3 - Run it all together and see if accuracy has improved
-    majorTest1();
+    // majorTest1();
 
     // 4 - Calibrate motors, adjust constants in calibrateDutyCycle function, modify other functions to use its output
+    crossCountersCool();
 
     // 5 - Test driving straight and sideways, test driveDiagonal (for staying along the counter), test crossCounters and determine if it is worth trying to get working
 }
 
 void loop()
 {
-    Serial.println(sweepCounter);
-    delay(10);
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
     if (currentStation.num == start.num && currentStation == start.height)

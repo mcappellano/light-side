@@ -23,7 +23,7 @@ void goNextStation()
 
     // Cross to the other counter if necessary
     if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
-        crossCounters(dcQuarter, dcQuarter);
+        crossCounters();
 
     // Get ready to cross the correct number of tape pieces
     arrived = false;
@@ -159,12 +159,12 @@ void traverseCounter(bool forward2, uint8_t driveSpeed, uint8_t reverseSpeed)
 void goServe()
 {
     if (node < 10)
-        crossCounters(dcQuarter, dcQuarter);
+        crossCounters();
 
     if (node <= 11)
-        driveBackward2(dcHalf);
+        driveBackward2(dcThreeQs);
     else if (node >= 12)
-        driveForward2(dcHalf);
+        driveForward2(dcThreeQs);
 
     // DO THIS: If we make the crossCounters timing use a timer instead of delays, we will be able to lower and retract while crossing counters
     previousFoodHeight = 50; // VALUE NOT FINALIZED - THE HEIGHT IN MM TO LOWER TO GET THE TOP OF THE BURGER OUT OF THE WAY FOR THE SWEEPER (it's the distance from the rim of the plate to the top of the burger)

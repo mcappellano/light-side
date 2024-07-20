@@ -124,7 +124,7 @@ void majorTest1()
 
     delay(2000);
 
-    traverseCounter(true, dcHalf, dcMin);
+    traverseCounter(true, dcThreeQs, dcEighth);
 
     retractSweeper(dcQuarter, true);
 }
