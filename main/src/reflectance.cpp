@@ -4,6 +4,7 @@
 
 hw_timer_t *tapeTimer = NULL;
 volatile bool alreadySeen = false;
+const unsigned long tapedelay_ms = 500;
 
 void IRAM_ATTR tapeInterrupt()
 {

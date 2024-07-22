@@ -22,25 +22,33 @@ void goNextStation()
     previousFoodHeight = currentStation.height;
 
     // Cross to the other counter if necessary
-    if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
+    // if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
+    //     crossCounters();
+
+    if (abs(nextStation.num - currentStation.num) >= 7)
         crossCounters();
 
     // Get ready to cross the correct number of tape pieces
     arrived = false;
     adjusted = false;
     tapeCounter = 0;
+    Serial.println("node:");
+    Serial.println(node);
     if (node <= 10)
         tapeToSee = abs(nextStation.num - node);
     else
         tapeToSee = 1;
 
+    Serial.println("tapeToSee:");
+    Serial.println(tapeToSee);
+
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
-    if ((nextStation.num > currentStation.num && currentStation.num < 10) || (nextStation.num < currentStation.num && nextStation.num >= 10))
-        traverseCounter(false, dcQuarter, dcEighth); // DOUBLE CHECK DIRECTIONS
-    else if ((nextStation.num < currentStation.num && currentStation.num < 10) || (nextStation.num > currentStation.num && currentStation.num >= 10))
-        traverseCounter(true, dcQuarter, dcEighth);
+    if ((nextStation.num > node && node < 10) || (nextStation.num < node && nextStation.num >= 10))
+        traverseCounter(false, dcThreeQs, dcEighth);
+    else if ((nextStation.num < node && node < 10) || (nextStation.num > node && node >= 10))
+        traverseCounter(true, dcThreeQs, dcEighth);
 }
 
 /*
@@ -49,42 +57,44 @@ While traversing forward/backward, we will also be extending the arm out, and lo
 At some point we must consider the edge cases of there being only a counter crossing movement and no traversing,
 and that of moving to and from the serving area!
 */
-void traverseCounter(bool forward2, uint8_t driveSpeed, uint8_t reverseSpeed)
+void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
     // JUST FOR TESTING ->
-    forward = forward2;
-    arrived = false;
-    tapeCounter = 0;
-    tapeToSee = 2;
+    // forward = forward2;
+    // arrived = false;
+    // tapeCounter = 0;
+    // tapeToSee = 1;
     // JUST FOR TESTING <-
 
     // Start driving along the counter
     if (forward == true)
-        driveBackward2(driveSpeed);
+        driveBackward(driveSpeed);
     else
-        driveForward2(driveSpeed);
+        driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    extendSweeper(dcQuarter); // Modify sweeper speed here
+    //extendSweeper(dcQuarter); // Modify sweeper speed here
 
     // JUST FOR TESTING ->
     currentStation = plates;
     // JUST FOR TESTING <-
 
-    if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
-        lowerPlatform(dcEighth); // Modify platform speed here
+    //if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
+        //lowerPlatform(dcEighth); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     alreadySeen = true;
     timerWrite(tapeTimer, 0);
     timerAlarmEnable(tapeTimer);
     tapeCounter = 0;
+    Serial.println("tapeCounter:");
 
     /* We must now wait until we have arrived at the food station.
     The motion of the sweeper must happen faster than the time it takes to traverse from two adjacent food stations.
     The platform and sweeper are stopped at the right height/length by the encoder interrupts. */
     while (!arrived)
     {
+        Serial.println(tapeCounter);
         // Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
         if (!adjusted)
         {
@@ -126,6 +136,7 @@ void traverseCounter(bool forward2, uint8_t driveSpeed, uint8_t reverseSpeed)
             }
         }
     }
+    Serial.println(tapeCounter);
 
     // In case they don't finish before making it to the food station
     stopSweeper();
@@ -136,9 +147,9 @@ void traverseCounter(bool forward2, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Now back up until centred exactly on the tape
     if (forward == true)
-        driveForward2(reverseSpeed);
+        driveForward(reverseSpeed);
     else
-        driveBackward2(reverseSpeed);
+        driveBackward(reverseSpeed);
 
     delay(100);
 

@@ -102,11 +102,17 @@ void setup()
     5 - Major test 2
     */
 
-    driveBackward(dcQuarter);
-    delay(250);
-    stopDriving();
-    delay(150);
+    // currentStation = cheese;
+    // nextStation = cooktop;
+    // node = currentStation.num;
+    // goNextStation();
+
     crossCounters();
+    // driveUpward(dcQuarter);
+    // delay(500);
+    // driveUpward(dcEighth + 10);
+    // delay(500);
+    // stopDriving();
 }
 
 void loop()

@@ -6,6 +6,7 @@ uint8_t currentDutyCycle = 0;
 volatile double loopNum = 0;
 bool accelForward = true;
 
+uint8_t speeds[4] = {0, 0, 0, 0};
 uint32_t freqHz = 50;
 // uint8_t dcSixteenth = 15;
 uint8_t dcMin = 24;
@@ -25,9 +26,11 @@ void crossCounters()
     stopDriving();
     delay(150);
     driveUpward(dcQuarter);
-    delay(475);
+    delay(350);
+    driveUpward(dcEighth);
+    delay(500);
     stopDriving();
-    delay(200);
+    //might need a short delay here
 
     if (currentStation.num >= 10)
         node -= 10;
@@ -92,14 +95,14 @@ void changingPWMs(uint8_t motor1Start, uint8_t motor1End, bool forw1, uint8_t mo
     }
 }
 
-uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
+void calibrateDutyCycle(uint8_t dutyCycle)
 {
     uint8_t motor1 = 0;
     uint8_t motor2 = 0;
     uint8_t motor3 = 0;
     uint8_t motor4 = 0;
 
-    if (abs(dutyCycle - dcEighth) < 10) // Driving at or near 1/8 duty cycle - 162 RPM
+    if (abs(dutyCycle - dcEighth) <= 10) // Driving at or near 1/8 duty cycle - 162 RPM
     {
         motor1 = dutyCycle * 1;
         motor2 = dutyCycle * 0.96;
@@ -113,7 +116,7 @@ uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
         motor3 = dutyCycle * 1.094;
         motor4 = dutyCycle * 0.823;
     }
-    else if (abs(dutyCycle - dcQuarter) < 25) // Driving at or near 1/4 duty cycle - 264 RPM
+    else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle - 264 RPM
     {
         motor1 = dutyCycle * 1.412;
         motor2 = dutyCycle * 1.44;
@@ -128,13 +131,18 @@ uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
         motor4 = dutyCycle * 0.56;
     }
 
-    static uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
-    return calibrated;
+    // uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
+    // return calibrated;
+    speeds[0] = motor1;
+    speeds[1] = motor2;
+    speeds[2] = motor3;
+    speeds[3] = motor4;
 }
 
 void spinAround(uint8_t dutyCycle)
 {
-    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, speeds[0]);
     analogWrite(motor1B, 0);
@@ -151,9 +159,11 @@ void spinAround(uint8_t dutyCycle)
 
 void driveForward(uint8_t dutyCycle)
 {
-    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t speeds[4] = {dutyCycle, dutyCycle, dutyCycle, dutyCycle};
+    calibrateDutyCycle(dutyCycle);
 
-    analogWrite(motor1F, speeds[0]);
+    analogWrite(motor1F, speeds[0] + 2);
     analogWrite(motor1B, 0);
 
     analogWrite(motor2F, speeds[1]);
@@ -162,22 +172,24 @@ void driveForward(uint8_t dutyCycle)
     analogWrite(motor3F, speeds[2]);
     analogWrite(motor3B, 0);
 
-    analogWrite(motor4F, speeds[3]);
+    analogWrite(motor4F, speeds[3] + 2);
     analogWrite(motor4B, 0);
 }
 
 void driveBackward(uint8_t dutyCycle)
 {
-    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t speeds[4] = {dutyCycle, dutyCycle, dutyCycle, dutyCycle};
+    calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, 0);
     analogWrite(motor1B, speeds[0]);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, speeds[1]);
+    analogWrite(motor2B, speeds[1] + 2);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, speeds[2]);
+    analogWrite(motor3B, speeds[2] + 2);
 
     analogWrite(motor4F, 0);
     analogWrite(motor4B, speeds[3]);
@@ -236,22 +248,25 @@ void IRAM_ATTR accelTimerInterrupt()
 
 void driveDiagonal(uint8_t dutyCycle)
 {
+    calibrateDutyCycle(dutyCycle);
+
     analogWrite(motor1F, 0);
-    analogWrite(motor1B, dutyCycle * 0.8);
+    analogWrite(motor1B, 0);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, dutyCycle);
+    analogWrite(motor2B, speeds[1]);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, dutyCycle * 0.8);
+    analogWrite(motor3B, 0);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, dutyCycle);
+    analogWrite(motor4B, speeds[3]);
 }
 
 void driveUpward(uint8_t dutyCycle)
 {
-    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, 0);
     analogWrite(motor1B, speeds[0] - 25); // - 25
@@ -268,7 +283,8 @@ void driveUpward(uint8_t dutyCycle)
 
 void driveDownward(uint8_t dutyCycle)
 {
-    uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
+    calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, speeds[0] - 25); // - 25
     analogWrite(motor1B, 0);

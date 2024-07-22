@@ -11,7 +11,7 @@
 // Variables
 extern hw_timer_t *tapeTimer;
 extern volatile bool alreadySeen;
-const unsigned long tapedelay_ms = 250;
+extern const unsigned long tapedelay_ms;
 
 // Function declarations
 void tapeInterrupt();
