@@ -11,5 +11,6 @@
 void testElevator();
 void testSweeper();
 void majorTest1();
+void majorTest2();
 
 #endif // TESTS_H

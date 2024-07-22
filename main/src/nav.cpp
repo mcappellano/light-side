@@ -187,9 +187,9 @@ void goServe()
 void IRAM_ATTR slowDownTimerInterrupt()
 {
     if (forward == true)
-        driveBackward(dcEighth);
+        driveBackward(dcMin);
     else
-        driveForward(dcEighth);
+        driveForward(dcMin);
 
     timerAlarmDisable(slowDownTimer);
 }

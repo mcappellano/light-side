@@ -78,7 +78,7 @@ void setup()
 
     accelTimer = timerBegin(1, 80, true);
     timerAttachInterrupt(accelTimer, &accelTimerInterrupt, true);
-    timerAlarmWrite(accelTimer, 50 * 1000, true);
+    timerAlarmWrite(accelTimer, 500 * 1000, true);
 
     slowDownTimer = timerBegin(2, 80, true);
     timerAttachInterrupt(slowDownTimer, &slowDownTimerInterrupt, true);
@@ -89,31 +89,24 @@ void setup()
 
     delay(1000);
 
-    // TESTING FOR JULY 18TH
+    /*
+    TESTING FOR JULY 22ND
 
-    // 1 - Test gradual speeding up; see if burger still slips, make adjustments as necessary. Determine if we have to slow down more gradually also
-    // driveForward2(dcQuarter);
-    // delay(1000);
-    // stopDriving();
-    // delay(1500);
-    // driveBackward(dcQuarter);
-    // delay(1000);
-    // stopDriving();
-    // Conclusion: It definitely makes the burger slip less - it is worth the miniscule time loss
+    2 - Test gradual speeding up with timers, see if it works
+        It does not. Can't get it to work with delay now either. Save this for later.
 
-    // 2 - See if the sweeper can sweep in and stop on its own (suddenly stopped working previous evening). Troubleshoot as necessary (note that I tried to modify the code to have it slow down when it gets within 9cm of the stopping position)
-    // extendSweeper(dcQuarter);
-    // delay(2500);
-    // retractSweeper(dcQuarter, true);
-    // Conclusion: The issue fixed itself... it is unclear how. Trying to sweep it back slowly at the end kind of breaks. Will revisit later if it is deemed necessary.
+    3 - Test crossing counters again - try and make it work for the edges of the counter
 
-    // 3 - Run it all together and see if accuracy has improved
-    // majorTest1();
+    4 - Adjust code and test driveDiagonal (for staying along the counter)
 
-    // 4 - Calibrate motors, adjust constants in calibrateDutyCycle function, modify other functions to use its output
-    crossCountersCool();
+    5 - Major test 2
+    */
 
-    // 5 - Test driving straight and sideways, test driveDiagonal (for staying along the counter), test crossCounters and determine if it is worth trying to get working
+    driveBackward(dcQuarter);
+    delay(250);
+    stopDriving();
+    delay(150);
+    crossCounters();
 }
 
 void loop()

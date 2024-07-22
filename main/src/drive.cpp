@@ -3,12 +3,12 @@
 
 hw_timer_t *accelTimer = NULL;
 uint8_t currentDutyCycle = 0;
-volatile int loopNum = 0;
+volatile double loopNum = 0;
 bool accelForward = true;
 
 uint32_t freqHz = 50;
 // uint8_t dcSixteenth = 15;
-// uint8_t dcMin = 24;
+uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
 uint8_t dc316 = 48;
 uint8_t dcQuarter = 63;
@@ -19,14 +19,15 @@ uint8_t dcThreeQs = 191;
 void crossCounters()
 {
     driveDownward(dcQuarter);
-    delay(400);
-    spinAround(dc316);
+    delay(475);
+    spinAround(dcQuarter);
     delay(650);
     stopDriving();
-    delay(250);
+    delay(150);
     driveUpward(dcQuarter);
-    delay(520);
+    delay(475);
     stopDriving();
+    delay(200);
 
     if (currentStation.num >= 10)
         node -= 10;
@@ -98,7 +99,7 @@ uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
     uint8_t motor3 = 0;
     uint8_t motor4 = 0;
 
-    if (abs(dutyCycle - dcEighth) < 5) // Driving at or near 1/8 duty cycle - 162 RPM
+    if (abs(dutyCycle - dcEighth) < 10) // Driving at or near 1/8 duty cycle - 162 RPM
     {
         motor1 = dutyCycle * 1;
         motor2 = dutyCycle * 0.96;
@@ -112,7 +113,7 @@ uint8_t *calibrateDutyCycle(uint8_t dutyCycle)
         motor3 = dutyCycle * 1.094;
         motor4 = dutyCycle * 0.823;
     }
-    else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle - 264 RPM
+    else if (abs(dutyCycle - dcQuarter) < 25) // Driving at or near 1/4 duty cycle - 264 RPM
     {
         motor1 = dutyCycle * 1.412;
         motor2 = dutyCycle * 1.44;
@@ -185,32 +186,51 @@ void driveBackward(uint8_t dutyCycle)
 // Speeds up more gradually
 void driveForward2(uint8_t dutyCycle)
 {
-    loopNum = 0;
-    accelForward = true;
-    currentDutyCycle = dutyCycle;
-    timerWrite(accelTimer, 0);
-    timerAlarmEnable(accelTimer);
+    // loopNum = 0;
+    // accelForward = true;
+    // currentDutyCycle = dutyCycle;
+    // timerWrite(accelTimer, 0);
+    // timerAlarmEnable(accelTimer);
+
+    uint8_t gradualDC = dutyCycle * 0.2;
+    for (int i = 0; i < 4; i++)
+    {
+        driveForward(gradualDC);
+        gradualDC += dutyCycle * 0.2;
+        delay(50);
+    }
 }
 
 void driveBackward2(uint8_t dutyCycle)
 {
-    loopNum = 0;
-    accelForward = false;
-    currentDutyCycle = dutyCycle;
-    timerWrite(accelTimer, 0);
-    timerAlarmEnable(accelTimer);
+    // loopNum = 0;
+    // accelForward = false;
+    // currentDutyCycle = dutyCycle;
+    // timerWrite(accelTimer, 0);
+    // timerAlarmEnable(accelTimer);
+
+    // float dutyCycle2 = static_cast<float>(dutyCycle);
+    // float gradualDC = dutyCycle2 * 0.2;
+    // driveBackward(static_cast<uint8_t>(gradualDC));
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     delay(50);
+    //     driveBackward(static_cast<uint8_t>(gradualDC));
+    //     gradualDC += dutyCycle2 * 0.2;
+    //     Serial.println(static_cast<uint8_t>(gradualDC));
+    // }
 }
 
 void IRAM_ATTR accelTimerInterrupt()
 {
-    uint8_t gradualDC = currentDutyCycle * ((2 + loopNum) / 10);
+    uint8_t gradualDC = currentDutyCycle * ((2.0 + loopNum) / 10.0);
     if (accelForward)
         driveForward(gradualDC);
     else
         driveBackward(gradualDC);
 
     loopNum++;
-    if (2 + loopNum >= 10)
+    if (2.0 + loopNum >= 10.0)
         timerAlarmDisable(accelTimer);
 }
 
@@ -234,15 +254,15 @@ void driveUpward(uint8_t dutyCycle)
     uint8_t *speeds = calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, 0);
-    analogWrite(motor1B, speeds[0] - 25);
+    analogWrite(motor1B, speeds[0] - 25); // - 25
 
-    analogWrite(motor2F, speeds[1] - 45);
+    analogWrite(motor2F, speeds[1] - 45); // - 45
     analogWrite(motor2B, 0);
 
     analogWrite(motor3F, 0);
-    analogWrite(motor3B, speeds[2]);
+    analogWrite(motor3B, speeds[2]); // - 0
 
-    analogWrite(motor4F, speeds[3]);
+    analogWrite(motor4F, speeds[3]); // - 0
     analogWrite(motor4B, 0);
 }
 
@@ -250,17 +270,17 @@ void driveDownward(uint8_t dutyCycle)
 {
     uint8_t *speeds = calibrateDutyCycle(dutyCycle);
 
-    analogWrite(motor1F, speeds[0] - 25);
+    analogWrite(motor1F, speeds[0] - 25); // - 25
     analogWrite(motor1B, 0);
 
     analogWrite(motor2F, 0);
-    analogWrite(motor2B, speeds[1] - 45);
+    analogWrite(motor2B, speeds[1] - 45); // 45
 
-    analogWrite(motor3F, speeds[2]);
+    analogWrite(motor3F, speeds[2]); // - 0
     analogWrite(motor3B, 0);
 
     analogWrite(motor4F, 0);
-    analogWrite(motor4B, speeds[3]);
+    analogWrite(motor4B, speeds[3]); // - 0
 }
 
 void stopDriving()

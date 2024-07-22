@@ -124,7 +124,12 @@ void majorTest1()
 
     delay(2000);
 
-    traverseCounter(true, dcThreeQs, dcEighth);
+    traverseCounter(true, dcThreeQs, dcMin);
 
     retractSweeper(dcQuarter, true);
+}
+
+// Same as majorTest1, however beginning at any station and ending at any other station
+void majorTest2()
+{
 }
