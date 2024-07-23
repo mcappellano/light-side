@@ -21,26 +21,26 @@ void goNextStation()
 {
     previousFoodHeight = currentStation.height;
 
-    // Cross to the other counter if necessary
-    // if (nextStation.num >= currentStation.num + 10 || nextStation.num <= currentStation.num - 10)
-    //     crossCounters();
-
+    // Cross counter if necessary
     if (abs(nextStation.num - currentStation.num) >= 7)
+    {
+        // Make adjustment before crossing counter if necessary
+        if (currentStation.equals(cheese) || currentStation.equals(plates))
+        {
+            driveForward(dcQuarter);
+            delay(200);
+        }
         crossCounters();
+    }
 
     // Get ready to cross the correct number of tape pieces
     arrived = false;
     adjusted = false;
     tapeCounter = 0;
-    Serial.println("node:");
-    Serial.println(node);
     if (node <= 10)
         tapeToSee = abs(nextStation.num - node);
     else
         tapeToSee = 1;
-
-    Serial.println("tapeToSee:");
-    Serial.println(tapeToSee);
 
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
@@ -60,7 +60,6 @@ and that of moving to and from the serving area!
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
     // JUST FOR TESTING ->
-    // forward = forward2;
     // arrived = false;
     // tapeCounter = 0;
     // tapeToSee = 1;
@@ -73,70 +72,29 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    //extendSweeper(dcQuarter); // Modify sweeper speed here
+    // extendSweeper(dcQuarter); // Modify sweeper speed here
 
     // JUST FOR TESTING ->
     currentStation = plates;
     // JUST FOR TESTING <-
 
-    //if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
-        //lowerPlatform(dcEighth); // Modify platform speed here
+    // if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
+    // lowerPlatform(dcEighth); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     alreadySeen = true;
     timerWrite(tapeTimer, 0);
     timerAlarmEnable(tapeTimer);
     tapeCounter = 0;
-    Serial.println("tapeCounter:");
 
     /* We must now wait until we have arrived at the food station.
     The motion of the sweeper must happen faster than the time it takes to traverse from two adjacent food stations.
     The platform and sweeper are stopped at the right height/length by the encoder interrupts. */
     while (!arrived)
     {
-        Serial.println(tapeCounter);
-        // Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
         if (!adjusted)
-        {
-            int next = nextStation.num;
-            if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
-            {
-                if (forward == true)
-                    driveBackward(dcEighth);
-                else
-                    driveForward(dcEighth);
-
-                adjusted = true;
-            }
-            if (next == 10)
-            {
-                if (node == 11)
-                    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-                else if (node == 12)
-                    timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
-                else if (node == 13)
-                    timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-
-                timerWrite(slowDownTimer, 0);
-                timerAlarmEnable(slowDownTimer);
-                adjusted = true;
-            }
-            if (next == 13)
-            {
-                if (node == 12)
-                    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-                else if (node == 11)
-                    timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
-                else if (node == 10)
-                    timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-
-                timerWrite(slowDownTimer, 0);
-                timerAlarmEnable(slowDownTimer);
-                adjusted = true;
-            }
-        }
+            handleEdgeCases();
     }
-    Serial.println(tapeCounter);
 
     // In case they don't finish before making it to the food station
     stopSweeper();
@@ -161,7 +119,47 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Update relevant variables
     currentStation = nextStation;
     node = currentStation.num;
-    nextStation = nextNextStation;
+}
+
+// Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
+void handleEdgeCases()
+{
+    int next = nextStation.num;
+    if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
+    {
+        if (forward == true)
+            driveBackward(dcEighth);
+        else
+            driveForward(dcEighth);
+
+        adjusted = true;
+    }
+    if (next == 10)
+    {
+        if (node == 11)
+            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+        else if (node == 12)
+            timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
+        else if (node == 13)
+            timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+
+        timerWrite(slowDownTimer, 0);
+        timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
+    if (next == 13)
+    {
+        if (node == 12)
+            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+        else if (node == 11)
+            timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
+        else if (node == 10)
+            timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+
+        timerWrite(slowDownTimer, 0);
+        timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
 }
 
 // At this point we have already dropped the burger onto the plate, and then collected salad and fries.
@@ -198,9 +196,9 @@ void goServe()
 void IRAM_ATTR slowDownTimerInterrupt()
 {
     if (forward == true)
-        driveBackward(dcMin);
+        driveBackward(dcEighth);
     else
-        driveForward(dcMin);
+        driveForward(dcEighth);
 
     timerAlarmDisable(slowDownTimer);
 }

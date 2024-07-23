@@ -16,6 +16,8 @@ public:
     int num;
     double height;
     int sweepLength;
+
+    bool equals(const Station &other) const;
 };
 
 // Variables
@@ -30,7 +32,6 @@ extern Station lettuce;
 extern Station servingArea;
 extern Station currentStation;
 extern Station nextStation;
-extern Station nextNextStation;
 extern int node;
 
 // Function declarations

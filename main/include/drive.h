@@ -20,7 +20,7 @@
 extern hw_timer_t *accelTimer;
 extern uint32_t freqHz;
 // extern uint8_t dcSixteenth;
-extern uint8_t dcMin;
+// extern uint8_t dcMin;
 extern uint8_t dcEighth;
 extern uint8_t dc316;
 extern uint8_t dcQuarter;
@@ -43,7 +43,6 @@ void driveBackward(uint8_t dutyCycle);
 void driveForward2(uint8_t dutyCycle);
 void driveBackward2(uint8_t dutyCycle);
 void IRAM_ATTR accelTimerInterrupt();
-void driveDiagonal(uint8_t dutyCycle);
 void driveUpward(uint8_t dutyCycle);
 void driveDownward(uint8_t dutyCycle);
 void stopDriving();

@@ -9,7 +9,7 @@ bool accelForward = true;
 uint8_t speeds[4] = {0, 0, 0, 0};
 uint32_t freqHz = 50;
 // uint8_t dcSixteenth = 15;
-uint8_t dcMin = 24;
+// uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
 uint8_t dc316 = 48;
 uint8_t dcQuarter = 63;
@@ -30,12 +30,22 @@ void crossCounters()
     driveUpward(dcEighth);
     delay(500);
     stopDriving();
-    //might need a short delay here
+    // might need a short delay here
 
+    // Update where we are
     if (currentStation.num >= 10)
         node -= 10;
     else
         node += 10;
+
+    // Edge cases for stations directly across from each other
+    if (abs(nextStation.num - currentStation.num) == 10)
+    {
+        if (currentStation.equals(cheese) || currentStation.equals(tomatoes))
+            node++;
+        if (currentStation.equals(plates) || currentStation.equals(lettuce))
+            node--;
+    }
 }
 
 /* Find the perfect combination of motors speeds
@@ -244,23 +254,6 @@ void IRAM_ATTR accelTimerInterrupt()
     loopNum++;
     if (2.0 + loopNum >= 10.0)
         timerAlarmDisable(accelTimer);
-}
-
-void driveDiagonal(uint8_t dutyCycle)
-{
-    calibrateDutyCycle(dutyCycle);
-
-    analogWrite(motor1F, 0);
-    analogWrite(motor1B, 0);
-
-    analogWrite(motor2F, 0);
-    analogWrite(motor2B, speeds[1]);
-
-    analogWrite(motor3F, 0);
-    analogWrite(motor3B, 0);
-
-    analogWrite(motor4F, 0);
-    analogWrite(motor4B, speeds[3]);
 }
 
 void driveUpward(uint8_t dutyCycle)

@@ -8,6 +8,13 @@
 
 Station::Station(int num, double height, int sweepLength) : num(num), height(height), sweepLength(sweepLength) {}
 
+bool Station::equals(const Station &other) const
+{
+    return (this->num == other.num) &&
+           (this->height == other.height) &&
+           (this->sweepLength == other.sweepLength);
+}
+
 Station start(0, 0, 149);       // Same sweep distance as plates and same number as tomatoes (for technicalities of the start sequence)
 Station tomatoes(0, 4.4, 176);  // 198... All measurements in mm
 Station exchange(1, 15, 169);   // 191... Only buns are being exchanged here. Top bun height doesn't matter
@@ -18,8 +25,7 @@ Station lettuce(13, 4.3, 179);  // 201...
 Station servingArea(11, 0, 100);
 
 Station currentStation = start;
-Station nextStation = plates;       // For top bot code, replace this with buns
-Station nextNextStation = exchange; // Same for top bot
+Station nextStation = plates; // For top bot code, replace this with buns
 
 std::map<int, Station> numsToStation = {{0, tomatoes}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
@@ -89,41 +95,56 @@ void setup()
 
     delay(1000);
 
-    /*
-    TESTING FOR JULY 22ND
-
-    2 - Test gradual speeding up with timers, see if it works
-        It does not. Can't get it to work with delay now either. Save this for later.
-
-    3 - Test crossing counters again - try and make it work for the edges of the counter
-
-    4 - Adjust code and test driveDiagonal (for staying along the counter)
-
-    5 - Major test 2
-    */
-
+    // 1
     // currentStation = cheese;
     // nextStation = cooktop;
+
+    // 2
+    // currentStation = cheese;
+    // nextStation = tomato;
+
+    // 3
+    // currentStation = tomato;
+    // nextStation = cheese;
+
+    // 4
+    // currentStation = plates;
+    // nextStation = cheese;
+
+    // 5
+    // currentStation = cooktop;
+    // nextStation = cheese;
+
+    // 6
+    // currentStation = exchange;
+    // nextStation = cheese;
+
+    // 7
+    // currentStation = tomato;
+    // nextStation = lettuce;
+
+    // 8
+    // currentStation = exchange;
+    // nextStation = lettuce;
+
+    // 9
+    // currentStation = cooktop;
+    // nextStation = lettuce;
+
     // node = currentStation.num;
     // goNextStation();
-
-    crossCounters();
-    // driveUpward(dcQuarter);
-    // delay(500);
-    // driveUpward(dcEighth + 10);
-    // delay(500);
-    // stopDriving();
 }
 
 void loop()
 {
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
-    if (currentStation.num == start.num && currentStation == start.height)
+    if (currentStation.equals(start))
     {
         raisePlatform(dcQuarter);
         driveUpward(dcHalf); // might have to be downward
         delay(1500); // VALUE NOT FINALIZED - should be enough time that we get to the counter without quite touching it
+        node = 0;
         goNextNode(); // From here it will go to plates and act as normal. It won't lower the platform at all since there is a special condition in traverseCounters()
     }
     else
@@ -134,7 +155,7 @@ void loop()
 
     /*
     This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
-    So this loop determines the next food station we must go to, assign that to nextStation or maybe nextNextStation, call goNextStation(),
+    So this loop determines the next food station we must go to, assign that to nextStation, call goNextStation(),
     and loop back to the beginning.
     We must ensure that goNextStation() is not called again until we are ready to move to the next station. Do this by checking
     until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
