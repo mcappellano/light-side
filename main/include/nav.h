@@ -12,6 +12,7 @@ extern volatile int tapeCounter;
 extern volatile bool arrived;
 extern int tapeToSee;
 extern hw_timer_t *slowDownTimer;
+extern bool adjusted;
 
 // Function declarations
 void goNextStation();

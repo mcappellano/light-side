@@ -28,7 +28,7 @@ void crossCounters()
     driveUpward(dcQuarter);
     delay(350);
     driveUpward(dcEighth);
-    delay(500);
+    delay(800);
     stopDriving();
     // might need a short delay here
 

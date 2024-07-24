@@ -13,7 +13,7 @@ volatile int tapeCounter = 0;
 volatile bool arrived = false;
 int tapeToSee = 0;
 bool adjusted = false;
-bool forward = true;
+bool forward2 = true;
 
 hw_timer_t *slowDownTimer = NULL;
 
@@ -27,8 +27,12 @@ void goNextStation()
         // Make adjustment before crossing counter if necessary
         if (currentStation.equals(cheese) || currentStation.equals(plates))
         {
+            driveBackward(dcQuarter);
+            delay(250);
+        }
+        else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce)){
             driveForward(dcQuarter);
-            delay(200);
+            delay(150);
         }
         crossCounters();
     }
@@ -59,11 +63,7 @@ and that of moving to and from the serving area!
 */
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
-    // JUST FOR TESTING ->
-    // arrived = false;
-    // tapeCounter = 0;
-    // tapeToSee = 1;
-    // JUST FOR TESTING <-
+    forward2 = forward;
 
     // Start driving along the counter
     if (forward == true)
@@ -74,17 +74,14 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     // extendSweeper(dcQuarter); // Modify sweeper speed here
 
-    // JUST FOR TESTING ->
-    currentStation = plates;
-    // JUST FOR TESTING <-
-
     // if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
     // lowerPlatform(dcEighth); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
-    alreadySeen = true;
-    timerWrite(tapeTimer, 0);
-    timerAlarmEnable(tapeTimer);
+    // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
+    // alreadySeen = true;
+    // timerWrite(tapeTimer, 0);
+    // timerAlarmEnable(tapeTimer);
     tapeCounter = 0;
 
     /* We must now wait until we have arrived at the food station.
@@ -127,7 +124,7 @@ void handleEdgeCases()
     int next = nextStation.num;
     if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
     {
-        if (forward == true)
+        if (forward2 == true)
             driveBackward(dcEighth);
         else
             driveForward(dcEighth);
@@ -136,28 +133,36 @@ void handleEdgeCases()
     }
     if (next == 10)
     {
+        if (currentStation.equals(tomatoes))
+            driveForward(dcEighth);
+        else{
         if (node == 11)
             timerAlarmWrite(slowDownTimer, 500 * 1000, false);
         else if (node == 12)
-            timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
-        else if (node == 13)
             timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+        else if (node == 13)
+            timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
+        }
         adjusted = true;
     }
     if (next == 13)
     {
+        if (currentStation.equals(plates))
+            driveBackward(dcEighth);
+        else{
         if (node == 12)
             timerAlarmWrite(slowDownTimer, 500 * 1000, false);
         else if (node == 11)
-            timerAlarmWrite(slowDownTimer, 1500 * 1000, false);
-        else if (node == 10)
             timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+        else if (node == 10)
+            timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
+        }
         adjusted = true;
     }
 }
@@ -195,7 +200,7 @@ void goServe()
 
 void IRAM_ATTR slowDownTimerInterrupt()
 {
-    if (forward == true)
+    if (forward2 == true)
         driveBackward(dcEighth);
     else
         driveForward(dcEighth);

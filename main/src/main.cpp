@@ -95,44 +95,40 @@ void setup()
 
     delay(1000);
 
-    // 1
+    // 1 - SUCCESS
+    // currentStation = cheese;
+    // nextStation = exchange;
+
+    // 2 - SUCCESS
     // currentStation = cheese;
     // nextStation = cooktop;
 
-    // 2
+    // 3 - SUCCESS
     // currentStation = cheese;
-    // nextStation = tomato;
+    // nextStation = tomatoes;
 
-    // 3
-    // currentStation = tomato;
+    // 4 - FAIL, FAIL, FAIL, SUCCESS
+    // currentStation = tomatoes;
     // nextStation = cheese;
 
-    // 4
+    // 5 - SUCCESS
+    // currentStation = exchange;
+    // nextStation = cheese;
+
+    // 6 - SUCCESS
+    // currentStation = cooktop;
+    // nextStation = cheese;
+
+    // 7 - SUCCESS
     // currentStation = plates;
     // nextStation = cheese;
 
-    // 5
-    // currentStation = cooktop;
-    // nextStation = cheese;
-
-    // 6
-    // currentStation = exchange;
-    // nextStation = cheese;
-
-    // 7
-    // currentStation = tomato;
-    // nextStation = lettuce;
-
-    // 8
-    // currentStation = exchange;
-    // nextStation = lettuce;
-
-    // 9
+    // 8 - FAIL, SUCCESS
     // currentStation = cooktop;
     // nextStation = lettuce;
 
-    // node = currentStation.num;
-    // goNextStation();
+    node = currentStation.num;
+    goNextStation();
 }
 
 void loop()
