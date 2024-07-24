@@ -32,7 +32,6 @@ void stopPlatform()
     analogWrite(ELEV_MOTOR_DOWN, 0);
 }
 
-// With premove!
 void swingOut()
 {
     // analogWrite(SERVO_PLATFORM, X);

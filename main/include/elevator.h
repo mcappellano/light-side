@@ -8,17 +8,9 @@
 #define ELEV_SWITCH 39
 #define ELEV_ENCODER_1 32
 #define ELEV_ENCODER_2 33
-#define ELEV_MOTOR_UP 27
-#define ELEV_MOTOR_DOWN 14
+#define ELEV_MOTOR_UP 12   // 27
+#define ELEV_MOTOR_DOWN 13 // 14
 #define SERVO_PLATFORM 1
-
-// Elevator Constants - ALL heights/distances in MILLIMITRES, measuring how far the platform is below the max height in which the switch is pressed
-// #define MIN_HEIGHT 0 // As a safety, this will prevent the platform from trying to lower further than possible
-// #define PATTY_HEIGHT 10
-// #define TOMATO_HEIGHT 4.5
-// #define CHEESE_HEIGHT 4.3
-// #define LETTUCE_HEIGHT 4.3
-// #define BOTTOM_BUN_HEIGHT 15 // No need for top bun height, as it is the last burger item
 
 // Variables - Measured the same way as the constants above (except for previousFoodHeight)
 extern const double ELEV_PULSE_DISTANCE; // The distance that the platform moves for every pulse sent by the rotary encoder

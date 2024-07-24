@@ -8,8 +8,8 @@
 #define SWEEP_SWITCH 36
 #define SWEEP_ENCODER_1 25
 #define SWEEP_ENCODER_2 26
-#define SWEEP_MOTOR_OUT 12
-#define SWEEP_MOTOR_BACK 13
+#define SWEEP_MOTOR_OUT 14  // 12
+#define SWEEP_MOTOR_BACK 27 // 13
 
 // Sweeper Constants - ALL distances in MILLIMITRES, measured with 0 being fully retracted, and calibrated using the switch at the fully extended position
 #define EXTEND_POS 660      // VALUE NOT FINALIZED - The "reset" position

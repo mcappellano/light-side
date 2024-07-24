@@ -14,12 +14,15 @@ volatile bool arrived = false;
 int tapeToSee = 0;
 bool adjusted = false;
 bool forward2 = true;
+bool crossed = false;
 
 hw_timer_t *slowDownTimer = NULL;
 
 void goNextStation()
 {
+    crossed = false;
     previousFoodHeight = currentStation.height;
+    node = currentStation.num;
 
     // Cross counter if necessary
     if (abs(nextStation.num - currentStation.num) >= 7)
@@ -30,11 +33,13 @@ void goNextStation()
             driveBackward(dcQuarter);
             delay(250);
         }
-        else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce)){
+        else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
+        {
             driveForward(dcQuarter);
             delay(150);
         }
         crossCounters();
+        crossed = true;
     }
 
     // Get ready to cross the correct number of tape pieces
@@ -72,17 +77,20 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    // extendSweeper(dcQuarter); // Modify sweeper speed here
+    extendSweeper(dcQuarter); // Modify sweeper speed here
 
-    // if (currentStation.num != start.num || currentStation.sweepLength != start.sweepLength)
-    // lowerPlatform(dcEighth); // Modify platform speed here
+    if (!currentStation.equals(start))
+        lowerPlatform(dcEighth); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
-    // alreadySeen = true;
-    // timerWrite(tapeTimer, 0);
-    // timerAlarmEnable(tapeTimer);
-    tapeCounter = 0;
+    if (!crossed)
+    {
+        alreadySeen = true;
+        timerWrite(tapeTimer, 0);
+        timerAlarmEnable(tapeTimer);
+        tapeCounter = 0;
+    }
 
     /* We must now wait until we have arrived at the food station.
     The motion of the sweeper must happen faster than the time it takes to traverse from two adjacent food stations.
@@ -135,16 +143,17 @@ void handleEdgeCases()
     {
         if (currentStation.equals(tomatoes))
             driveForward(dcEighth);
-        else{
-        if (node == 11)
-            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-        else if (node == 12)
-            timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-        else if (node == 13)
-            timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
+        else
+        {
+            if (node == 11)
+                timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+            else if (node == 12)
+                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+            else if (node == 13)
+                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
-        timerWrite(slowDownTimer, 0);
-        timerAlarmEnable(slowDownTimer);
+            timerWrite(slowDownTimer, 0);
+            timerAlarmEnable(slowDownTimer);
         }
         adjusted = true;
     }
@@ -152,16 +161,17 @@ void handleEdgeCases()
     {
         if (currentStation.equals(plates))
             driveBackward(dcEighth);
-        else{
-        if (node == 12)
-            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-        else if (node == 11)
-            timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-        else if (node == 10)
-            timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
+        else
+        {
+            if (node == 12)
+                timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+            else if (node == 11)
+                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+            else if (node == 10)
+                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
-        timerWrite(slowDownTimer, 0);
-        timerAlarmEnable(slowDownTimer);
+            timerWrite(slowDownTimer, 0);
+            timerAlarmEnable(slowDownTimer);
         }
         adjusted = true;
     }

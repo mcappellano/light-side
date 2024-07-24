@@ -19,7 +19,7 @@ Station start(0, 0, 149, NA);        // Same sweep distance as plates and same n
 Station tomatoes(0, 4.4, 176, NA);   // 198... All measurements in mm
 Station exchange(1, 15, 169, EMPTY); // 191... Only buns are being exchanged here. Top bun height doesn't matter
 Station cooktop(2, 10, 173, EMPTY);  // 195.. Only height of patty matters; fries are not being stacked
-Station plates(3, 23.175, 149, NA);  // 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station plates(3, 24.5, 149, NA);    // Previously 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
 Station cheese(10, 4.3, 176, NA);    // 198...
 Station lettuce(13, 4.3, 179, NA);   // 201...
 Station servingArea(11, 0, 100, NA);
@@ -95,11 +95,25 @@ void setup()
 
     delay(1000);
 
+    // raisePlatform(dcQuarter);
+    // delay(2000);
+    // previousFoodHeight = plates.height;
+    // lowerPlatform(dcQuarter);
+    // delay(2000);
+    // previousFoodHeight = exchange.height;
+    // lowerPlatform(dcQuarter);
+
+    // extendSweeper(dcQuarter);
+    // delay(2000);
+    // currentStation = plates;
+    // retractSweeper(dcQuarter, true);
+
     majorTest2();
 }
 
 void loop()
 {
+    Serial.println(sweepCounter);
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
     if (currentStation.equals(start))
