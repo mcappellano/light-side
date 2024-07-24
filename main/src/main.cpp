@@ -103,12 +103,18 @@ void setup()
     // previousFoodHeight = exchange.height;
     // lowerPlatform(dcQuarter);
 
-    // extendSweeper(dcQuarter);
+    // extendSweeper(dcThreeQs);
     // delay(2000);
-    // currentStation = plates;
+    // currentStation = exchange;
     // retractSweeper(dcQuarter, true);
 
-    majorTest2();
+    raisePlatform(dcQuarter);
+    delay(2000);
+    currentStation = lettuce;
+    nextStation = plates;
+    goNextStation();
+    currentStation = exchange;
+    retractSweeper(dcQuarter, true);
 }
 
 void loop()

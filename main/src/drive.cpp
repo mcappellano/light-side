@@ -19,6 +19,8 @@ uint8_t dcThreeQs = 191;
 
 void crossCounters()
 {
+    /*
+    // WITHOUT WEIGHT OF ELEVATOR AND SWEEPER
     driveDownward(dcQuarter);
     delay(475);
     spinAround(dcQuarter);
@@ -30,7 +32,20 @@ void crossCounters()
     driveUpward(dcEighth);
     delay(800);
     stopDriving();
-    // might need a short delay here
+    */
+
+    // WITH ELEVATOR AND SWEEPER
+    driveDownward(dcQuarter);
+    delay(550);
+    spinAround(dcQuarter);
+    delay(700);
+    stopDriving();
+    delay(150);
+    driveUpward(dcQuarter);
+    delay(600);
+    driveUpward(dcEighth);
+    delay(400);
+    stopDriving();
 
     // Update where we are
     if (currentStation.num >= 10)
