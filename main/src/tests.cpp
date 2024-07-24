@@ -129,7 +129,57 @@ void majorTest1()
     retractSweeper(dcQuarter, true);
 }
 
-// Same as majorTest1, however beginning at any station and ending at any other station
+// Purely driving; traverse between the nodes in the expected order required to make a burger.
+// During the delays is when we would be sweeping in the food item.
 void majorTest2()
 {
+    /*
+    // Get plate - not part of this test
+    currentStation = start;
+    nextStation = plates;
+    goNextStation();
+    delay(2000);
+    */
+
+    // Get bottom bun
+    currentStation = plates;
+    nextStation = exchange;
+    goNextStation();
+    delay(2000);
+
+    // Get tomato
+    nextStation = tomatoes;
+    goNextStation();
+    delay(2000);
+
+    // Get cheese
+    nextStation = cheese;
+    goNextStation();
+    delay(2000);
+
+    // Get patty
+    nextStation = cooktop;
+    goNextStation();
+    delay(2000);
+
+    // Get lettuce
+    nextStation = lettuce;
+    goNextStation();
+    delay(2000);
+
+    // Get top bun
+    nextStation = exchange;
+    goNextStation();
+    delay(2000);
+
+    // Get fry
+    nextStation = cooktop;
+    goNextStation();
+    delay(2000);
+
+    /*
+    // Serve - not part of this test
+    nextStation = servingArea;
+    goNextStation();
+    */
 }

@@ -15,7 +15,7 @@ bool Station::equals(const Station &other) const
            (this->sweepLength == other.sweepLength);
 }
 
-Station start(0, 0, 149, NA);        // Same sweep distance as plates and same number as tomatoes (for technicalities of the start sequence)
+Station start(0, 0, 149, NA);        // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
 Station tomatoes(0, 4.4, 176, NA);   // 198... All measurements in mm
 Station exchange(1, 15, 169, EMPTY); // 191... Only buns are being exchanged here. Top bun height doesn't matter
 Station cooktop(2, 10, 173, EMPTY);  // 195.. Only height of patty matters; fries are not being stacked
@@ -27,7 +27,7 @@ Station servingArea(11, 0, 100, NA);
 Station currentStation = start;
 Station nextStation = plates; // For top bot code, replace this with buns
 
-std::map<int, Station> numsToStation = {{0, tomatoes}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
+// std::map<int, Station> numsToStation = {{0, tomato}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
 int node = -1;
 
@@ -95,40 +95,7 @@ void setup()
 
     delay(1000);
 
-    // 1 - SUCCESS
-    // currentStation = cheese;
-    // nextStation = exchange;
-
-    // 2 - SUCCESS
-    // currentStation = cheese;
-    // nextStation = cooktop;
-
-    // 3 - SUCCESS
-    // currentStation = cheese;
-    // nextStation = tomatoes;
-
-    // 4 - FAIL, FAIL, FAIL, SUCCESS
-    // currentStation = tomatoes;
-    // nextStation = cheese;
-
-    // 5 - SUCCESS
-    // currentStation = exchange;
-    // nextStation = cheese;
-
-    // 6 - SUCCESS
-    // currentStation = cooktop;
-    // nextStation = cheese;
-
-    // 7 - SUCCESS
-    // currentStation = plates;
-    // nextStation = cheese;
-
-    // 8 - FAIL, SUCCESS
-    // currentStation = cooktop;
-    // nextStation = lettuce;
-
-    node = currentStation.num;
-    goNextStation();
+    majorTest2();
 }
 
 void loop()
