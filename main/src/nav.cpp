@@ -77,11 +77,11 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    extendSweeper(dcQuarter); // Modify sweeper speed here
+    // extendSweeper(dcQuarter); // Modify sweeper speed here
 
     previousFoodHeight = plates.height; // REMOVE THIS LINE!!!
     if (!currentStation.equals(start))
-       lowerPlatform(dcEighth); // Modify platform speed here
+       // lowerPlatform(dcEighth); // Modify platform speed here
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
@@ -160,13 +160,13 @@ void handleEdgeCases()
     }
     if (next == 13)
     {
-        if (currentStation.equals(plates))
+        if (currentStation.equals(plates) || node == 12)
             driveBackward(dcEighth);
         else
         {
-            if (node == 12)
-                timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-            else if (node == 11)
+            // if (node == 12)
+            //     timerAlarmWrite(slowDownTimer, 300 * 1000, false);
+            if (node == 11)
                 timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
             else if (node == 10)
                 timerAlarmWrite(slowDownTimer, 2500 * 1000, false);

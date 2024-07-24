@@ -38,13 +38,13 @@ void crossCounters()
     driveDownward(dcQuarter);
     delay(550);
     spinAround(dcQuarter);
-    delay(700);
+    delay(950);
     stopDriving();
-    delay(150);
+    delay(300);
     driveUpward(dcQuarter);
-    delay(600);
+    delay(500);
     driveUpward(dcEighth);
-    delay(400);
+    delay(900);
     stopDriving();
 
     // Update where we are
@@ -184,40 +184,74 @@ void spinAround(uint8_t dutyCycle)
 
 void driveForward(uint8_t dutyCycle)
 {
-    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
-    // uint8_t speeds[4] = {dutyCycle, dutyCycle, dutyCycle, dutyCycle};
+    int waitTime = 0;
     calibrateDutyCycle(dutyCycle);
+
+        // Further tuning to make it drive slightly into the wall
+    if (dutyCycle == dcThreeQs){
+        speeds[0] += 2;
+        speeds[3] += 2;
+        speeds[1] += 0;
+        speeds[2] += 0;
+        waitTime = 50;
+    }
+
+    if (dutyCycle == dcEighth){
+        speeds[0] += 1;
+        speeds[3] += 1;
+        speeds[1] += 0;
+        speeds[2] += 0;
+    }
 
     analogWrite(motor1F, speeds[0] + 2);
     analogWrite(motor1B, 0);
+
+    analogWrite(motor4F, speeds[3] + 2);
+    analogWrite(motor4B, 0);
+
+    delay(waitTime);
 
     analogWrite(motor2F, speeds[1]);
     analogWrite(motor2B, 0);
 
     analogWrite(motor3F, speeds[2]);
     analogWrite(motor3B, 0);
-
-    analogWrite(motor4F, speeds[3] + 2);
-    analogWrite(motor4B, 0);
 }
 
 void driveBackward(uint8_t dutyCycle)
 {
-    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
-    // uint8_t speeds[4] = {dutyCycle, dutyCycle, dutyCycle, dutyCycle};
+    int waitTime = 0;
     calibrateDutyCycle(dutyCycle);
+
+    // Further tuning to make it drive slightly into the wall
+    if (dutyCycle == dcThreeQs){
+        speeds[0] -= 6;
+        speeds[3] -= 6;
+        speeds[1] += 0;
+        speeds[2] += 0;
+        waitTime = 70;
+    }
+
+    if (dutyCycle == dcEighth){
+        speeds[0] -= 2;
+        speeds[3] -= 2;
+        speeds[1] += 0;
+        speeds[2] += 0;
+    }
 
     analogWrite(motor1F, 0);
     analogWrite(motor1B, speeds[0]);
 
-    analogWrite(motor2F, 0);
-    analogWrite(motor2B, speeds[1] + 2);
-
-    analogWrite(motor3F, 0);
-    analogWrite(motor3B, speeds[2] + 2);
-
     analogWrite(motor4F, 0);
     analogWrite(motor4B, speeds[3]);
+
+    delay(waitTime); // Motors 2 and 3 seem to start a tiny bit early
+
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, speeds[1]);
+
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, speeds[2]);
 }
 
 // Speeds up more gradually
@@ -273,13 +307,29 @@ void IRAM_ATTR accelTimerInterrupt()
 
 void driveUpward(uint8_t dutyCycle)
 {
-    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
     calibrateDutyCycle(dutyCycle);
 
-    analogWrite(motor1F, 0);
-    analogWrite(motor1B, speeds[0] - 25); // - 25
+    // Further tuning to make up for uneven weight distribution between wheels
+    if (dutyCycle == dcQuarter)
+    {
+        speeds[0] -= 25;
+        speeds[1] -= 45;
+        speeds[2] += 0;
+        speeds[3] += 0;
+    }
 
-    analogWrite(motor2F, speeds[1] - 45); // - 45
+    if (dutyCycle == dcEighth)
+    {
+        speeds[0] += 5;
+        speeds[1] += 5;
+        speeds[2] += 28;
+        speeds[3] += 22;
+    }
+
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, speeds[0]); // - 25
+
+    analogWrite(motor2F, speeds[1]); // - 45
     analogWrite(motor2B, 0);
 
     analogWrite(motor3F, 0);
