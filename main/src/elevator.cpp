@@ -3,7 +3,6 @@
 
 const double ELEV_PULSE_DISTANCE = 0.40906; // millimitres - previously 1.63625 (4x)
 int elevCounter = 0;
-volatile bool maxHeight = false;
 volatile bool raising = false;
 volatile bool elevStopped = true;
 double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
@@ -50,6 +49,7 @@ void elevSwitchInterrupt()
     {
         stopPlatform();
         raising = false;
+        elevStopped = true;
     }
 }
 
@@ -79,18 +79,10 @@ void elevEncoderInterrupt()
         elevStopped = true;
     }
 
-    // Possibility for error: It will never raise more than 57.5 mm. But we shouldn't have to move more than that.
-    if (raising)
+    if (raising && (currentStation.equals(servingArea) && elevCounter >= 57.5 / ELEV_PULSE_DISTANCE))
     {
-        if (currentStation.equals(servingArea) && elevCounter >= 14 / ELEV_PULSE_DISTANCE)
-        {
-            stopPlatform();
-            elevStopped = true;
-        }
-        else if (elevCounter >= 57.5 / ELEV_PULSE_DISTANCE) // VALUE NOT FINALIZED
-        {
-            stopPlatform();
-            elevStopped = true;
-        }
+        stopPlatform();
+        elevStopped = true;
+        raising = false;
     }
 }

@@ -88,9 +88,13 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     }
     else
     {
-        previousFoodHeight = 35; // Move out of the way for sweeper to retract fully
+        if (currentStation.equals(exchange))
+            previousFoodHeight = 35; // VALUE NOT FINALIZED - move top bun out of the way
+        else
+            previousFoodHeight = 60; // VALUE NOT FINALIZED - move entire burger from rim of plate to top out of the way
+
         lowerPlatform(dcQuarter);
-        delay(200);
+        delay(1000);
         currentStation = servingArea;
         retractSweeper(dcQuarter, false);
     }
@@ -135,6 +139,11 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             delay(1);
 
         stopDriving();
+    }
+    else
+    {
+        while (!arrived)
+            delay(1);
     }
 
     // Update relevant variables
@@ -194,9 +203,9 @@ void handleEdgeCases()
     if (next == 11.5)
     {
         if (node == 11 || node == 12)
-            timerAlarmWrite(slowDownTimer, 600 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 100 * 1000, false);
         else if (node == 10 || node == 13)
-            timerAlarmWrite(slowDownTimer, 1700 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 900 * 1000, false);
 
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
@@ -216,15 +225,8 @@ void moveBurgerBack()
 // Directly after arriving at serving area
 void serveMeal()
 {
-    previousFoodHeight = 35;
-    lowerPlatform(dcQuarter);
-    delay(500);
-    retractSweeper(dcQuarter, false);
-
-    // Raise by height of plate
-    currentStation = servingArea; // This shouldn't be needed
     raisePlatform(dcQuarter);
-    delay(500);
+    delay(1000);
     extendSweeper(dcQuarter);
 }
 

@@ -281,8 +281,50 @@ void cheesePlate()
 
     nextStation = servingArea;
     goNextStation();
-    while (!arrived)
-        delay(1);
+    serveMeal();
+}
 
+void timeTrials()
+{
+    currentStation = start;
+    driveUpward(dcEighth);
+    delay(2000);
+    nextStation = plates;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = exchange;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = cooktop;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = cheese;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = tomatoes;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = lettuce;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = exchange;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    delay(1500);
+
+    nextStation = servingArea;
+    goNextStation();
     serveMeal();
 }

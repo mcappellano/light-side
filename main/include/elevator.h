@@ -16,7 +16,6 @@
 extern const double ELEV_PULSE_DISTANCE; // The distance that the platform moves for every pulse sent by the rotary encoder
 extern int elevCounter;
 extern volatile bool raising;
-extern volatile bool maxHeight;
 extern int var1;
 extern double previousFoodHeight; // For the plate, this height is the distance between the two platforms, not the height of the plate
 

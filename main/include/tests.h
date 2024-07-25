@@ -13,5 +13,7 @@ void testSweeper();
 void majorTest1();
 void majorTest2();
 void buildBurgerStationary();
+void cheesePlate();
+void timeTrials();
 
 #endif // TESTS_H
