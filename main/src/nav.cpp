@@ -51,6 +51,9 @@ void goNextStation()
     else
         tapeToSee = 1;
 
+    if (currentStation.equals(servingArea))
+        tapeToSee++;
+
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
@@ -77,11 +80,20 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    // extendSweeper(dcQuarter); // Modify sweeper speed here
-
-    previousFoodHeight = plates.height; // REMOVE THIS LINE!!!
-    if (!currentStation.equals(start))
-       // lowerPlatform(dcEighth); // Modify platform speed here
+    if (!nextStation.equals(servingArea))
+    {
+        extendSweeper(dcQuarter); // Modify sweeper speed here
+        if (!currentStation.equals(start))
+            lowerPlatform(dcEighth); // Modify platform speed here
+    }
+    else
+    {
+        previousFoodHeight = 35; // Move out of the way for sweeper to retract fully
+        lowerPlatform(dcQuarter);
+        delay(200);
+        currentStation = servingArea;
+        retractSweeper(dcQuarter, false);
+    }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
@@ -106,21 +118,24 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     stopSweeper();
     stopPlatform();
 
-    // Don't allow any more tape pieces to be unintentionally counted until we are ready again
-    alreadySeen = true;
+    if (!nextStation.equals(servingArea))
+    {
+        // Don't allow any more tape pieces to be unintentionally counted until we are ready again
+        alreadySeen = true;
 
-    // Now back up until centred exactly on the tape
-    if (forward == true)
-        driveForward(reverseSpeed);
-    else
-        driveBackward(reverseSpeed);
+        // Now back up until centred exactly on the tape
+        if (forward == true)
+            driveForward(reverseSpeed);
+        else
+            driveBackward(reverseSpeed);
 
-    delay(100);
+        delay(100);
 
-    while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) // PREVIOUSLY || (not &&)
-        delay(1);
+        while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) // PREVIOUSLY || (not &&)
+            delay(1);
 
-    stopDriving();
+        stopDriving();
+    }
 
     // Update relevant variables
     currentStation = nextStation;
@@ -130,7 +145,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 // Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
 void handleEdgeCases()
 {
-    int next = nextStation.num;
+    double next = nextStation.num;
     if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
     {
         if (forward2 == true)
@@ -176,44 +191,53 @@ void handleEdgeCases()
         }
         adjusted = true;
     }
+    if (next == 11.5)
+    {
+        if (node == 11 || node == 12)
+            timerAlarmWrite(slowDownTimer, 600 * 1000, false);
+        else if (node == 10 || node == 13)
+            timerAlarmWrite(slowDownTimer, 1700 * 1000, false);
+
+        timerWrite(slowDownTimer, 0);
+        timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
 }
 
-// At this point we have already dropped the burger onto the plate, and then collected salad and fries.
-// We are now going from either lettuce, tomato, or cooktop to the serving area.
-// WAIT ---------------- IT WOULD BE SMART TO GET SALAD LETTUCE ALWAYS LAST - SAVES TIME and means we don't have to make two separate cases for this part of the code
-void goServe()
+// Directly after sweeping in top bun
+void moveBurgerBack()
 {
-    if (node < 10)
-        crossCounters();
-
-    if (node <= 11)
-        driveBackward2(dcThreeQs);
-    else if (node >= 12)
-        driveForward2(dcThreeQs);
-
-    // DO THIS: If we make the crossCounters timing use a timer instead of delays, we will be able to lower and retract while crossing counters
-    previousFoodHeight = 60; // VALUE NOT FINALIZED - THE HEIGHT IN MM TO LOWER TO GET THE TOP OF THE BURGER OUT OF THE WAY FOR THE SWEEPER (it's the distance from the rim of the plate to the top of the burger)
-    lowerPlatform(dcQuarter);
-
-    currentStation = servingArea;
-    retractSweeper(dcEighth, true); // VALUE NOT FINALIZED - In main.cpp, change the third entry of the servingArea station object to the distance in mm that the sweeper has to retract from the position after sweeping a fry or salad item to fully retracted.
-
-    // Enter cross correlation code, call stopDriving() once we detect enough of a signal
-
     raisePlatform(dcQuarter);
     delay(2000);
-    extendSweeper(dcQuarter);
-    delay(2000);
-    swingIn();
+    currentStation = burgerBack;
+    retractSweeper(dcQuarter, true);
+}
 
-    // Ready to go to nextStation, which should be set to the plates station
+// Directly after arriving at serving area
+void serveMeal()
+{
+    previousFoodHeight = 35;
+    lowerPlatform(dcQuarter);
+    delay(500);
+    retractSweeper(dcQuarter, false);
+
+    // Raise by height of plate
+    currentStation = servingArea; // This shouldn't be needed
+    raisePlatform(dcQuarter);
+    delay(500);
+    extendSweeper(dcQuarter);
 }
 
 void IRAM_ATTR slowDownTimerInterrupt()
 {
-    if (forward2 == true)
+    if (nextStation.equals(servingArea))
+    {
+        stopDriving();
+        arrived = true;
+    }
+    else if (forward2 == true)
         driveBackward(dcEighth);
-    else
+    else if (forward2 == false)
         driveForward(dcEighth);
 
     timerAlarmDisable(slowDownTimer);

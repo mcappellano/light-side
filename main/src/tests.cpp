@@ -279,12 +279,10 @@ void cheesePlate()
     driveBackward(dcThreeQs);
     delay(1900);
 
-    lowerPlatform(dcQuarter);
-    delay(3000);
-    currentStation = servingArea;
-    retractSweeper(dcQuarter, false);
-    delay(3000);
-    raisePlatform(dcQuarter);
-    delay(3000);
-    extendSweeper(dcQuarter);
+    nextStation = servingArea;
+    goNextStation();
+    while (!arrived)
+        delay(1);
+
+    serveMeal();
 }

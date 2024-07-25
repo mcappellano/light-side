@@ -6,7 +6,7 @@
 #include "tests.h"
 #include "nav.h"
 
-Station::Station(int num, double height, int sweepLength, int item) : num(num), height(height), sweepLength(sweepLength), item(item) {}
+Station::Station(double num, double height, int sweepLength, int item) : num(num), height(height), sweepLength(sweepLength), item(item) {}
 
 bool Station::equals(const Station &other) const
 {
@@ -15,21 +15,22 @@ bool Station::equals(const Station &other) const
            (this->sweepLength == other.sweepLength);
 }
 
-Station start(0, 0, 149, NA);        // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
-Station tomatoes(0, 4.4, 176, NA);   // 198... All measurements in mm
-Station exchange(1, 15, 169, EMPTY); // 191... Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 10, 173, EMPTY);  // 195.. Only height of patty matters; fries are not being stacked
-Station plates(3, 14, 149, NA);      // Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
-Station cheese(10, 4.3, 176, NA);    // 198...
-Station lettuce(13, 4.3, 179, NA);   // 201...
-Station servingArea(11, 0, 340, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
+Station start(0, 0, 149, NA);                    // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
+Station tomatoes(0, 4.4, 169 + 65, NA);          // 176 + 65 ... All measurements in mm
+Station exchange(1, 15, 169 + 65, EMPTY);        // 169 + 65 ... Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 10, 169 + 65, EMPTY);         // 173 + 65 ... Only height of patty matters; fries are not being stacked
+Station plates(3, 14, 149 + 65 - 35, NA);        // 149 + 65, Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station cheese(10, 4.3, 169 + 65 - 35, NA);      // 176 + 65 ...
+Station lettuce(13, 4.3, 169 + 65, NA);          // 179 + 65 ...
+Station servingArea(11.5, 0, 350 + 65 - 35, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
+Station burgerBack(1, 15, 25, NA);               // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
 
 Station currentStation = start;
 Station nextStation = plates; // For top bot code, replace this with buns
 
 // std::map<int, Station> numsToStation = {{0, tomato}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
-int node = -1;
+double node = -1;
 
 void setup()
 {
@@ -128,11 +129,23 @@ void setup()
     // delay(1000);
     // stopDriving();
 
-    buildBurgerStationary();
+    extendSweeper(dcQuarter);
+    delay(3000);
+    currentStation = cheese;
+    retractSweeper(dcQuarter, true);
+    delay(2000);
+    currentStation = servingArea;
+    retractSweeper(dcQuarter, false);
+    delay(2000);
+    raisePlatform(dcQuarter);
+    delay(2000);
+    extendSweeper(dcQuarter);
 }
 
 void loop()
 {
+    Serial.println(sweepCounter);
+    delay(10);
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
     if (currentStation.equals(start))

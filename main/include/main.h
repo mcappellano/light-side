@@ -11,9 +11,9 @@
 class Station
 {
 public:
-    Station(int num, double height, int sweepLength, int item);
+    Station(double num, double height, int sweepLength, int item);
 
-    int num;
+    double num;
     double height;
     int sweepLength;
     int item;
@@ -39,9 +39,10 @@ extern Station plates;
 extern Station cheese;
 extern Station lettuce;
 extern Station servingArea;
+extern Station burgerBack;
 extern Station currentStation;
 extern Station nextStation;
-extern int node;
+extern double node;
 
 // Function declarations
 void setup();

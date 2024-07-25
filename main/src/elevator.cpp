@@ -78,4 +78,19 @@ void elevEncoderInterrupt()
         stopPlatform();
         elevStopped = true;
     }
+
+    // Possibility for error: It will never raise more than 57.5 mm. But we shouldn't have to move more than that.
+    if (raising)
+    {
+        if (currentStation.equals(servingArea) && elevCounter >= 14 / ELEV_PULSE_DISTANCE)
+        {
+            stopPlatform();
+            elevStopped = true;
+        }
+        else if (elevCounter >= 57.5 / ELEV_PULSE_DISTANCE) // VALUE NOT FINALIZED
+        {
+            stopPlatform();
+            elevStopped = true;
+        }
+    }
 }
