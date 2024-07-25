@@ -19,10 +19,10 @@ Station start(0, 0, 149, NA);        // Same sweep distance as plates and same n
 Station tomatoes(0, 4.4, 176, NA);   // 198... All measurements in mm
 Station exchange(1, 15, 169, EMPTY); // 191... Only buns are being exchanged here. Top bun height doesn't matter
 Station cooktop(2, 10, 173, EMPTY);  // 195.. Only height of patty matters; fries are not being stacked
-Station plates(3, 12, 149, NA);      // Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station plates(3, 14, 149, NA);      // Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
 Station cheese(10, 4.3, 176, NA);    // 198...
 Station lettuce(13, 4.3, 179, NA);   // 201...
-Station servingArea(11, 0, 100, NA);
+Station servingArea(11, 0, 340, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
 
 Station currentStation = start;
 Station nextStation = plates; // For top bot code, replace this with buns
@@ -128,13 +128,7 @@ void setup()
     // delay(1000);
     // stopDriving();
 
-    // majorTest2();
-
-    extendSweeper(dcThreeQs);
-    delay(5000);
-    currentStation = exchange;
-    retractSweeper(dcThreeQs, true);
-
+    buildBurgerStationary();
 }
 
 void loop()

@@ -44,7 +44,7 @@ void crossCounters()
     driveUpward(dcQuarter);
     delay(500);
     driveUpward(dcEighth);
-    delay(900);
+    delay(1000);
     stopDriving();
 
     // Update where we are
@@ -187,8 +187,9 @@ void driveForward(uint8_t dutyCycle)
     int waitTime = 0;
     calibrateDutyCycle(dutyCycle);
 
-        // Further tuning to make it drive slightly into the wall
-    if (dutyCycle == dcThreeQs){
+    // Further tuning to make it drive slightly into the wall
+    if (dutyCycle == dcThreeQs)
+    {
         speeds[0] += 2;
         speeds[3] += 2;
         speeds[1] += 0;
@@ -196,7 +197,8 @@ void driveForward(uint8_t dutyCycle)
         waitTime = 50;
     }
 
-    if (dutyCycle == dcEighth){
+    if (dutyCycle == dcEighth)
+    {
         speeds[0] += 1;
         speeds[3] += 1;
         speeds[1] += 0;
@@ -224,7 +226,8 @@ void driveBackward(uint8_t dutyCycle)
     calibrateDutyCycle(dutyCycle);
 
     // Further tuning to make it drive slightly into the wall
-    if (dutyCycle == dcThreeQs){
+    if (dutyCycle == dcThreeQs)
+    {
         speeds[0] -= 6;
         speeds[3] -= 6;
         speeds[1] += 0;
@@ -232,7 +235,8 @@ void driveBackward(uint8_t dutyCycle)
         waitTime = 70;
     }
 
-    if (dutyCycle == dcEighth){
+    if (dutyCycle == dcEighth)
+    {
         speeds[0] -= 2;
         speeds[3] -= 2;
         speeds[1] += 0;

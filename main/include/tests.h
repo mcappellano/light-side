@@ -12,5 +12,6 @@ void testElevator();
 void testSweeper();
 void majorTest1();
 void majorTest2();
+void buildBurgerStationary();
 
 #endif // TESTS_H
