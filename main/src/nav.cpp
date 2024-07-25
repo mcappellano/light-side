@@ -31,12 +31,12 @@ void goNextStation()
         if (currentStation.equals(cheese) || currentStation.equals(plates))
         {
             driveBackward(dcQuarter);
-            delay(250);
+            delay(350);
         }
         else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
         {
             driveForward(dcQuarter);
-            delay(150);
+            delay(250);
         }
         crossCounters();
         crossed = true;

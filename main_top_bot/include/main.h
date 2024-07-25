@@ -32,13 +32,13 @@ public:
 // Variables
 extern std::map<int, Station> numsToStation;
 extern Station start;
+extern Station patties;
+extern Station buns;
+extern Station potatoes;
 extern Station tomatoes;
 extern Station exchange;
 extern Station cooktop;
 extern Station plates;
-extern Station cheese;
-extern Station lettuce;
-extern Station servingArea;
 extern Station currentStation;
 extern Station nextStation;
 extern int node;

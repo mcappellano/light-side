@@ -53,14 +53,14 @@ void crossCounters()
     else
         node += 10;
 
-    // Edge cases for stations directly across from each other
-    if (abs(nextStation.num - currentStation.num) == 10)
-    {
-        if (currentStation.equals(cheese) || currentStation.equals(tomatoes))
-            node++;
-        if (currentStation.equals(plates) || currentStation.equals(lettuce))
-            node--;
-    }
+    //  THIS IS BOTTOM BOT CODE - Edge cases for stations directly across from each other
+    // if (abs(nextStation.num - currentStation.num) == 10)
+    // {
+    //     if (currentStation.equals(cheese) || currentStation.equals(tomatoes))
+    //         node++;
+    //     if (currentStation.equals(plates) || currentStation.equals(lettuce))
+    //         node--;
+    // }
 }
 
 /* Find the perfect combination of motors speeds
@@ -129,31 +129,31 @@ void calibrateDutyCycle(uint8_t dutyCycle)
 
     if (abs(dutyCycle - dcEighth) <= 10) // Driving at or near 1/8 duty cycle - 162 RPM
     {
-        motor1 = dutyCycle * 1;
-        motor2 = dutyCycle * 0.96;
-        motor3 = dutyCycle * 1.088;
-        motor4 = dutyCycle * 0.88;
+        motor1 = dutyCycle * 1.108;
+        motor2 = dutyCycle * 0.944;
+        motor3 = dutyCycle * 1.156;
+        motor4 = dutyCycle * 0.98;
     }
     else if (abs(dutyCycle - dc316) < 5) // Driving at or near 3/16 duty cycle - 220 RPM
     {
-        motor1 = dutyCycle * 0.987;
+        motor1 = dutyCycle * 1.04;
         motor2 = dutyCycle * 1.013;
-        motor3 = dutyCycle * 1.094;
-        motor4 = dutyCycle * 0.823;
+        motor3 = dutyCycle * 1.173;
+        motor4 = dutyCycle * 0.987;
     }
     else if (abs(dutyCycle - dcQuarter) < 15) // Driving at or near 1/4 duty cycle - 264 RPM
     {
-        motor1 = dutyCycle * 1.412;
-        motor2 = dutyCycle * 1.44;
-        motor3 = dutyCycle * 1.48;
-        motor4 = dutyCycle * 1;
+        motor1 = dutyCycle * 1.36;
+        motor2 = dutyCycle * 1.6;
+        motor3 = dutyCycle * 1.4;
+        motor4 = dutyCycle * 1.28;
     }
     else if (abs(dutyCycle - dcThreeQs) < 15) // Driving at or near 3/4 duty cycle - 288 RPM
     {
-        motor1 = dutyCycle * 1.186;
+        motor1 = dutyCycle * 0.933;
         motor2 = dutyCycle * 1.333;
-        motor3 = dutyCycle * 1.26;
-        motor4 = dutyCycle * 0.56;
+        motor3 = dutyCycle * 1.066;
+        motor4 = dutyCycle * 0.82;
     }
 
     // uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
@@ -194,7 +194,7 @@ void driveForward(uint8_t dutyCycle)
         speeds[3] += 2;
         speeds[1] += 0;
         speeds[2] += 0;
-        waitTime = 50;
+        waitTime = 70;
     }
 
     if (dutyCycle == dcEighth)
@@ -228,8 +228,8 @@ void driveBackward(uint8_t dutyCycle)
     // Further tuning to make it drive slightly into the wall
     if (dutyCycle == dcThreeQs)
     {
-        speeds[0] -= 6;
-        speeds[3] -= 6;
+        speeds[0] += 8;
+        speeds[3] += 8;
         speeds[1] += 0;
         speeds[2] += 0;
         waitTime = 70;

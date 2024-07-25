@@ -21,8 +21,8 @@ extern int var1;
 extern double previousFoodHeight; // For the plate, this height is the distance between the two platforms, not the height of the plate
 
 // Function declarations
-void raisePlatform(uint8_t dutyCycle);
-void lowerPlatform(uint8_t dutyCycle);
+void raisePlatform(uint8_t dutyCycle, bool extendB);
+void lowerPlatform(uint8_t dutyCycle, bool retractB);
 void stopPlatform(); // stop moving the platform up or down
 void swingOut();
 void swingIn(); // bring the platform back from the swung out position

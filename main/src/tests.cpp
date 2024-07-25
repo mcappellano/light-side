@@ -286,6 +286,12 @@ void cheesePlate()
 
 void timeTrials()
 {
+    raisePlatform(dcQuarter);
+    delay(2000);
+    previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    lowerPlatform(dcQuarter);
+    delay(500);
+
     currentStation = start;
     driveUpward(dcEighth);
     delay(2000);

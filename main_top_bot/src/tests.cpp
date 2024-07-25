@@ -8,7 +8,7 @@
 
 void testElevator()
 {
-    raisePlatform(dcQuarter);
+    raisePlatform(dcQuarter, false);
 
     delay(2500);
 
@@ -26,7 +26,7 @@ void testElevator()
 
     // MOVE DOWN BY THE HEIGHT OF A BOTTOM BUN
     previousFoodHeight = exchange.height;
-    lowerPlatform(dcEighth);
+    lowerPlatform(dcEighth, false);
 
     delay(2000);
 
@@ -43,7 +43,7 @@ void testElevator()
 
     // MOVE DOWN BY THE HEIGHT OF A TOMATO
     previousFoodHeight = tomatoes.height;
-    lowerPlatform(dcEighth);
+    lowerPlatform(dcEighth, false);
 
     delay(2000);
 
@@ -120,7 +120,7 @@ void testSweeper()
 // Drive to a tape line (on the same counter) while extending arm and lowering platform, then sweep in
 void majorTest1()
 {
-    raisePlatform(dcQuarter);
+    raisePlatform(dcQuarter, false);
 
     delay(2000);
 
@@ -130,161 +130,88 @@ void majorTest1()
 }
 
 // Purely driving; traverse between the nodes in the expected order required to make a burger.
-// During the delays is when we would be sweeping in the food item.
+// During the delays is when we would be sweeping in the food item or pushing it onto the counter.
 void majorTest2()
 {
-    /*
-    // Get plate - not part of this test
-    currentStation = start;
-    nextStation = plates;
-    goNextStation();
-    delay(2000);
-    */
-
-    // Get bottom bun
-    currentStation = plates;
+    // Start at bun station, go to exchange
+    currentStation = buns;
     nextStation = exchange;
-    goNextStation();
-    delay(2000);
-
-    // Get tomato
-    nextStation = tomatoes;
-    goNextStation();
-    delay(2000);
-
-    // Get cheese
-    nextStation = cheese;
     goNextStation();
     delay(2000);
 
     // Get patty
+    nextStation = patties;
+    goNextStation();
+    delay(2000);
+
+    // Cook patty
     nextStation = cooktop;
-    goNextStation();
-    delay(2000);
-
-    // Get lettuce
-    nextStation = lettuce;
-    goNextStation();
-    delay(2000);
-
-    // Get top bun
-    nextStation = exchange;
     goNextStation();
     delay(2000);
 
     // Get fry
+    nextStation = potatoes;
+    goNextStation();
+    delay(2000);
+
+    // Cook fry
     nextStation = cooktop;
     goNextStation();
     delay(2000);
 
-    /*
-    // Serve - not part of this test
-    nextStation = servingArea;
+    // Get top bun
+    nextStation = buns;
     goNextStation();
-    */
+    delay(2000);
+
+    // Exchange top bun
+    nextStation = exchange;
+    goNextStation();
+    delay(2000);
 }
 
-void buildBurgerStationary()
+void timeTrials()
 {
-    raisePlatform(dcQuarter);
-    delay(3000);
+    raisePlatform(dcQuarter, false);
+    delay(2000);
+    previousFoodHeight = 10; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    lowerPlatform(dcQuarter, false);
+    delay(500);
+    previousFoodHeight = 35;
 
-    previousFoodHeight = 3; // TO GET PERFECTLY THE HEIGHT OF COUNTER
-    lowerPlatform(dcQuarter);
-    delay(2000);
-
-    extendSweeper(dcThreeQs);
-    delay(4000);
-    currentStation = plates;
-    previousFoodHeight = plates.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
-    currentStation = exchange;
-    previousFoodHeight = exchange.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    // lowerPlatform(dcQuarter); Don't uncomment
-    // delay(2000); Don't uncomment
-    currentStation = cooktop;
-    previousFoodHeight = cooktop.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
-    currentStation = cheese;
-    previousFoodHeight = cheese.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
-    currentStation = tomatoes;
-    previousFoodHeight = tomatoes.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
-    currentStation = lettuce;
-    previousFoodHeight = lettuce.height;
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
-    currentStation = exchange;
-    previousFoodHeight = 60; // VALUE NOT FINALIZED
-    retractSweeper(dcQuarter, true);
-    delay(3000);
-
-    // lowerPlatform(dcQuarter);
-    // delay(3000);
-    // currentStation = servingArea;
-    // retractSweeper(dcQuarter, false);
-    // delay(3000);
-    // raisePlatform(dcQuarter);
-    // delay(3000);
-    // extendSweeper(dcQuarter);
-}
-
-void cheesePlate()
-{
     currentStation = start;
     driveUpward(dcEighth);
+    delay(2000); // VALUE NOT FINALIZED - the time required driving slowly towards the counter from the start position
+    nextStation = buns;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
     delay(2000);
-    nextStation = plates;
+
+    nextStation = exchange;
+    goNextStation();
+    delay(2000);
+    exchangeItem();
+    delay(2000);
+
+    nextStation = patties;
     goNextStation();
     retractSweeper(dcQuarter, true);
+    delay(2000);
 
-    nextStation = cheese;
+    nextStation = cooktop;
+    goNextStation();
+    delay(2000);
+    exchangeItem();
+    delay(2000);
+
+    nextStation = buns;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    driveBackward(dcThreeQs);
-    delay(1900);
+    delay(2000);
 
-    lowerPlatform(dcQuarter);
-    delay(3000);
-    currentStation = servingArea;
-    retractSweeper(dcQuarter, false);
-    delay(3000);
-    raisePlatform(dcQuarter);
-    delay(3000);
-    extendSweeper(dcQuarter);
+    nextStation = exchange;
+    goNextStation();
+    delay(2000);
+    exchangeItem();
+    delay(2000);
 }

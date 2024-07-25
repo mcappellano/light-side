@@ -25,19 +25,8 @@ void goNextStation()
     node = currentStation.num;
 
     // Cross counter if necessary
-    if (abs(nextStation.num - currentStation.num) >= 7)
+    if ((node >= 10 && nextStation.num < 10) || (node < 10 && nextStation.num >= 10))
     {
-        // Make adjustment before crossing counter if necessary
-        if (currentStation.equals(cheese) || currentStation.equals(plates))
-        {
-            driveBackward(dcQuarter);
-            delay(250);
-        }
-        else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
-        {
-            driveForward(dcQuarter);
-            delay(150);
-        }
         crossCounters();
         crossed = true;
     }
@@ -46,18 +35,13 @@ void goNextStation()
     arrived = false;
     adjusted = false;
     tapeCounter = 0;
-    if (node <= 10)
-        tapeToSee = abs(nextStation.num - node);
-    else
-        tapeToSee = 1;
-
-    // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
+    tapeToSee = abs(nextStation.num - node) / 2 + 1;
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextStation.num > node && node < 10) || (nextStation.num < node && nextStation.num >= 10))
-        traverseCounter(false, dcThreeQs, dcEighth);
+        traverseCounter(false, dcThreeQs, dcEighth); // Modify driving speeds here
     else if ((nextStation.num < node && node < 10) || (nextStation.num > node && node >= 10))
-        traverseCounter(true, dcThreeQs, dcEighth);
+        traverseCounter(true, dcThreeQs, dcEighth); // Modify driving speeds here
 }
 
 /*
@@ -77,11 +61,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         driveForward(driveSpeed);
 
     // Move sweeper and platform to ready positions
-    // extendSweeper(dcQuarter); // Modify sweeper speed here
-
-    previousFoodHeight = plates.height; // REMOVE THIS LINE!!!
-    if (!currentStation.equals(start))
-       // lowerPlatform(dcEighth); // Modify platform speed here
+    if (currentStation.equals(potatoes) || currentStation.equals(patties) || currentStation.equals(buns))
+        lowerPlatform(dcQuarter, true);
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
@@ -178,35 +159,9 @@ void handleEdgeCases()
     }
 }
 
-// At this point we have already dropped the burger onto the plate, and then collected salad and fries.
-// We are now going from either lettuce, tomato, or cooktop to the serving area.
-// WAIT ---------------- IT WOULD BE SMART TO GET SALAD LETTUCE ALWAYS LAST - SAVES TIME and means we don't have to make two separate cases for this part of the code
-void goServe()
+void exchangeItem()
 {
-    if (node < 10)
-        crossCounters();
-
-    if (node <= 11)
-        driveBackward2(dcThreeQs);
-    else if (node >= 12)
-        driveForward2(dcThreeQs);
-
-    // DO THIS: If we make the crossCounters timing use a timer instead of delays, we will be able to lower and retract while crossing counters
-    previousFoodHeight = 60; // VALUE NOT FINALIZED - THE HEIGHT IN MM TO LOWER TO GET THE TOP OF THE BURGER OUT OF THE WAY FOR THE SWEEPER (it's the distance from the rim of the plate to the top of the burger)
-    lowerPlatform(dcQuarter);
-
-    currentStation = servingArea;
-    retractSweeper(dcEighth, true); // VALUE NOT FINALIZED - In main.cpp, change the third entry of the servingArea station object to the distance in mm that the sweeper has to retract from the position after sweeping a fry or salad item to fully retracted.
-
-    // Enter cross correlation code, call stopDriving() once we detect enough of a signal
-
-    raisePlatform(dcQuarter);
-    delay(2000);
-    extendSweeper(dcQuarter);
-    delay(2000);
-    swingIn();
-
-    // Ready to go to nextStation, which should be set to the plates station
+    raisePlatform(dcQuarter, true);
 }
 
 void IRAM_ATTR slowDownTimerInterrupt()

@@ -15,19 +15,18 @@ bool Station::equals(const Station &other) const
            (this->sweepLength == other.sweepLength);
 }
 
-Station start(0, 0, 149, NA);        // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
-Station tomatoes(0, 4.4, 176, NA);   // 198... All measurements in mm
-Station exchange(1, 15, 169, EMPTY); // 191... Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 10, 173, EMPTY);  // 195.. Only height of patty matters; fries are not being stacked
-Station plates(3, 14, 149, NA);      // Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
-Station cheese(10, 4.3, 176, NA);    // 198...
-Station lettuce(13, 4.3, 179, NA);   // 201...
-Station servingArea(11, 0, 340, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
+// All measurements in mm
+Station start(0, 0, 175, NA);
+Station patties(0, 35, 175, NA);
+Station buns(1, 35, 175, NA);
+Station potatoes(2, 35, 175, NA);
+Station tomatoes(3, 0, 0, NA);
+Station exchange(10, 35, 0, EMPTY);
+Station cooktop(13, 35, 175, EMPTY);
+Station plates(11, 0, 0, NA);
 
 Station currentStation = start;
-Station nextStation = plates; // For top bot code, replace this with buns
-
-// std::map<int, Station> numsToStation = {{0, tomato}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
+Station nextStation = buns;
 
 int node = -1;
 
@@ -95,40 +94,16 @@ void setup()
 
     delay(1000);
 
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-    // previousFoodHeight = plates.height;
-    // lowerPlatform(dcQuarter);
-    // delay(2000);
-    // previousFoodHeight = exchange.height;
-    // lowerPlatform(dcQuarter);
+    // TESTING FOR DAY BEFORE TIME TRIALS
 
-    // extendSweeper(dcThreeQs);
-    // delay(2000);
-    // currentStation = exchange;
-    // retractSweeper(dcQuarter, true);
+    // test crossing counters - adjust delays as necessary
+    // crossCounters();
 
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-    // currentStation = lettuce;
-    // nextStation = plates;
-    // goNextStation();
-    // currentStation = exchange;
-    // retractSweeper(dcQuarter, true);
+    // test majorTest2 without sweeper or elevator - UNPLUG THE H-BRIDGE ON THE WALL FROM POWER
+    // majorTest2();
 
-    // driveBackward(dcThreeQs);
-    // delay(1500);
-    // driveBackward(dcEighth);
-    // delay(1000);
-    // stopDriving();
-    // delay(1000);
-    // driveForward(dcThreeQs);
-    // delay(1500);
-    // driveForward(dcEighth);
-    // delay(1000);
-    // stopDriving();
-
-    buildBurgerStationary();
+    // test majorTest2 with sweeper and elevator BUT PLACE THE ROBOT ON A JACK AND JUST WATCH THE MOVEMENT OF THE SWEEPER AND ELEVATOR
+    // majorTest2();
 }
 
 void loop()
@@ -157,6 +132,42 @@ void loop()
     until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
     */
 }
+
+/*
+Testing code week of July 22nd:
+raisePlatform(dcQuarter);
+delay(2000);
+previousFoodHeight = plates.height;
+lowerPlatform(dcQuarter);
+delay(2000);
+previousFoodHeight = exchange.height;
+lowerPlatform(dcQuarter);
+
+extendSweeper(dcThreeQs);
+delay(2000);
+currentStation = exchange;
+retractSweeper(dcQuarter, true);
+
+raisePlatform(dcQuarter);
+delay(2000);
+currentStation = lettuce;
+nextStation = plates;
+goNextStation();
+currentStation = exchange;
+retractSweeper(dcQuarter, true);
+
+driveBackward(dcThreeQs);
+delay(1500);
+driveBackward(dcEighth);
+delay(1000);
+stopDriving();
+delay(1000);
+driveForward(dcThreeQs);
+delay(1500);
+driveForward(dcEighth);
+delay(1000);
+stopDriving();
+*/
 
 /*
 H-BRIDGE TESTING:
