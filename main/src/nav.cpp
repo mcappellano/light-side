@@ -23,6 +23,7 @@ void goNextStation()
     crossed = false;
     previousFoodHeight = currentStation.height;
     node = currentStation.num;
+    alreadySeen = true;
 
     // Cross counter if necessary
     if (abs(nextStation.num - currentStation.num) >= 7)
@@ -52,7 +53,7 @@ void goNextStation()
         tapeToSee = 1;
 
     if (currentStation.equals(servingArea))
-        tapeToSee++;
+        tapeToSee = 2;
 
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
 
@@ -84,17 +85,23 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     {
         extendSweeper(dcQuarter); // Modify sweeper speed here
         if (!currentStation.equals(start))
-            lowerPlatform(dcEighth); // Modify platform speed here
+            lowerPlatform(dcQuarter); // Modify platform speed here
     }
     else
     {
+        alreadySeen = true;
+        if (forward == true)
+            driveBackward(reverseSpeed);
+        else
+            driveForward(reverseSpeed);
+
         if (currentStation.equals(exchange))
             previousFoodHeight = 35; // VALUE NOT FINALIZED - move top bun out of the way
         else
-            previousFoodHeight = 60; // VALUE NOT FINALIZED - move entire burger from rim of plate to top out of the way
+            previousFoodHeight = 20; // VALUE NOT FINALIZED - PREVIOUSLY 70 -  move entire burger from rim of plate to top out of the way
 
         lowerPlatform(dcQuarter);
-        delay(1000);
+        delay(900);
         currentStation = servingArea;
         retractSweeper(dcQuarter, false);
     }
@@ -108,6 +115,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         timerAlarmEnable(tapeTimer);
         tapeCounter = 0;
     }
+
+    // Fix for bug introduced somewhere else...
+    if (node == 1.5)
+        alreadySeen = false;
 
     /* We must now wait until we have arrived at the food station.
     The motion of the sweeper must happen faster than the time it takes to traverse from two adjacent food stations.
@@ -166,6 +177,7 @@ void handleEdgeCases()
     }
     if (next == 10)
     {
+        alreadySeen = false;
         if (currentStation.equals(tomatoes))
             driveForward(dcEighth);
         else
@@ -184,6 +196,7 @@ void handleEdgeCases()
     }
     if (next == 13)
     {
+        alreadySeen = false;
         if (currentStation.equals(plates) || node == 12)
             driveBackward(dcEighth);
         else
@@ -193,7 +206,7 @@ void handleEdgeCases()
             if (node == 11)
                 timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
             else if (node == 10)
-                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
+                timerAlarmWrite(slowDownTimer, 2250 * 1000, false);
 
             timerWrite(slowDownTimer, 0);
             timerAlarmEnable(slowDownTimer);
@@ -203,12 +216,17 @@ void handleEdgeCases()
     if (next == 11.5)
     {
         if (node == 11 || node == 12)
-            timerAlarmWrite(slowDownTimer, 100 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 1200 * 1000, false);
         else if (node == 10 || node == 13)
-            timerAlarmWrite(slowDownTimer, 900 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 3200 * 1000, false);
 
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
+    if (node == 1.5 && tapeCounter == tapeToSee - 1)
+    {
+        driveForward(dcEighth);
         adjusted = true;
     }
 }
@@ -225,9 +243,14 @@ void moveBurgerBack()
 // Directly after arriving at serving area
 void serveMeal()
 {
+    currentStation = servingArea;
     raisePlatform(dcQuarter);
-    delay(1000);
-    extendSweeper(dcQuarter);
+    delay(1400);
+    extendSweeper(dcEighth);
+    delay(4000);
+    stopSweeper();
+    extending = false;
+    // raisePlatform(dcQuarter);
 }
 
 void IRAM_ATTR slowDownTimerInterrupt()

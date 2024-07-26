@@ -23,6 +23,7 @@ extern volatile int sweepCounter;
 extern volatile bool readyToLeave;
 extern volatile bool extending;
 extern volatile bool sweepStopped;
+extern volatile bool swept;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);

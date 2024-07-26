@@ -4,7 +4,7 @@
 
 hw_timer_t *tapeTimer = NULL;
 volatile bool alreadySeen = false;
-const unsigned long tapedelay_ms = 400;
+const unsigned long tapedelay_ms = 600;
 
 void IRAM_ATTR tapeInterrupt()
 {
@@ -16,8 +16,11 @@ void IRAM_ATTR tapeInterrupt()
         {
             arrived = true;
         }
-        timerWrite(tapeTimer, 0);
-        timerAlarmEnable(tapeTimer);
+        else
+        {
+            timerWrite(tapeTimer, 0);
+            timerAlarmEnable(tapeTimer);
+        }
     }
 }
 

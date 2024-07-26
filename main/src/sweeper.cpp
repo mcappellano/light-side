@@ -10,12 +10,15 @@ volatile bool extending = false; // Make sure to set this variable back to false
                                  // Delay is fine because nothing else is happening while pushing off
 volatile bool readyToLeave = false;
 volatile bool sweepStopped = false; // true, don't forget to PUT THIS BACK!!!
+volatile bool slowed = false;
+volatile bool swept = false;
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
 {
     sweepCounter = 0;
     extending = true;
+    slowed = false;
     sweepStopped = false;
     analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
     analogWrite(SWEEP_MOTOR_BACK, 0);
@@ -23,6 +26,7 @@ void extendSweeper(uint8_t dutyCycle)
 
 void retractSweeper(uint8_t dutyCycle, bool reset)
 {
+    swept = false;
     if (reset)
         sweepCounter = 0;
 
@@ -68,8 +72,14 @@ void sweepEncoderInterrupt()
             stopSweeper();
             readyToLeave = 1;
             sweepStopped = true;
+            swept = true;
         }
         // else if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 100)
         //     stopSweeper();
+    }
+    else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter <= -140 / SWEEP_PULSE_DISTANCE)
+    {
+        extendSweeper(dcEighth);
+        slowed = true;
     }
 }

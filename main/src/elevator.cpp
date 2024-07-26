@@ -69,9 +69,9 @@ void elevEncoderInterrupt()
 
     elevPrevious = updatedEncoder;
 
-    int stoppingTicks = 14;
+    int stoppingTicks = 14; // 14
     if (previousFoodHeight >= 4 && previousFoodHeight <= 5)
-        stoppingTicks = 7;
+        stoppingTicks = 1; // 1
 
     if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + stoppingTicks))
     {
@@ -79,7 +79,7 @@ void elevEncoderInterrupt()
         elevStopped = true;
     }
 
-    if (raising && (currentStation.equals(servingArea) && elevCounter >= 57.5 / ELEV_PULSE_DISTANCE))
+    if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
     {
         stopPlatform();
         elevStopped = true;

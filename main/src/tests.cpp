@@ -186,15 +186,16 @@ void majorTest2()
 
 void buildBurgerStationary()
 {
+    extendSweeper(dcQuarter);
+    delay(3000);
+
     raisePlatform(dcQuarter);
     delay(3000);
 
-    previousFoodHeight = 3; // TO GET PERFECTLY THE HEIGHT OF COUNTER
+    previousFoodHeight = 1; // TO GET PERFECTLY THE HEIGHT OF COUNTER
     lowerPlatform(dcQuarter);
-    delay(2000);
+    delay(3000);
 
-    extendSweeper(dcThreeQs);
-    delay(4000);
     currentStation = plates;
     previousFoodHeight = plates.height;
     retractSweeper(dcQuarter, true);
@@ -250,41 +251,54 @@ void buildBurgerStationary()
     lowerPlatform(dcQuarter);
     delay(2000);
     currentStation = exchange;
-    previousFoodHeight = 60; // VALUE NOT FINALIZED
+    previousFoodHeight = 35; // VALUE NOT FINALIZED
     retractSweeper(dcQuarter, true);
     delay(3000);
 
-    // lowerPlatform(dcQuarter);
-    // delay(3000);
-    // currentStation = servingArea;
-    // retractSweeper(dcQuarter, false);
-    // delay(3000);
-    // raisePlatform(dcQuarter);
-    // delay(3000);
-    // extendSweeper(dcQuarter);
-}
-
-void cheesePlate()
-{
-    currentStation = start;
-    driveUpward(dcEighth);
-    delay(2000);
-    nextStation = plates;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-
-    nextStation = cheese;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    driveBackward(dcThreeQs);
-    delay(1900);
-
-    nextStation = servingArea;
-    goNextStation();
+    lowerPlatform(dcQuarter);
+    delay(2500);
+    currentStation = servingArea;
+    retractSweeper(dcQuarter, false);
+    delay(2500);
     serveMeal();
 }
 
-void timeTrials()
+// Don't use. is broken. use cheesePlateOld below
+void cheesePlate()
+{
+    raisePlatform(dcQuarter);
+    delay(2000);
+    previousFoodHeight = 1;
+    lowerPlatform(dcQuarter);
+    delay(500);
+
+    currentStation = start;
+    driveUpward(dcEighth);
+    delay(2000);
+
+    while (true)
+    {
+        nextStation = plates;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        while (!swept)
+            delay(1);
+
+        plates.sweepLength -= 65;
+
+        nextStation = cheese;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        while (!swept)
+            delay(1);
+
+        nextStation = servingArea;
+        goNextStation();
+        serveMeal();
+    }
+}
+
+void burger()
 {
     raisePlatform(dcQuarter);
     delay(2000);
@@ -297,40 +311,198 @@ void timeTrials()
     delay(2000);
     nextStation = plates;
     goNextStation();
+    detachInterrupt(digitalPinToInterrupt(REFLEC1));
+    detachInterrupt(digitalPinToInterrupt(REFLEC2));
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
+    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
 
     nextStation = exchange;
     goNextStation();
+    detachInterrupt(digitalPinToInterrupt(REFLEC1));
+    detachInterrupt(digitalPinToInterrupt(REFLEC2));
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
+    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
+    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
 
     nextStation = cooktop;
     goNextStation();
+    detachInterrupt(digitalPinToInterrupt(REFLEC1));
+    detachInterrupt(digitalPinToInterrupt(REFLEC2));
+    alreadySeen = true;
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
 
     nextStation = cheese;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
 
     nextStation = tomatoes;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
 
     nextStation = lettuce;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
 
     nextStation = exchange;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(1500);
+    while (!swept)
+        delay(1);
 
     nextStation = servingArea;
     goNextStation();
     serveMeal();
+}
+
+void debugCooktop()
+{
+
+    raisePlatform(dcQuarter);
+    delay(2000);
+    previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    lowerPlatform(dcQuarter);
+    delay(500);
+
+    currentStation = exchange;
+    nextStation = cooktop;
+    goNextStation();
+    alreadySeen = true;
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+        delay(1);
+    }
+}
+
+void salad()
+{
+    raisePlatform(dcQuarter);
+    delay(2000);
+    previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    lowerPlatform(dcQuarter);
+    delay(500);
+
+    currentStation = start;
+    driveUpward(dcEighth);
+    delay(2000);
+
+    while (true)
+    {
+        nextStation = plates;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        while (!swept)
+            delay(1);
+
+        nextStation = tomatoes;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        while (!swept)
+            delay(1);
+
+        nextStation = lettuce;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        while (!swept)
+            delay(1);
+
+        nextStation = servingArea;
+        goNextStation();
+        serveMeal();
+    }
+}
+
+void timeTrials()
+{
+    raisePlatform(dcQuarter);
+    delay(2000);
+    previousFoodHeight = 1;
+    lowerPlatform(dcQuarter);
+    delay(500);
+
+    currentStation = start;
+    driveUpward(dcEighth);
+    delay(2000);
+
+    for (int i = 0; i < 4; i++)
+    {
+        nextStation = plates;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = tomatoes;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = lettuce;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = servingArea;
+        goNextStation();
+        serveMeal();
+    }
+
+    for (int i = 0; i < 4; i++)
+    {
+        nextStation = plates;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = cheese;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = servingArea;
+        goNextStation();
+        serveMeal();
+    }
+}
+
+void cheesePlateOld()
+{
+    raisePlatform(dcQuarter);
+    delay(2000);
+    // previousFoodHeight = 1;
+    // lowerPlatform(dcQuarter);
+    // delay(1000);
+
+    currentStation = start;
+    driveUpward(dcEighth);
+    delay(2000);
+
+    while (true)
+    {
+        nextStation = plates;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = cheese;
+        goNextStation();
+        retractSweeper(dcQuarter, true);
+        delay(2000);
+
+        nextStation = servingArea;
+        goNextStation();
+        serveMeal();
+    }
 }
