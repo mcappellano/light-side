@@ -192,9 +192,9 @@ void buildBurgerStationary()
     raisePlatform(dcQuarter);
     delay(3000);
 
-    previousFoodHeight = 1; // TO GET PERFECTLY THE HEIGHT OF COUNTER
-    lowerPlatform(dcQuarter);
-    delay(3000);
+    // previousFoodHeight = 1; // TO GET PERFECTLY THE HEIGHT OF COUNTER
+    // lowerPlatform(dcQuarter);
+    // delay(3000);
 
     currentStation = plates;
     previousFoodHeight = plates.height;
@@ -302,65 +302,48 @@ void burger()
 {
     raisePlatform(dcQuarter);
     delay(2000);
-    previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    lowerPlatform(dcQuarter);
-    delay(500);
+    // previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    // lowerPlatform(dcQuarter);
+    // delay(500);
 
     currentStation = start;
     driveUpward(dcEighth);
     delay(2000);
     nextStation = plates;
     goNextStation();
-    detachInterrupt(digitalPinToInterrupt(REFLEC1));
-    detachInterrupt(digitalPinToInterrupt(REFLEC2));
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
-    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
-    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
+    delay(2000);
 
     nextStation = exchange;
     goNextStation();
-    detachInterrupt(digitalPinToInterrupt(REFLEC1));
-    detachInterrupt(digitalPinToInterrupt(REFLEC2));
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
-    attachInterrupt(digitalPinToInterrupt(REFLEC1), tapeInterrupt, RISING);
-    attachInterrupt(digitalPinToInterrupt(REFLEC2), tapeInterrupt, RISING);
+    delay(2000);
 
     nextStation = cooktop;
     goNextStation();
-    detachInterrupt(digitalPinToInterrupt(REFLEC1));
-    detachInterrupt(digitalPinToInterrupt(REFLEC2));
     alreadySeen = true;
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
+    delay(2000);
 
     nextStation = cheese;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
+    delay(2000);
 
     nextStation = tomatoes;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
+    delay(2000);
 
     nextStation = lettuce;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
+    delay(2000);
 
     nextStation = exchange;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    while (!swept)
-        delay(1);
+    delay(2000);
 
     nextStation = servingArea;
     goNextStation();
