@@ -30,6 +30,9 @@ Station nextStation = plates; // For top bot code, replace this with buns
 
 // std::map<int, Station> numsToStation = {{0, tomato}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
 
+Station stationOrder[9] = {plates, exchange, cheese, cooktop, tomatoes, lettuce, exchange, cooktop, servingArea};
+int orderNum = 0;
+
 double node = -1;
 
 void setup()
@@ -95,87 +98,13 @@ void setup()
     Serial.println("Setup");
 
     delay(1000);
-
-    // extendSweeper(dcQuarter);
-    // delay(3000);
-    // currentStation = exchange;
-    // retractSweeper(dcQuarter, true);
-    // delay(3000);
-    // currentStation = servingArea;
-    // retractSweeper(dcQuarter, false);
-
-    // extendSweeper(dcEighth);
-    // delay(3000);
-    // currentStation = exchange;
-    // retractSweeper(dcQuarter, true);
-    // delay(3000);
-    // extendSweeper(dcThreeQs);
-
-    // TESTING FOR DAY BEFORE TIME TRIALS
-
-    // Try serving a meal and watch elevator closely
-    // serveMeal();
-
-    // Try building burger stationary, watch elevator and sweeper closely, make adjustments
-    // buildBurgerStationary();
-
-    // Try going to the serving station from cheese ------------------------------------------------------------------
-    // extendSweeper(dc316);
-    // delay(4000);
-    // currentStation = cheese;
-    // retractSweeper(dcQuarter, true);
-    // delay(2000);
-
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-    // previousFoodHeight = 14;
-    // lowerPlatform(dcQuarter);
-
-    // currentStation = cheese;
-    // nextStation = servingArea;
-    // goNextStation();
-    // serveMeal();
-
-    // Try going to the serving station from cheese and serving meal -------------------------------------------------
-    // currentStation = cheese;
-    // nextStation = servingArea;
-    // goNextStation();
-    // serveMeal();
-
-    // Try going to the serving station from exchange (top bun) ------------------------------------------------------
-    // currentStation = cheese;
-    // nextStation = servingArea;
-    // goNextStation();
-
-    // Try going to the serving station from cooktop (fries) ---------------------------------------------------------
-    // currentStation = cheese;
-    // nextStation = servingArea;
-    // goNextStation();
-
-    // Try crossing counters (try everywhere) ------------------------------------------------------------------------
-    // crossCounters();
-
-    // Try MT2 -------------------------------------------------------------------------------------------------------
-    // majorTest2();
-
-    // Try serving a cheese plate ------------------------------------------------------------------------------------
-    // cheesePlate();
-
-    // Test time trials code in careful stages
-    // 1. Just moving from start position to plates station (hit the off switch once at plates)
-    // 2. While supported by a jack, run the code and watch the movements of everything, particularly the elevator and sweeper
-    // 3. Try it fully
-
-    // crossCounters();
-    // cheesePlateOld();
-    // buildBurgerStationary();
-    burger();
 }
 
 void loop()
 {
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
+    DO THIS IN SETUP!!
     if (currentStation.equals(start))
     {
         raisePlatform(dcQuarter);
@@ -197,7 +126,15 @@ void loop()
     We must ensure that goNextStation() is not called again until we are ready to move to the next station. Do this by checking
     until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
     */
+
+   nextStation = stationOrder[orderNum++];
+   if (orderNum >= 9)
+    orderNum = 0;
+
+    goNextStation();
 }
+
+// Old code
 
 /*
 raisePlatform(dcQuarter);
