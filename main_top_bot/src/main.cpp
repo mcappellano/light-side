@@ -17,13 +17,13 @@ bool Station::equals(const Station &other) const
 
 // All measurements in mm
 Station start(0, 0, 175, NA);
-Station patties(0, 35, 175, NA);
-Station buns(1, 35, 175, NA);
-Station potatoes(2, 35, 175, NA);
-Station tomatoes(3, 0, 0, NA);
-Station exchange(10, 35, 0, EMPTY);
-Station cooktop(13, 35, 175, EMPTY);
-Station plates(11, 0, 0, NA);
+Station patties(1, 35, 175, NA);
+Station buns(3, 35, 175, NA);
+Station potatoes(5, 35, 175, NA);
+Station tomatoes(10, 0, 0, NA);
+Station exchange(12, 35, 0, EMPTY);
+Station cooktop(14, 35, 175, EMPTY);
+Station plates(16, 0, 0, NA);
 
 Station currentStation = start;
 Station nextStation = buns;
@@ -103,7 +103,7 @@ void setup()
     // majorTest2();
 
     // test majorTest2 with sweeper and elevator BUT PLACE THE ROBOT ON A JACK AND JUST WATCH THE MOVEMENT OF THE SWEEPER AND ELEVATOR
-    // majorTest2();
+    majorTest2();
 }
 
 void loop()
