@@ -15,12 +15,15 @@ int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle, bool extendB)
 {
-    elevCounter = 0;
-    raising = true;
-    elevStopped = false;
-    analogWrite(ELEV_MOTOR_UP, dutyCycle);
-    analogWrite(ELEV_MOTOR_DOWN, 0);
-    extend = extendB;
+    if (digitalRead(ELEV_SWITCH))
+    {
+        elevCounter = 0;
+        raising = true;
+        elevStopped = false;
+        analogWrite(ELEV_MOTOR_UP, dutyCycle);
+        analogWrite(ELEV_MOTOR_DOWN, 0);
+        extend = extendB;
+    }
 }
 
 void lowerPlatform(uint8_t dutyCycle, bool retractB)
@@ -39,6 +42,8 @@ void stopPlatform()
 {
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, 0);
+    raising = false;
+    elevStopped = true;
     if (retract)
     {
         retractSweeper(dcQuarter, false);
@@ -54,10 +59,7 @@ void stopPlatform()
 void elevSwitchInterrupt()
 {
     if (raising)
-    {
         stopPlatform();
-        raising = false;
-    }
 }
 
 // IF EACH TIME WE GO DOWN WE GO 1 MM EXTRA, WE MAY HAVE TO ACCOUNT FOR THIS (by the end it could be 0.5 cm off)
@@ -81,14 +83,7 @@ void elevEncoderInterrupt()
         stoppingTicks = 7;
 
     if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DIST) + stoppingTicks))
-    {
         stopPlatform();
-        elevStopped = true;
-    }
     else if (raising && !elevStopped && (currentStation.equals(exchange) || currentStation.equals(cooktop)) && (elevCounter >= (previousFoodHeight / ELEV_PULSE_DIST)))
-    {
         stopPlatform();
-        raising = false;
-        elevStopped = true;
-    }
 }

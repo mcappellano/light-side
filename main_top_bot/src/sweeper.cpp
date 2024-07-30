@@ -16,12 +16,15 @@ int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
 {
-    sweepCounter = 0;
-    extending = true;
-    sweepStopped = false;
-    slowed = false;
-    analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
-    analogWrite(SWEEP_MOTOR_BACK, 0);
+    if (digitalRead(SWEEP_SWITCH))
+    {
+        sweepCounter = 0;
+        extending = true;
+        sweepStopped = false;
+        slowed = false;
+        analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
+        analogWrite(SWEEP_MOTOR_BACK, 0);
+    }
 }
 
 void retractSweeper(uint8_t dutyCycle, bool reset)

@@ -96,7 +96,8 @@ void setup()
 
     delay(1000);
 
-    timeTrials();
+    crossCounters();
+    // timeTrials();
 }
 
 /* The loop determines the next station we have to go to, and sends the robot there.
@@ -104,25 +105,25 @@ Once arrived, we either sweep in the item or push it out onto the counter.
 After waiting for this action to finish, we go back to the beginning of the loop. */
 void loop()
 {
-    nextStation = stationOrder[orderNum++];
-    if (orderNum >= 8)
-        orderNum = 0;
+    // nextStation = stationOrder[orderNum++];
+    // if (orderNum >= 8)
+    //     orderNum = 0;
 
-    goNextStation();
-    if (currentStation.equals(exchange) || currentStation.equals(cooktop))
-    {
-        exchangeItem();
-        while (extending)
-        {
-        }
-    }
-    else
-    {
-        retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
-        while (!swept)
-        {
-        }
-    }
+    // goNextStation();
+    // if (currentStation.equals(exchange) || currentStation.equals(cooktop))
+    // {
+    //     exchangeItem();
+    //     while (extending)
+    //     {
+    //     }
+    // }
+    // else
+    // {
+    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
+    //     while (!swept)
+    //     {
+    //     }
+    // }
 }
 
 /*
