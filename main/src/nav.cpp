@@ -33,12 +33,17 @@ void goNextStation()
         {
             driveBackward(dcQuarter);
             delay(350);
+            stopDriving();
+            delay(250);
         }
         else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
         {
             driveForward(dcQuarter);
             delay(250);
+            stopDriving();
+            delay(250);
         }
+
         crossCounters();
         crossed = true;
     }
@@ -47,12 +52,11 @@ void goNextStation()
     arrived = false;
     adjusted = false;
     tapeCounter = 0;
-    if (node <= 10)
+    if (node < 10)
         tapeToSee = abs(nextStation.num - node);
-    else
+    else if (node >= 10)
         tapeToSee = 1;
-
-    if (currentStation.equals(servingArea))
+    else if (currentStation.equals(servingArea))
         tapeToSee = 2;
 
     // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
@@ -62,6 +66,17 @@ void goNextStation()
         traverseCounter(false, dcThreeQs, dcEighth);
     else if ((nextStation.num < node && node < 10) || (nextStation.num > node && node >= 10))
         traverseCounter(true, dcThreeQs, dcEighth);
+}
+
+// Returns true or false based on whether we are the current station and next station are directly across from each other
+bool directlyAcross()
+{
+    if ((currentStation.equals(lettuce) && nextStation.equals(plates)) || (currentStation.equals(plates) && nextStation.equals(lettuce)))
+        return true;
+    if ((currentStation.equals(cheese) && nextStation.equals(tomatoes)) || (currentStation.equals(tomatoes) && nextStation.equals(cheese)))
+        return true;
+
+    return false;
 }
 
 /*
@@ -83,8 +98,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     if (!nextStation.equals(servingArea))
     {
-        extendSweeper(dcQuarter); // Modify sweeper speed here
-        if (!currentStation.equals(start))
+        extendSweeper(dcThreeQs); // Modify sweeper speed here
+        if (!currentStation.equals(start) && !currentStation.equals(exchange))
             lowerPlatform(dcQuarter); // Modify platform speed here
     }
     else
@@ -115,8 +130,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         timerAlarmEnable(tapeTimer);
         tapeCounter = 0;
     }
+    else
+        alreadySeen = false;
 
-    // Fix for bug introduced somewhere else...
+    // Fix for bug introduced somewhere else... I think it is fixed so we can take this out
     if (node == 1.5)
         alreadySeen = false;
 
@@ -160,6 +177,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Update relevant variables
     currentStation = nextStation;
     node = currentStation.num;
+
+    driveUpward(dcEighth);
+    delay(100);
+    stopDriving();
 }
 
 // Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS

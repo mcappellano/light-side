@@ -1,7 +1,11 @@
 #include "drive.h"
 #include "main.h"
+#include "sweeper.h"
+#include "nav.h"
 
 hw_timer_t *accelTimer = NULL;
+hw_timer_t *crossTimer = NULL;
+bool next = true;
 uint8_t currentDutyCycle = 0;
 volatile double loopNum = 0;
 bool accelForward = true;
@@ -36,15 +40,17 @@ void crossCounters()
 
     // WITH ELEVATOR AND SWEEPER
     driveDownward(dcQuarter);
-    delay(550);
+    setCrossTimer(800);
     spinAround(dcQuarter);
-    delay(975); // 950
+    if (directlyAcross())
+        extendSweeper(dcQuarter);
+    setCrossTimer(950);
     stopDriving();
-    delay(300);
+    setCrossTimer(300);
     driveUpward(dcQuarter);
-    delay(500);
+    setCrossTimer(300);
     driveUpward(dcEighth);
-    delay(1200);
+    setCrossTimer(1400);
     stopDriving();
 
     // Update where we are
@@ -60,6 +66,23 @@ void crossCounters()
             node++;
         if (currentStation.equals(plates) || currentStation.equals(lettuce))
             node--;
+    }
+}
+
+void IRAM_ATTR crossTimerInterrupt()
+{
+    next = true;
+    timerAlarmDisable(crossTimer);
+}
+
+void setCrossTimer(int ms)
+{
+    next = false;
+    timerAlarmWrite(crossTimer, ms * 1000, false);
+    timerWrite(crossTimer, 0);
+    timerAlarmEnable(crossTimer);
+    while (!next)
+    {
     }
 }
 

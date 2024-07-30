@@ -10,11 +10,14 @@ int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle)
 {
-    elevCounter = 0;
-    raising = true;
-    elevStopped = false;
-    analogWrite(ELEV_MOTOR_UP, dutyCycle);
-    analogWrite(ELEV_MOTOR_DOWN, 0);
+    if (digitalRead(ELEV_SWITCH))
+    {
+        elevCounter = 0;
+        raising = true;
+        elevStopped = false;
+        analogWrite(ELEV_MOTOR_UP, dutyCycle);
+        analogWrite(ELEV_MOTOR_DOWN, 0);
+    }
 }
 
 void lowerPlatform(uint8_t dutyCycle)
@@ -29,18 +32,6 @@ void stopPlatform()
 {
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, 0);
-}
-
-void swingOut()
-{
-    // analogWrite(SERVO_PLATFORM, X);
-    // delay(Y);
-    // analogWrite(Z);
-}
-
-void swingIn()
-{
-    // analogWrite(X);
 }
 
 void elevSwitchInterrupt()
@@ -69,9 +60,11 @@ void elevEncoderInterrupt()
 
     elevPrevious = updatedEncoder;
 
-    int stoppingTicks = 14; // 14
-    if (previousFoodHeight >= 4 && previousFoodHeight <= 5)
-        stoppingTicks = 1; // 1
+    int stoppingTicks = 7;
+    if (previousFoodHeight > 5)
+        stoppingTicks = 12;
+    if (previousFoodHeight > 12)
+        stoppingTicks = 14;
 
     if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + stoppingTicks))
     {

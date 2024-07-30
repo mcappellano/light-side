@@ -20,7 +20,7 @@
 extern const double SWEEP_PULSE_DISTANCE;
 extern double sweeperPosition;
 extern volatile int sweepCounter;
-extern volatile bool readyToLeave;
+// extern volatile bool readyToLeave;
 extern volatile bool extending;
 extern volatile bool sweepStopped;
 extern volatile bool swept;

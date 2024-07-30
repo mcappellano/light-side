@@ -22,9 +22,7 @@ extern double previousFoodHeight; // For the plate, this height is the distance 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle);
 void lowerPlatform(uint8_t dutyCycle);
-void stopPlatform(); // stop moving the platform up or down
-void swingOut();
-void swingIn(); // bring the platform back from the swung out position
+void stopPlatform(); // Stop moving the platform up or down
 void elevSwitchInterrupt();
 void elevEncoderInterrupt();
 

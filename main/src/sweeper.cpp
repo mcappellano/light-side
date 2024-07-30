@@ -8,20 +8,23 @@ volatile int sweepCounter = 0;
 volatile bool extending = false; // Make sure to set this variable back to false after extending the sweeper when pushing the plate off
                                  // Use a delay for the approximate right amount of time - doesn't have to be perfect
                                  // Delay is fine because nothing else is happening while pushing off
-volatile bool readyToLeave = false;
-volatile bool sweepStopped = false; // true, don't forget to PUT THIS BACK!!!
+// volatile bool readyToLeave = false;
+volatile bool sweepStopped = true;
 volatile bool slowed = false;
 volatile bool swept = false;
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
 {
-    sweepCounter = 0;
-    extending = true;
-    slowed = false;
-    sweepStopped = false;
-    analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
-    analogWrite(SWEEP_MOTOR_BACK, 0);
+    if (digitalRead(SWEEP_SWITCH))
+    {
+        sweepCounter = 0;
+        extending = true;
+        slowed = false;
+        sweepStopped = false;
+        analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
+        analogWrite(SWEEP_MOTOR_BACK, 0);
+    }
 }
 
 void retractSweeper(uint8_t dutyCycle, bool reset)
@@ -39,15 +42,14 @@ void stopSweeper()
 {
     analogWrite(SWEEP_MOTOR_OUT, 0);
     analogWrite(SWEEP_MOTOR_BACK, 0);
+    sweepStopped = true;
+    extending = false;
 }
 
 void sweepSwitchInterrupt()
 {
     if (extending)
-    {
         stopSweeper();
-        extending = false;
-    }
 }
 
 void sweepEncoderInterrupt()
@@ -67,17 +69,15 @@ void sweepEncoderInterrupt()
 
     if (!extending && !sweepStopped)
     {
-        if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15) // Unless sweepCounter goes negative when retracting?
+        if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15)
         {
             stopSweeper();
-            readyToLeave = 1;
-            sweepStopped = true;
             swept = true;
         }
         // else if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 100)
         //     stopSweeper();
     }
-    else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter <= -140 / SWEEP_PULSE_DISTANCE)
+    else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter <= -160 / SWEEP_PULSE_DISTANCE)
     {
         extendSweeper(dcEighth);
         slowed = true;

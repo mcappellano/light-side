@@ -15,13 +15,13 @@ bool Station::equals(const Station &other) const
            (this->sweepLength == other.sweepLength);
 }
 
-Station start(0, 0, 149, NA);               // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
-Station tomatoes(0, 3, 169 + 65, NA);       // PREVIOUSLY 4.4 - 176 + 65 ... All measurements in mm
-Station exchange(1, 15, 169 + 65, EMPTY);   // 169 + 65 ... Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 9, 169 + 65, EMPTY);     // PREVIOUSLY 10 - 173 + 65 ... Only height of patty matters; fries are not being stacked
-Station plates(3, 15.5, 140 + 65, NA);      // 149 + 65, Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
-Station cheese(10, 4.3, 166 + 65, NA);      // PREVIOUSLY 4.3- 176 + 65 ...
-Station lettuce(13, 3, 169 + 65, NA);       // PREVIOUSLY 4.3  -  179 + 65 ...
+Station start(0, 0, 100, NA);               // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
+Station tomatoes(0, 3, 165 + 65, NA);       // PREVIOUSLY 4.4 - 176 + 65 ... All measurements in mm
+Station exchange(1, 0, 165 + 65, EMPTY);    // PREVIOUSLY 15 // 169 + 65 ... Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 9, 165 + 65, EMPTY);     // PREVIOUSLY 10 - 173 + 65 ... Only height of patty matters; fries are not being stacked
+Station plates(3, 13.5, 140 + 65, NA);      // 149 + 65, Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station cheese(10, 4.3, 162 + 65, NA);      // PREVIOUSLY 4.3  -  176 + 65 ...
+Station lettuce(13, 3, 165 + 65, NA);       // PREVIOUSLY 4.3  -  179 + 65 ...
 Station servingArea(11.5, 1, 325 + 65, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
 Station burgerBack(1, 15, 25, NA);          // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
 
@@ -94,10 +94,98 @@ void setup()
     timerAttachInterrupt(slowDownTimer, &slowDownTimerInterrupt, true);
     timerAlarmWrite(slowDownTimer, 500 * 1000, false);
 
+    crossTimer = timerBegin(3, 80, true);
+    timerAttachInterrupt(crossTimer, &crossTimerInterrupt, true);
+
     Serial.println("");
     Serial.println("Setup");
 
     delay(1000);
+
+    // Works when sensing a bunch of tape :
+    // currentStation = cooktop;
+    // extendSweeper(dcQuarter);
+    // delay(4000);
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+    // delay(1000);
+    // extendSweeper(dcQuarter);
+    // delay(2500);
+    // retractSweeper(dcQuarter, true);
+
+    // Also works:
+    // currentStation = exchange;
+    // nextStation = cooktop;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+
+    // Doesn't work:
+    // burger();
+
+    // raisePlatform(dcQuarter);
+    // delay(2000);
+
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = exchange;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    //     Serial.println("extending:");
+    //     Serial.println(extending);
+    //     Serial.println("sweepStopped:");
+    //     Serial.println(sweepStopped);
+    //     Serial.println("sweepCounter:");
+    //     Serial.println(sweepCounter);
+    //     Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
+    //     Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
+    // }
+
+    // break ---------------------------------------------------------------------------------------
+
+    // raisePlatform(dcQuarter);
+    // delay(2000);
+
+    // currentStation = start;
+    // driveUpward(dcEighth);
+    // delay(2000);
+    // nextStation = plates;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = exchange;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    //     Serial.println("extending:");
+    //     Serial.println(extending);
+    //     Serial.println("sweepStopped:");
+    //     Serial.println(sweepStopped);
+    //     Serial.println("sweepCounter:");
+    //     Serial.println(sweepCounter);
+    //     Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
+    //     Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
+    // }
+
+    burger();
+
+    // raisePlatform(dcQuarter);
+    // delay(2000);
+    // currentStation = cheese;
+    // nextStation = tomatoes;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
 }
 
 void loop()
@@ -127,11 +215,16 @@ void loop()
     until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
     */
 
-   nextStation = stationOrder[orderNum++];
-   if (orderNum >= 9)
-    orderNum = 0;
+    // ACTUAL LOOP CODE:
+    // nextStation = stationOrder[orderNum++];
+    // if (orderNum >= 9)
+    //     orderNum = 0;
 
-    goNextStation();
+    // goNextStation();
+    // if (currentStation.equals(servingArea))
+    //     serveMeal();
+    // else
+    //     retractSweeper(dcQuarter, true); // maybe make it dcThreeQs
 }
 
 // Old code

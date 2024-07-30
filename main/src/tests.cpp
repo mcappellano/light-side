@@ -302,9 +302,6 @@ void burger()
 {
     raisePlatform(dcQuarter);
     delay(2000);
-    // previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    // lowerPlatform(dcQuarter);
-    // delay(500);
 
     currentStation = start;
     driveUpward(dcEighth);
@@ -312,42 +309,83 @@ void burger()
     nextStation = plates;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+        Serial.println("extending:");
+        Serial.println(extending);
+        Serial.println("sweepStopped:");
+        Serial.println(sweepStopped);
+        Serial.println("sweepCounter:");
+        Serial.println(sweepCounter);
+        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
+        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
+    }
 
     nextStation = exchange;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+        Serial.println("extending:");
+        Serial.println(extending);
+        Serial.println("sweepStopped:");
+        Serial.println(sweepStopped);
+        Serial.println("sweepCounter:");
+        Serial.println(sweepCounter);
+        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
+        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
+    }
 
     nextStation = cooktop;
     goNextStation();
-    alreadySeen = true;
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+        Serial.println("extending:");
+        Serial.println(extending);
+        Serial.println("sweepStopped:");
+        Serial.println(sweepStopped);
+        Serial.println("sweepCounter:");
+        Serial.println(sweepCounter);
+        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
+        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
+    }
 
     nextStation = cheese;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = tomatoes;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = lettuce;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = exchange;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = servingArea;
     goNextStation();
     serveMeal();
+
+    // previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    // lowerPlatform(dcQuarter);
+    // delay(500);
 }
 
 void debugCooktop()
