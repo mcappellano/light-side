@@ -38,11 +38,11 @@ void crossCounters()
     driveDownward(dcQuarter);
     delay(550);
     spinAround(dcQuarter);
-    delay(900);
+    delay(880);
     stopDriving();
     delay(300);
-    driveUpward(dcQuarter);
-    delay(250);
+    // driveUpward(dcQuarter);
+    // delay(350);
     driveUpward(dcEighth);
     delay(1000);
     stopDriving();

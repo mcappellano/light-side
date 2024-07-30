@@ -5,9 +5,9 @@
 #include <cmath>
 
 // Pin definitions - not necessarily finalized - also need to add the servos!
-#define ELEV_SWITCH 39
-#define ELEV_ENCODER_1 32
-#define ELEV_ENCODER_2 33
+#define ELEV_SWITCH 20
+#define ELEV_ENCODER_1 38 // 37
+#define ELEV_ENCODER_2 37 // 38
 #define ELEV_MOTOR_UP 12   // 27
 #define ELEV_MOTOR_DOWN 13 // 14
 #define SERVO_PLATFORM 1
@@ -23,9 +23,7 @@ extern double previousFoodHeight; // For the plate, this height is the distance 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle, bool extendB);
 void lowerPlatform(uint8_t dutyCycle, bool retractB);
-void stopPlatform(); // stop moving the platform up or down
-void swingOut();
-void swingIn(); // bring the platform back from the swung out position
+void stopPlatform(); // Stop moving the platform up or down
 void elevSwitchInterrupt();
 void elevEncoderInterrupt();
 

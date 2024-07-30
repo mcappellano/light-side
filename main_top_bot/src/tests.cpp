@@ -140,31 +140,32 @@ void majorTest2()
     delay(2000);
 
     // Get patty
+    // currentStation = exchange; // added as a test can be removed after
     nextStation = patties;
     goNextStation();
     delay(2000);
 
-    // Cook patty
+    // // Cook patty
     nextStation = cooktop;
     goNextStation();
     delay(2000);
 
-    // Get fry
+    // // Get fry
     nextStation = potatoes;
     goNextStation();
     delay(2000);
 
-    // Cook fry
+    // // Cook fry
     nextStation = cooktop;
     goNextStation();
     delay(2000);
 
-    // Get top bun
+    // // Get top bun
     nextStation = buns;
     goNextStation();
     delay(2000);
 
-    // Exchange top bun
+    // // Exchange top bun
     nextStation = exchange;
     goNextStation();
     delay(2000);
@@ -174,7 +175,7 @@ void timeTrials()
 {
     raisePlatform(dcQuarter, false);
     delay(2000);
-    previousFoodHeight = 10; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    previousFoodHeight = 5; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
     lowerPlatform(dcQuarter, false);
     delay(500);
     previousFoodHeight = 35;

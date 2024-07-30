@@ -16,13 +16,13 @@ bool Station::equals(const Station &other) const
 }
 
 // All measurements in mm
-Station start(0, 0, 175, NA);
-Station patties(1, 35, 175, NA);
-Station buns(3, 35, 175, NA);
-Station potatoes(5, 35, 175, NA);
+Station start(0, 0, 150, NA);
+Station patties(1, 35, 150, NA);
+Station buns(3, 35, 150, NA);
+Station potatoes(5, 35, 150, NA);
 Station tomatoes(10, 0, 0, NA);
-Station exchange(12, 35, 0, EMPTY);
-Station cooktop(14, 35, 175, EMPTY);
+Station exchange(12, 35, 150, EMPTY);
+Station cooktop(14, 35, 150, EMPTY);
 Station plates(16, 0, 0, NA);
 
 Station currentStation = start;
@@ -94,20 +94,28 @@ void setup()
 
     delay(1000);
 
-    // TESTING FOR DAY BEFORE TIME TRIALS
+    // raisePlatform(dcQuarter, false);
+    // delay(3000);
+    
+    // lowerPlatform(dcQuarter,true);
 
-    // test crossing counters - adjust delays as necessary
-    // crossCounters();
+    // extendSweeper(dcQuarter);
+    // delay(1000);
+    // retractSweeper(dcQuarter,false);
+    // analogWrite(27,dcQuarter);
+    // delay(1000);
+    // analogWrite(14,dcQuarter);
 
-    // test majorTest2 without sweeper or elevator - UNPLUG THE H-BRIDGE ON THE WALL FROM POWER
-    // majorTest2();
+    // timeTrials();
 
-    // test majorTest2 with sweeper and elevator BUT PLACE THE ROBOT ON A JACK AND JUST WATCH THE MOVEMENT OF THE SWEEPER AND ELEVATOR
-    majorTest2();
+    // currentStation = cooktop;
+    // raisePlatform(dcQuarter, false);
 }
 
 void loop()
 {
+    Serial.println(sweepCounter);
+    delay(10);
     /*
     // If we are just starting from the start position, execute a different sequence to get set up
     if (currentStation.equals(start))

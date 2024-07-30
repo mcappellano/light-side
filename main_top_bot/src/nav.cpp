@@ -63,6 +63,9 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     if (currentStation.equals(potatoes) || currentStation.equals(patties) || currentStation.equals(buns))
         lowerPlatform(dcQuarter, true);
+    
+    if (currentStation.equals(start))
+        extendSweeper(dcQuarter);
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
@@ -80,7 +83,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     while (!arrived)
     {
         // if (!adjusted)
-        //     handleEdgeCases();
+            // handleEdgeCases();
     }
 
     // In case they don't finish before making it to the food station

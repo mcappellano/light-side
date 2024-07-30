@@ -49,18 +49,6 @@ void stopPlatform()
     }
 }
 
-void swingOut()
-{
-    // analogWrite(SERVO_PLATFORM, X);
-    // delay(Y);
-    // analogWrite(Z);
-}
-
-void swingIn()
-{
-    // analogWrite(X);
-}
-
 void elevSwitchInterrupt()
 {
     if (raising)
