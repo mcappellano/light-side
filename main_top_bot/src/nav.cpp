@@ -1,6 +1,6 @@
-/* Please check the navREADME to see the detailed explanation of this code!
+/* Check the navREADME to see the detailed explanation of this code!
 Open it on the GitHub website to see the diagrams.
-Note that this code is specific to the bottom robot. */
+Note that this code is specific to the top robot. */
 
 #include "nav.h"
 #include "main.h"
@@ -9,14 +9,13 @@ Note that this code is specific to the bottom robot. */
 #include "sweeper.h"
 #include "elevator.h"
 
+hw_timer_t *slowDownTimer = NULL;
 volatile int tapeCounter = 0;
 volatile bool arrived = false;
 int tapeToSee = 0;
 bool adjusted = false;
 bool forward2 = true;
 bool crossed = false;
-
-hw_timer_t *slowDownTimer = NULL;
 
 void goNextStation()
 {
@@ -44,12 +43,6 @@ void goNextStation()
         traverseCounter(true, dcThreeQs, dcEighth); // Modify driving speeds here
 }
 
-/*
-IMPORTANT:
-While traversing forward/backward, we will also be extending the arm out, and lowering the platform.
-At some point we must consider the edge cases of there being only a counter crossing movement and no traversing,
-and that of moving to and from the serving area!
-*/
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
     forward2 = forward;
@@ -63,12 +56,11 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     if (currentStation.equals(potatoes) || currentStation.equals(patties) || currentStation.equals(buns))
         lowerPlatform(dcQuarter, true);
-    
+
     if (currentStation.equals(start))
         extendSweeper(dcQuarter);
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
-    // IF WE END UP NEEDING THIS, IT MUST BE ADJUSTED. It messes up when we start close to a piece of tape
     if (!crossed)
     {
         alreadySeen = true;
@@ -83,7 +75,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     while (!arrived)
     {
         // if (!adjusted)
-            // handleEdgeCases();
+        //  handleEdgeCases();
     }
 
     // In case they don't finish before making it to the food station
@@ -108,58 +100,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Update relevant variables
     currentStation = nextStation;
+    distanceToSweep = currentStation.sweepLength;
     node = currentStation.num;
-}
-
-// Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
-void handleEdgeCases()
-{
-    int next = nextStation.num;
-    if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
-    {
-        if (forward2 == true)
-            driveBackward(dcEighth);
-        else
-            driveForward(dcEighth);
-
-        adjusted = true;
-    }
-    if (next == 10)
-    {
-        if (currentStation.equals(tomatoes))
-            driveForward(dcEighth);
-        else
-        {
-            if (node == 11)
-                timerAlarmWrite(slowDownTimer, 500 * 1000, false);
-            else if (node == 12)
-                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-            else if (node == 13)
-                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
-
-            timerWrite(slowDownTimer, 0);
-            timerAlarmEnable(slowDownTimer);
-        }
-        adjusted = true;
-    }
-    if (next == 13)
-    {
-        if (currentStation.equals(plates) || node == 12)
-            driveBackward(dcEighth);
-        else
-        {
-            // if (node == 12)
-            //     timerAlarmWrite(slowDownTimer, 300 * 1000, false);
-            if (node == 11)
-                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
-            else if (node == 10)
-                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
-
-            timerWrite(slowDownTimer, 0);
-            timerAlarmEnable(slowDownTimer);
-        }
-        adjusted = true;
-    }
 }
 
 void exchangeItem()

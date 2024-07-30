@@ -12,7 +12,7 @@ void testElevator()
 
     delay(2500);
 
-    float distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
+    float distanceMoved = elevCounter * ELEV_PULSE_DIST;
 
     // print encoder info
     Serial.println("");
@@ -31,7 +31,7 @@ void testElevator()
     delay(2000);
 
     // print encoder info
-    distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
+    distanceMoved = elevCounter * ELEV_PULSE_DIST;
     Serial.println("");
     Serial.println("DOWN BY BOTTOM BUN HEIGHT");
     Serial.println("Number of ticks:");
@@ -48,7 +48,7 @@ void testElevator()
     delay(2000);
 
     // print encoder info
-    distanceMoved = elevCounter * ELEV_PULSE_DISTANCE;
+    distanceMoved = elevCounter * ELEV_PULSE_DIST;
     Serial.println("");
     Serial.println("DOWN BY TOMATO HEIGHT");
     Serial.println("Number of ticks:");
@@ -57,14 +57,14 @@ void testElevator()
     Serial.println(distanceMoved);
 }
 
-// DETERMINE SWEEP_PULSE_DISTANCE BEFORE RUNNING THIS TEST
+// DETERMINE SWEEP_PULSE_DIST BEFORE RUNNING THIS TEST
 void testSweeper()
 {
     extendSweeper(dcQuarter);
 
     delay(3000);
 
-    float distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    float distanceMoved = sweepCounter * SWEEP_PULSE_DIST;
     Serial.println("");
     Serial.println("EXTENDING");
     Serial.println("Number of ticks:");
@@ -77,7 +77,7 @@ void testSweeper()
 
     delay(3000);
 
-    distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    distanceMoved = sweepCounter * SWEEP_PULSE_DIST;
     Serial.println("");
     Serial.println("PLATE SWEEP");
     Serial.println("Number of ticks:");
@@ -94,7 +94,7 @@ void testSweeper()
 
     delay(3000);
 
-    distanceMoved = sweepCounter * SWEEP_PULSE_DISTANCE;
+    distanceMoved = sweepCounter * SWEEP_PULSE_DIST;
     Serial.println("");
     Serial.println("BUN SWEEP");
     Serial.println("Number of ticks:");
@@ -175,44 +175,50 @@ void timeTrials()
 {
     raisePlatform(dcQuarter, false);
     delay(2000);
-    previousFoodHeight = 5; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    lowerPlatform(dcQuarter, false);
-    delay(500);
+    // previousFoodHeight = 5; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
+    // lowerPlatform(dcQuarter, false);
+    // delay(500);
     previousFoodHeight = 35;
 
     currentStation = start;
     driveUpward(dcEighth);
-    delay(2000); // VALUE NOT FINALIZED - the time required driving slowly towards the counter from the start position
+    delay(1500); // VALUE NOT FINALIZED - the time required driving slowly towards the counter from the start position
     nextStation = buns;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = exchange;
     goNextStation();
-    delay(2000);
     exchangeItem();
-    delay(2000);
+    while (extending)
+    {
+    }
 
     nextStation = patties;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = cooktop;
     goNextStation();
-    delay(2000);
     exchangeItem();
-    delay(2000);
+    while (extending)
+    {
+    }
 
     nextStation = buns;
     goNextStation();
     retractSweeper(dcQuarter, true);
-    delay(2000);
+    while (!swept)
+    {
+    }
 
     nextStation = exchange;
     goNextStation();
-    delay(2000);
     exchangeItem();
-    delay(2000);
 }

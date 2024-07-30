@@ -4,21 +4,21 @@
 // Library includes
 #include <cmath>
 
-// Pin definitions - not necessarily finalized - also need to add the servos!
+// Pin definitions
 #define ELEV_SWITCH 20
-#define ELEV_ENCODER_1 38 // 37
-#define ELEV_ENCODER_2 37 // 38
+#define ELEV_ENCODER_1 38  // 37
+#define ELEV_ENCODER_2 37  // 38
 #define ELEV_MOTOR_UP 12   // 27
 #define ELEV_MOTOR_DOWN 13 // 14
 #define SERVO_PLATFORM 1
 
-// Variables - Measured the same way as the constants above (except for previousFoodHeight)
-extern const double ELEV_PULSE_DISTANCE; // The distance that the platform moves for every pulse sent by the rotary encoder
+// Variables
+extern const double ELEV_PULSE_DIST; // The distance in mm that the platform moves for every pulse sent by the rotary encoder
 extern int elevCounter;
 extern volatile bool raising;
 extern volatile bool maxHeight;
 extern int var1;
-extern double previousFoodHeight; // For the plate, this height is the distance between the two platforms, not the height of the plate
+extern double previousFoodHeight;
 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle, bool extendB);

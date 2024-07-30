@@ -8,17 +8,17 @@
 // Pin definitions
 
 // Variables
+extern hw_timer_t *slowDownTimer;
 extern volatile int tapeCounter;
 extern volatile bool arrived;
 extern int tapeToSee;
-extern hw_timer_t *slowDownTimer;
 extern bool adjusted;
 
 // Function declarations
 void goNextStation();
-void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed); // Enter true to go forwards, false to go backwards?
-void handleEdgeCases();
+void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed);
 void exchangeItem();
 void slowDownTimerInterrupt();
+// void handleEdgeCases();
 
 #endif // NAV_H

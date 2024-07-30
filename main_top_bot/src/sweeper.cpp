@@ -2,14 +2,16 @@
 #include "main.h"
 #include "drive.h"
 
-// double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
-const double SWEEP_PULSE_DISTANCE = 0.6545; // previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
+const double SWEEP_PULSE_DIST = 0.6545; // Previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
+const int FULL_RETRACT_DIST = 300;
+const int HALF_RETRACT_DIST = 150;
+int distanceToSweep = 150;
 volatile int sweepCounter = 0;
-volatile bool extending = false; // Make sure to set this variable back to false after extending the sweeper when pushing the plate off
-                                 // Use a delay for the approximate right amount of time - doesn't have to be perfect
-                                 // Delay is fine because nothing else is happening while pushing off
-volatile bool readyToLeave = false;
-volatile bool sweepStopped = false; // true, don't forget to PUT THIS BACK!!!
+volatile bool extending = false;
+volatile bool sweepStopped = true;
+volatile bool swept = false;
+volatile bool served = false;
+volatile bool slowed = false;
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
@@ -17,12 +19,14 @@ void extendSweeper(uint8_t dutyCycle)
     sweepCounter = 0;
     extending = true;
     sweepStopped = false;
+    slowed = false;
     analogWrite(SWEEP_MOTOR_OUT, dutyCycle);
     analogWrite(SWEEP_MOTOR_BACK, 0);
 }
 
 void retractSweeper(uint8_t dutyCycle, bool reset)
 {
+    swept = false;
     if (reset)
         sweepCounter = 0;
 
@@ -35,15 +39,14 @@ void stopSweeper()
 {
     analogWrite(SWEEP_MOTOR_OUT, 0);
     analogWrite(SWEEP_MOTOR_BACK, 0);
+    extending = false;
+    sweepStopped = true;
 }
 
 void sweepSwitchInterrupt()
 {
     if (extending)
-    {
         stopSweeper();
-        extending = false;
-    }
 }
 
 void sweepEncoderInterrupt()
@@ -63,13 +66,15 @@ void sweepEncoderInterrupt()
 
     if (!extending && !sweepStopped)
     {
-        if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15) // Unless sweepCounter goes negative when retracting?
+        if (sweepCounter >= (distanceToSweep / SWEEP_PULSE_DIST) - 15)
         {
             stopSweeper();
-            readyToLeave = 1;
-            sweepStopped = true;
+            swept = true;
         }
-        // else if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 100)
-        //     stopSweeper();
+    }
+    else if (extending && !slowed && sweepCounter <= -270 / SWEEP_PULSE_DIST)
+    {
+        extendSweeper(dcEighth);
+        slowed = true;
     }
 }

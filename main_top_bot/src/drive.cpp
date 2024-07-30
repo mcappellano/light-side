@@ -1,50 +1,28 @@
 #include "drive.h"
 #include "main.h"
 
-hw_timer_t *accelTimer = NULL;
-uint8_t currentDutyCycle = 0;
-volatile double loopNum = 0;
-bool accelForward = true;
-
+hw_timer_t *crossTimer = NULL;
+bool next = true;
 uint8_t speeds[4] = {0, 0, 0, 0};
 uint32_t freqHz = 50;
-// uint8_t dcSixteenth = 15;
-// uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
 uint8_t dc316 = 48;
 uint8_t dcQuarter = 63;
-// uint8_t dcHalf = 127;
 uint8_t dcThreeQs = 191;
-// uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% and doesn't spin. But 245 works (96%).
 
+// With the weight of the elevator and sweeper (but without fry arm)
 void crossCounters()
 {
-    /*
-    // WITHOUT WEIGHT OF ELEVATOR AND SWEEPER
     driveDownward(dcQuarter);
-    delay(475);
+    setCrossTimer(550);
     spinAround(dcQuarter);
-    delay(650);
+    setCrossTimer(880);
     stopDriving();
-    delay(150);
-    driveUpward(dcQuarter);
-    delay(350);
-    driveUpward(dcEighth);
-    delay(800);
-    stopDriving();
-    */
-
-    // WITH ELEVATOR AND SWEEPER
-    driveDownward(dcQuarter);
-    delay(550);
-    spinAround(dcQuarter);
-    delay(880);
-    stopDriving();
-    delay(300);
+    setCrossTimer(300);
     // driveUpward(dcQuarter);
-    // delay(350);
+    // setCrossTimer(350);
     driveUpward(dcEighth);
-    delay(1000);
+    setCrossTimer(1000);
     stopDriving();
 
     // Update where we are
@@ -52,71 +30,22 @@ void crossCounters()
         node -= 10;
     else
         node += 10;
-
-    //  THIS IS BOTTOM BOT CODE - Edge cases for stations directly across from each other
-    // if (abs(nextStation.num - currentStation.num) == 10)
-    // {
-    //     if (currentStation.equals(cheese) || currentStation.equals(tomatoes))
-    //         node++;
-    //     if (currentStation.equals(plates) || currentStation.equals(lettuce))
-    //         node--;
-    // }
 }
 
-/* Find the perfect combination of motors speeds
-so that the robot moves counter to counter
-while simulatenously rotating 180 degrees
-(consult image I found online and add the vectors to the two motions we want) */
-void crossCountersCool()
+void IRAM_ATTR crossTimerInterrupt()
 {
-    // IMPORTANT NOTE: double duty cycle is not necessarily double RPM
-    changingPWMs(dcQuarter, dcEighth, false, dcQuarter, dcQuarter, true, 0, dcEighth, true, 0, 0, true, 5);
-    changingPWMs(dcEighth, 0, false, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, true, 0, 0, true, 5);
-    changingPWMs(0, 0, false, dcQuarter, dcEighth, true, dcQuarter, dcQuarter, true, 0, dcEighth, false, 5);
-    changingPWMs(0, 0, false, dcEighth, 0, true, dcQuarter, dcQuarter, true, dcEighth, dcQuarter, false, 5);
-
-    if (currentStation.num >= 10)
-        node -= 10;
-    else
-        node += 10;
+    next = true;
+    timerAlarmDisable(crossTimer);
 }
 
-void changingPWMs(uint8_t motor1Start, uint8_t motor1End, bool forw1, uint8_t motor2Start, uint8_t motor2End, bool forw2, uint8_t motor3Start, uint8_t motor3End, bool forw3, uint8_t motor4Start, uint8_t motor4End, bool forw4, int loops)
+void setCrossTimer(int ms)
 {
-    uint8_t motor1Speed = motor1Start;
-    uint8_t motor2Speed = motor2Start;
-    uint8_t motor3Speed = motor3Start;
-    uint8_t motor4Speed = motor4Start;
-
-    stopDriving();
-
-    for (int i = 0; i < loops; i++)
+    next = false;
+    timerAlarmWrite(crossTimer, ms * 1000, false);
+    timerWrite(crossTimer, 0);
+    timerAlarmEnable(crossTimer);
+    while (!next)
     {
-        if (forw1)
-            analogWrite(motor1F, motor1Speed);
-        else
-            analogWrite(motor1B, motor1Speed);
-
-        if (forw2)
-            analogWrite(motor2F, motor2Speed);
-        else
-            analogWrite(motor2B, motor2Speed);
-
-        if (forw3)
-            analogWrite(motor3F, motor3Speed);
-        else
-            analogWrite(motor3B, motor3Speed);
-
-        if (forw4)
-            analogWrite(motor4F, motor4Speed);
-        else
-            analogWrite(motor4B, motor4Speed);
-
-        motor1Speed -= (motor1Start - motor1End) / loops; // This will cause slight rounding errors. Hopefully not enough to notice.
-        motor2Speed -= (motor2Start - motor2End) / loops;
-        motor3Speed -= (motor3Start - motor3End) / loops;
-        motor4Speed -= (motor4Start - motor4End) / loops;
-        delay(75); // change the number of loops and the delay to get the timing right
     }
 }
 
@@ -156,8 +85,6 @@ void calibrateDutyCycle(uint8_t dutyCycle)
         motor4 = dutyCycle * 0.82;
     }
 
-    // uint8_t calibrated[4] = {motor1, motor2, motor3, motor4};
-    // return calibrated;
     speeds[0] = motor1;
     speeds[1] = motor2;
     speeds[2] = motor3;
@@ -166,7 +93,6 @@ void calibrateDutyCycle(uint8_t dutyCycle)
 
 void spinAround(uint8_t dutyCycle)
 {
-    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
     calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, speeds[0]);
@@ -249,64 +175,13 @@ void driveBackward(uint8_t dutyCycle)
     analogWrite(motor4F, 0);
     analogWrite(motor4B, speeds[3]);
 
-    delay(waitTime); // Motors 2 and 3 seem to start a tiny bit early
+    delay(waitTime); // Motors 2 and 3 seem to start a tiny bit early, this helps account for that
 
     analogWrite(motor2F, 0);
     analogWrite(motor2B, speeds[1]);
 
     analogWrite(motor3F, 0);
     analogWrite(motor3B, speeds[2]);
-}
-
-// Speeds up more gradually
-void driveForward2(uint8_t dutyCycle)
-{
-    // loopNum = 0;
-    // accelForward = true;
-    // currentDutyCycle = dutyCycle;
-    // timerWrite(accelTimer, 0);
-    // timerAlarmEnable(accelTimer);
-
-    uint8_t gradualDC = dutyCycle * 0.2;
-    for (int i = 0; i < 4; i++)
-    {
-        driveForward(gradualDC);
-        gradualDC += dutyCycle * 0.2;
-        delay(50);
-    }
-}
-
-void driveBackward2(uint8_t dutyCycle)
-{
-    // loopNum = 0;
-    // accelForward = false;
-    // currentDutyCycle = dutyCycle;
-    // timerWrite(accelTimer, 0);
-    // timerAlarmEnable(accelTimer);
-
-    // float dutyCycle2 = static_cast<float>(dutyCycle);
-    // float gradualDC = dutyCycle2 * 0.2;
-    // driveBackward(static_cast<uint8_t>(gradualDC));
-    // for (int i = 0; i < 4; i++)
-    // {
-    //     delay(50);
-    //     driveBackward(static_cast<uint8_t>(gradualDC));
-    //     gradualDC += dutyCycle2 * 0.2;
-    //     Serial.println(static_cast<uint8_t>(gradualDC));
-    // }
-}
-
-void IRAM_ATTR accelTimerInterrupt()
-{
-    uint8_t gradualDC = currentDutyCycle * ((2.0 + loopNum) / 10.0);
-    if (accelForward)
-        driveForward(gradualDC);
-    else
-        driveBackward(gradualDC);
-
-    loopNum++;
-    if (2.0 + loopNum >= 10.0)
-        timerAlarmDisable(accelTimer);
 }
 
 void driveUpward(uint8_t dutyCycle)
@@ -345,7 +220,6 @@ void driveUpward(uint8_t dutyCycle)
 
 void driveDownward(uint8_t dutyCycle)
 {
-    // uint8_t *speeds = calibrateDutyCycle(dutyCycle);
     calibrateDutyCycle(dutyCycle);
 
     analogWrite(motor1F, speeds[0] - 25); // - 25

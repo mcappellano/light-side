@@ -3,14 +3,14 @@
 #include "drive.h"
 #include "main.h"
 
-const double ELEV_PULSE_DISTANCE = 0.40906; // millimitres - previously 1.63625 (4x)
+const double ELEV_PULSE_DIST = 0.40906; // Previously 1.63625 (4x)
 int elevCounter = 0;
 volatile bool maxHeight = false;
 volatile bool raising = false;
 volatile bool elevStopped = true;
 volatile bool retract = false;
 volatile bool extend = false;
-double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
+double previousFoodHeight = 35;
 int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle, bool extendB)
@@ -31,6 +31,8 @@ void lowerPlatform(uint8_t dutyCycle, bool retractB)
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, dutyCycle);
     retract = retractB;
+    if (retract)
+        distanceToSweep = FULL_RETRACT_DIST;
 }
 
 void stopPlatform()
@@ -78,12 +80,12 @@ void elevEncoderInterrupt()
     if (previousFoodHeight >= 4 && previousFoodHeight <= 5)
         stoppingTicks = 7;
 
-    if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + stoppingTicks))
+    if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DIST) + stoppingTicks))
     {
         stopPlatform();
         elevStopped = true;
     }
-    else if (raising && !elevStopped && (currentStation.equals(exchange) || currentStation.equals(cooktop)) && (elevCounter >= (previousFoodHeight / ELEV_PULSE_DISTANCE)))
+    else if (raising && !elevStopped && (currentStation.equals(exchange) || currentStation.equals(cooktop)) && (elevCounter >= (previousFoodHeight / ELEV_PULSE_DIST)))
     {
         stopPlatform();
         raising = false;

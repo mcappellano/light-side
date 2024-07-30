@@ -28,6 +28,9 @@ Station plates(16, 0, 0, NA);
 Station currentStation = start;
 Station nextStation = buns;
 
+Station stationOrder[8] = {buns, exchange, patties, cooktop, buns, exchange, potatoes, cooktop};
+int orderNum = 0;
+
 int node = -1;
 
 void setup()
@@ -81,64 +84,45 @@ void setup()
     timerAttachInterrupt(tapeTimer, &tapeTimerInterrupt, true);
     timerAlarmWrite(tapeTimer, tapedelay_ms * 1000, false);
 
-    accelTimer = timerBegin(1, 80, true);
-    timerAttachInterrupt(accelTimer, &accelTimerInterrupt, true);
-    timerAlarmWrite(accelTimer, 500 * 1000, true);
-
-    slowDownTimer = timerBegin(2, 80, true);
+    slowDownTimer = timerBegin(1, 80, true);
     timerAttachInterrupt(slowDownTimer, &slowDownTimerInterrupt, true);
     timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+
+    crossTimer = timerBegin(2, 80, true);
+    timerAttachInterrupt(crossTimer, &crossTimerInterrupt, true);
 
     Serial.println("");
     Serial.println("Setup");
 
     delay(1000);
 
-    // raisePlatform(dcQuarter, false);
-    // delay(3000);
-    
-    // lowerPlatform(dcQuarter,true);
-
-    // extendSweeper(dcQuarter);
-    // delay(1000);
-    // retractSweeper(dcQuarter,false);
-    // analogWrite(27,dcQuarter);
-    // delay(1000);
-    // analogWrite(14,dcQuarter);
-
-    // timeTrials();
-
-    // currentStation = cooktop;
-    // raisePlatform(dcQuarter, false);
+    timeTrials();
 }
 
+/* The loop determines the next station we have to go to, and sends the robot there.
+Once arrived, we either sweep in the item or push it out onto the counter.
+After waiting for this action to finish, we go back to the beginning of the loop. */
 void loop()
 {
-    Serial.println(sweepCounter);
-    delay(10);
-    /*
-    // If we are just starting from the start position, execute a different sequence to get set up
-    if (currentStation.equals(start))
+    nextStation = stationOrder[orderNum++];
+    if (orderNum >= 8)
+        orderNum = 0;
+
+    goNextStation();
+    if (currentStation.equals(exchange) || currentStation.equals(cooktop))
     {
-        raisePlatform(dcQuarter);
-        driveUpward(dcHalf); // might have to be downward
-        delay(1500); // VALUE NOT FINALIZED - should be enough time that we get to the counter without quite touching it
-        node = 0;
-        goNextNode(); // From here it will go to plates and act as normal. It won't lower the platform at all since there is a special condition in traverseCounters()
+        exchangeItem();
+        while (extending)
+        {
+        }
     }
     else
     {
-     // Everything else (see description below)
+        retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
+        while (!swept)
+        {
+        }
     }
-    */
-
-    /*
-    This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
-    So this loop determines the next food station we must go to, assign that to nextStation, call goNextStation(),
-    and loop back to the beginning.
-    We must ensure that goNextStation() is not called again until we are ready to move to the next station. Do this by checking
-    until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
-    */
 }
 
 /*
