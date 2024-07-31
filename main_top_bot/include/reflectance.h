@@ -7,6 +7,8 @@
 // Pin definitions
 #define REFLEC1 4
 #define REFLEC2 15
+#define REFLEC3 25
+#define REFLEC4 26
 
 // Variables
 extern hw_timer_t *tapeTimer;

@@ -5,6 +5,7 @@
 #include "sweeper.h"
 #include "tests.h"
 #include "nav.h"
+#include "fryarm.h"
 
 Station::Station(int num, double height, int sweepLength, int item) : num(num), height(height), sweepLength(sweepLength), item(item) {}
 
@@ -40,6 +41,8 @@ void setup()
     // Pin setups
     pinMode(REFLEC1, INPUT);
     pinMode(REFLEC2, INPUT);
+    pinMode(REFLEC3, INPUT);
+    pinMode(REFLEC4, INPUT);
 
     pinMode(ELEV_SWITCH, INPUT); // LOW means switch is pressed. Connect C to the proper ESP pin, NO to ESP GND, and NC to nothing.
     pinMode(SWEEP_SWITCH, INPUT);
@@ -96,8 +99,7 @@ void setup()
 
     delay(1000);
 
-    crossCounters();
-    // timeTrials();
+    crossCountersTape();
 }
 
 /* The loop determines the next station we have to go to, and sends the robot there.
@@ -114,6 +116,15 @@ void loop()
     // {
     //     exchangeItem();
     //     while (extending)
+    //     {
+    //     }
+    // }
+    // else if (currentStation.equals(potatoes))
+    // {
+    //     cutFries();
+    //     // Right here we will have to drive to make sure we are in the right place relative to the fries
+    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
+    //     while (!swept)
     //     {
     //     }
     // }

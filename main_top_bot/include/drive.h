@@ -27,6 +27,7 @@ extern uint8_t speeds[4];
 
 // Function declarations
 void crossCounters();
+void crossCountersTape();
 void IRAM_ATTR crossTimerInterrupt();
 void setCrossTimer(int ms);
 void calibrateDutyCycle(uint8_t dutyCycle);

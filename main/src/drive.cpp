@@ -12,14 +12,10 @@ bool accelForward = true;
 
 uint8_t speeds[4] = {0, 0, 0, 0};
 uint32_t freqHz = 50;
-// uint8_t dcSixteenth = 15;
-// uint8_t dcMin = 24;
 uint8_t dcEighth = 31;
 uint8_t dc316 = 48;
 uint8_t dcQuarter = 63;
-// uint8_t dcHalf = 127;
 uint8_t dcThreeQs = 191;
-// uint8_t dcMax = 245; // FOR SOME REASON, the motor buzzes when ran at 100% and doesn't spin. But 245 works (96%).
 
 void crossCounters()
 {

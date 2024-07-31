@@ -2,17 +2,14 @@
 #include "main.h"
 #include "drive.h"
 
-// double sweeperPosition = FULLY_RETRACT_POS; // Assuming we have to start fully retracted
-const double SWEEP_PULSE_DISTANCE = 0.6545; // previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
+const double SWEEP_PULSE_DISTANCE = 0.6545; // PREVIOUSLY 0.6545 - previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
 volatile int sweepCounter = 0;
-volatile bool extending = false; // Make sure to set this variable back to false after extending the sweeper when pushing the plate off
-                                 // Use a delay for the approximate right amount of time - doesn't have to be perfect
-                                 // Delay is fine because nothing else is happening while pushing off
-// volatile bool readyToLeave = false;
+volatile bool extending = false;
 volatile bool sweepStopped = true;
 volatile bool slowed = false;
 volatile bool swept = false;
 int sweepPrevious = 0;
+uint8_t dcSlowSweep = 44;
 
 void extendSweeper(uint8_t dutyCycle)
 {
@@ -69,7 +66,7 @@ void sweepEncoderInterrupt()
 
     if (!extending && !sweepStopped)
     {
-        if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15)
+        if (sweepCounter <= (-currentStation.sweepLength / SWEEP_PULSE_DISTANCE) + 15)
         {
             stopSweeper();
             swept = true;
@@ -77,7 +74,7 @@ void sweepEncoderInterrupt()
         // else if (sweepCounter >= (currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 100)
         //     stopSweeper();
     }
-    else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter <= -160 / SWEEP_PULSE_DISTANCE)
+    else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter >= 160 / SWEEP_PULSE_DISTANCE)
     {
         extendSweeper(dcEighth);
         slowed = true;

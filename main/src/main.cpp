@@ -26,11 +26,10 @@ Station servingArea(11.5, 1, 325 + 65, NA); // 340 is the total distance the swe
 Station burgerBack(1, 15, 25, NA);          // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
 
 Station currentStation = start;
-Station nextStation = plates; // For top bot code, replace this with buns
+Station nextStation = plates;
 
-// std::map<int, Station> numsToStation = {{0, tomato}, {1, exchange}, {2, cooktop}, {3, plates}, {10, cheese}, {13, lettuce}};
-
-Station stationOrder[9] = {plates, exchange, cheese, cooktop, tomatoes, lettuce, exchange, cooktop, servingArea};
+Station stationOrder[9] = {plates, exchange, cheese, tomatoes, lettuce, cooktop, exchange, cooktop, servingArea};
+int delayOrder[9] = {0, 2000, 0, 0, 0, 0, 0, 0};
 int orderNum = 0;
 
 double node = -1;
@@ -102,111 +101,11 @@ void setup()
 
     delay(1000);
 
-    // Works when sensing a bunch of tape :
-    // currentStation = cooktop;
-    // extendSweeper(dcQuarter);
-    // delay(4000);
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
-    // delay(1000);
-    // extendSweeper(dcQuarter);
-    // delay(2500);
-    // retractSweeper(dcQuarter, true);
-
-    // Also works:
-    // currentStation = exchange;
-    // nextStation = cooktop;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-
-    // Doesn't work:
-    // burger();
-
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
-
-    // nextStation = exchange;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    //     Serial.println("extending:");
-    //     Serial.println(extending);
-    //     Serial.println("sweepStopped:");
-    //     Serial.println(sweepStopped);
-    //     Serial.println("sweepCounter:");
-    //     Serial.println(sweepCounter);
-    //     Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
-    //     Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
-    // }
-
-    // break ---------------------------------------------------------------------------------------
-
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-
-    // currentStation = start;
-    // driveUpward(dcEighth);
-    // delay(2000);
-    // nextStation = plates;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
-
-    // nextStation = exchange;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    //     Serial.println("extending:");
-    //     Serial.println(extending);
-    //     Serial.println("sweepStopped:");
-    //     Serial.println(sweepStopped);
-    //     Serial.println("sweepCounter:");
-    //     Serial.println(sweepCounter);
-    //     Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
-    //     Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
-    // }
-
     burger();
-
-    // raisePlatform(dcQuarter);
-    // delay(2000);
-    // currentStation = cheese;
-    // nextStation = tomatoes;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
 }
 
 void loop()
 {
-    /*
-    // If we are just starting from the start position, execute a different sequence to get set up
-    DO THIS IN SETUP!!
-    if (currentStation.equals(start))
-    {
-        raisePlatform(dcQuarter);
-        driveUpward(dcHalf); // might have to be downward
-        delay(1500); // VALUE NOT FINALIZED - should be enough time that we get to the counter without quite touching it
-        node = 0;
-        goNextNode(); // From here it will go to plates and act as normal. It won't lower the platform at all since there is a special condition in traverseCounters()
-    }
-    else
-    {
-     // Everything else (see description below)
-    }
-    */
-
     /*
     This will contain logic that decides where the robot will go next. Once that is decided, all we need to do is call goNextStation().
     So this loop determines the next food station we must go to, assign that to nextStation, call goNextStation(),
@@ -215,8 +114,8 @@ void loop()
     until the variable readyToLeave is true, while making sure to set it back to false afterwards. (Not sure yet if this is needed)
     */
 
-    // ACTUAL LOOP CODE:
-    // nextStation = stationOrder[orderNum++];
+    // nextStation = stationOrder[orderNum];
+    // delay(delayOrder[orderNum++]);
     // if (orderNum >= 9)
     //     orderNum = 0;
 

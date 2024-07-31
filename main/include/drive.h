@@ -20,14 +20,10 @@
 extern hw_timer_t *accelTimer;
 extern hw_timer_t *crossTimer;
 extern uint32_t freqHz;
-// extern uint8_t dcSixteenth;
-// extern uint8_t dcMin;
 extern uint8_t dcEighth;
 extern uint8_t dc316;
 extern uint8_t dcQuarter;
-// extern uint8_t dcHalf;
 extern uint8_t dcThreeQs;
-// extern uint8_t dcMax;
 extern uint8_t speeds[4];
 
 extern volatile double loopNum;
