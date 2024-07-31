@@ -58,7 +58,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         lowerPlatform(dcQuarter, true);
 
     if (currentStation.equals(start))
+    {
         extendSweeper(dcQuarter);
+        raisePlatform(dcQuarter, false);
+    }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
     if (!crossed)

@@ -173,16 +173,17 @@ void majorTest2()
 
 void timeTrials()
 {
-    raisePlatform(dcQuarter, false);
-    delay(2000);
     // previousFoodHeight = 5; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
     // lowerPlatform(dcQuarter, false);
     // delay(500);
     previousFoodHeight = 35;
 
     currentStation = start;
+    driveUpward(dcQuarter);
+    delay(500); // VALUE NOT FINALIZED - the time required driving towards the counter from the start position
     driveUpward(dcEighth);
-    delay(1500); // VALUE NOT FINALIZED - the time required driving slowly towards the counter from the start position
+    delay(500);
+    stopDriving();
     nextStation = buns;
     goNextStation();
     retractSweeper(dcQuarter, true);

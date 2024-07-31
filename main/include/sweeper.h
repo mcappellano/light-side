@@ -18,7 +18,6 @@ extern volatile int sweepCounter;
 extern volatile bool extending;
 extern volatile bool sweepStopped;
 extern volatile bool swept;
-extern uint8_t dcSlowSweep;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);

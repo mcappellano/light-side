@@ -9,7 +9,6 @@ volatile bool sweepStopped = true;
 volatile bool slowed = false;
 volatile bool swept = false;
 int sweepPrevious = 0;
-uint8_t dcSlowSweep = 44;
 
 void extendSweeper(uint8_t dutyCycle)
 {
@@ -76,7 +75,7 @@ void sweepEncoderInterrupt()
     }
     else if (extending && !slowed && !currentStation.equals(servingArea) && sweepCounter >= 160 / SWEEP_PULSE_DISTANCE)
     {
-        extendSweeper(dcEighth);
+        extendSweeper(40);
         slowed = true;
     }
 }

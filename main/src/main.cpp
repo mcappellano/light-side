@@ -16,13 +16,13 @@ bool Station::equals(const Station &other) const
 }
 
 Station start(0, 0, 100, NA);               // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
-Station tomatoes(0, 3, 165 + 65, NA);       // PREVIOUSLY 4.4 - 176 + 65 ... All measurements in mm
-Station exchange(1, 0, 165 + 65, EMPTY);    // PREVIOUSLY 15 // 169 + 65 ... Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 9, 165 + 65, EMPTY);     // PREVIOUSLY 10 - 173 + 65 ... Only height of patty matters; fries are not being stacked
-Station plates(3, 13.5, 140 + 65, NA);      // 149 + 65, Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
-Station cheese(10, 4.3, 162 + 65, NA);      // PREVIOUSLY 4.3  -  176 + 65 ...
-Station lettuce(13, 3, 165 + 65, NA);       // PREVIOUSLY 4.3  -  179 + 65 ...
-Station servingArea(11.5, 1, 325 + 65, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
+Station tomatoes(0, 3, 165 + 45, NA);       // PREVIOUSLY 4.4 - 176 + 65 ... All measurements in mm
+Station exchange(1, 0, 165 + 45, EMPTY);    // PREVIOUSLY 15 // 169 + 65 ... Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 9, 165 + 45, EMPTY);     // PREVIOUSLY 10 - 173 + 65 ... Only height of patty matters; fries are not being stacked
+Station plates(3, 13.5, 144 + 45, NA);      // 149 + 65, Previously 24.5, 23.175 - 149... VALUES NOT FINALIZED - replace 40 with the height between the two platforms, replace 150 with the distance the plate must be swept in
+Station cheese(10, 4.3, 162 + 45, NA);      // PREVIOUSLY 4.3  -  176 + 65 ...
+Station lettuce(13, 3, 165 + 45, NA);       // PREVIOUSLY 4.3  -  179 + 65 ...
+Station servingArea(11.5, 1, 325 + 35, NA); // 340 is the total distance the sweeper must move back (from fully extended to fully retracted)
 Station burgerBack(1, 15, 25, NA);          // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
 
 Station currentStation = start;

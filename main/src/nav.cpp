@@ -98,7 +98,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Move sweeper and platform to ready positions
     if (!nextStation.equals(servingArea))
     {
-        extendSweeper(dcThreeQs); // Modify sweeper speed here
+        if (currentStation.equals(start))
+            extendSweeper(40); // Either dcEighth or dc316
+        else
+            extendSweeper(dcQuarter); // Modify sweeper speed here
         if (!currentStation.equals(start) && !currentStation.equals(exchange))
             lowerPlatform(dcQuarter); // Modify platform speed here
     }

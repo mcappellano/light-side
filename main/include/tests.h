@@ -15,7 +15,6 @@ void majorTest2();
 void buildBurgerStationary();
 void cheesePlate();
 void burger();
-void debugCooktop();
 void salad();
 void timeTrials();
 void cheesePlateOld();

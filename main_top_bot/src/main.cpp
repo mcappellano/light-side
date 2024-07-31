@@ -17,19 +17,20 @@ bool Station::equals(const Station &other) const
 }
 
 // All measurements in mm
-Station start(0, 0, 150, NA);
-Station patties(1, 35, 150, NA);
-Station buns(3, 35, 150, NA);
-Station potatoes(5, 35, 150, NA);
+Station start(0, 0, HALF_RETRACT_DIST, NA);
+Station patties(1, 35, HALF_RETRACT_DIST, NA);
+Station buns(3, 35, HALF_RETRACT_DIST, NA);
+Station potatoes(5, 35, HALF_RETRACT_DIST, NA);
 Station tomatoes(10, 0, 0, NA);
-Station exchange(12, 35, 150, EMPTY);
-Station cooktop(14, 35, 150, EMPTY);
+Station exchange(12, 35, HALF_RETRACT_DIST, EMPTY);
+Station cooktop(14, 35, HALF_RETRACT_DIST, EMPTY);
 Station plates(16, 0, 0, NA);
 
 Station currentStation = start;
 Station nextStation = buns;
 
 Station stationOrder[8] = {buns, exchange, patties, cooktop, buns, exchange, potatoes, cooktop};
+int delayOrder[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int orderNum = 0;
 
 int node = -1;
@@ -97,9 +98,21 @@ void setup()
     Serial.println("");
     Serial.println("Setup");
 
+    // ACTUAL CODE --------------------------------------------------
+    // driveUpward(dcQuarter);
+    // delay(1000);
+    // stopDriving();
+
+    // TESTING CODE -------------------------------------------------
     delay(1000);
 
-    crossCountersTape();
+    // timeTrials();
+    extendSweeper(dcQuarter);
+    delay(4000);
+    retractSweeper(dcQuarter, true);
+    delay(3500);
+    distanceToSweep = FULL_RETRACT_DIST;
+    retractSweeper(dcQuarter, false);
 }
 
 /* The loop determines the next station we have to go to, and sends the robot there.
@@ -107,11 +120,12 @@ Once arrived, we either sweep in the item or push it out onto the counter.
 After waiting for this action to finish, we go back to the beginning of the loop. */
 void loop()
 {
-    // nextStation = stationOrder[orderNum++];
+    // nextStation = stationOrder[orderNum];
+    // delay(delayOrder[orderNum++]);
     // if (orderNum >= 8)
     //     orderNum = 0;
-
     // goNextStation();
+
     // if (currentStation.equals(exchange) || currentStation.equals(cooktop))
     // {
     //     exchangeItem();

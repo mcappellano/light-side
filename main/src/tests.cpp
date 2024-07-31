@@ -311,65 +311,6 @@ void burger()
     retractSweeper(dcQuarter, true);
     while (!swept)
     {
-        Serial.println("extending:");
-        Serial.println(extending);
-        Serial.println("sweepStopped:");
-        Serial.println(sweepStopped);
-        Serial.println("sweepCounter:");
-        Serial.println(sweepCounter);
-        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
-        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
-    }
-
-    nextStation = exchange;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
-        Serial.println("extending:");
-        Serial.println(extending);
-        Serial.println("sweepStopped:");
-        Serial.println(sweepStopped);
-        Serial.println("sweepCounter:");
-        Serial.println(sweepCounter);
-        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
-        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
-    }
-
-    nextStation = cooktop;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
-        Serial.println("extending:");
-        Serial.println(extending);
-        Serial.println("sweepStopped:");
-        Serial.println(sweepStopped);
-        Serial.println("sweepCounter:");
-        Serial.println(sweepCounter);
-        Serial.println("(currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15:");
-        Serial.println((currentStation.sweepLength / SWEEP_PULSE_DISTANCE) - 15);
-    }
-
-    nextStation = cheese;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
-    }
-
-    nextStation = tomatoes;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
-    }
-
-    nextStation = lettuce;
-    goNextStation();
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
     }
 
     nextStation = exchange;
@@ -378,6 +319,41 @@ void burger()
     while (!swept)
     {
     }
+
+    // nextStation = cooktop;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = cheese;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = tomatoes;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = lettuce;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
+
+    // nextStation = exchange;
+    // goNextStation();
+    // retractSweeper(dcQuarter, true);
+    // while (!swept)
+    // {
+    // }
 
     nextStation = servingArea;
     goNextStation();
@@ -386,26 +362,6 @@ void burger()
     // previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
     // lowerPlatform(dcQuarter);
     // delay(500);
-}
-
-void debugCooktop()
-{
-
-    raisePlatform(dcQuarter);
-    delay(2000);
-    previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    lowerPlatform(dcQuarter);
-    delay(500);
-
-    currentStation = exchange;
-    nextStation = cooktop;
-    goNextStation();
-    alreadySeen = true;
-    retractSweeper(dcQuarter, true);
-    while (!swept)
-    {
-        delay(1);
-    }
 }
 
 void salad()
