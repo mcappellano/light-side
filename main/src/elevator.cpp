@@ -62,7 +62,7 @@ void elevEncoderInterrupt()
 
     int stoppingTicks = 7;
     if (previousFoodHeight > 5)
-        stoppingTicks = 12;
+        stoppingTicks = 10;
     if (previousFoodHeight > 12)
         stoppingTicks = 14;
 

@@ -300,12 +300,12 @@ void cheesePlate()
 
 void burger()
 {
-    raisePlatform(dcQuarter);
-    delay(2000);
-
     currentStation = start;
+    driveUpward(dcQuarter);
+    delay(700);
     driveUpward(dcEighth);
-    delay(2000);
+    delay(600);
+    stopDriving();
     nextStation = plates;
     goNextStation();
     retractSweeper(dcQuarter, true);
@@ -320,40 +320,40 @@ void burger()
     {
     }
 
-    // nextStation = cooktop;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
+    nextStation = cooktop;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+    }
 
-    // nextStation = cheese;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
+    nextStation = cheese;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+    }
 
-    // nextStation = tomatoes;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
+    nextStation = tomatoes;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+    }
 
-    // nextStation = lettuce;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
+    nextStation = lettuce;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+    }
 
-    // nextStation = exchange;
-    // goNextStation();
-    // retractSweeper(dcQuarter, true);
-    // while (!swept)
-    // {
-    // }
+    nextStation = exchange;
+    goNextStation();
+    retractSweeper(dcQuarter, true);
+    while (!swept)
+    {
+    }
 
     nextStation = servingArea;
     goNextStation();

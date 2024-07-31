@@ -42,8 +42,6 @@ void stopPlatform()
 {
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, 0);
-    raising = false;
-    elevStopped = true;
     if (retract)
     {
         retractSweeper(dcQuarter, false);
@@ -54,6 +52,8 @@ void stopPlatform()
         extendSweeper(dcQuarter);
         extend = false;
     }
+    raising = false;
+    elevStopped = true;
 }
 
 void elevSwitchInterrupt()

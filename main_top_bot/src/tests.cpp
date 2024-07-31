@@ -186,6 +186,10 @@ void timeTrials()
     stopDriving();
     nextStation = buns;
     goNextStation();
+
+    previousFoodHeight = 5;
+    lowerPlatform(dcQuarter, false);
+
     retractSweeper(dcQuarter, true);
     while (!swept)
     {
@@ -193,8 +197,11 @@ void timeTrials()
 
     nextStation = exchange;
     goNextStation();
+    while (!sweepStopped)
+    {
+    }
     exchangeItem();
-    while (extending)
+    while (raising || extending)
     {
     }
 
@@ -207,8 +214,11 @@ void timeTrials()
 
     nextStation = cooktop;
     goNextStation();
+    while (!sweepStopped)
+    {
+    }
     exchangeItem();
-    while (extending)
+    while (raising || extending)
     {
     }
 

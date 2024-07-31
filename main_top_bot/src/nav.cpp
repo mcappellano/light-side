@@ -57,14 +57,19 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     if (currentStation.equals(potatoes) || currentStation.equals(patties) || currentStation.equals(buns))
         lowerPlatform(dcQuarter, true);
 
-    if (currentStation.equals(start))
+    else if (currentStation.equals(start))
     {
         extendSweeper(dcQuarter);
         raisePlatform(dcQuarter, false);
     }
+    else if (currentStation.equals(exchange) || currentStation.equals(cooktop))
+    {
+        previousFoodHeight = 5;
+        lowerPlatform(dcQuarter, false);
+    }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
-    if (!crossed)
+    if (!crossed && !currentStation.equals(start))
     {
         alreadySeen = true;
         timerWrite(tapeTimer, 0);
@@ -82,8 +87,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     }
 
     // In case they don't finish before making it to the food station
-    stopSweeper();
-    stopPlatform();
+    // stopSweeper();
+    // stopPlatform();
 
     // Don't allow any more tape pieces to be unintentionally counted until we are ready again
     alreadySeen = true;

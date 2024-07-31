@@ -19,34 +19,19 @@ uint8_t dcThreeQs = 191;
 
 void crossCounters()
 {
-    /*
-    // WITHOUT WEIGHT OF ELEVATOR AND SWEEPER
-    driveDownward(dcQuarter);
-    delay(475);
-    spinAround(dcQuarter);
-    delay(650);
-    stopDriving();
-    delay(150);
-    driveUpward(dcQuarter);
-    delay(350);
-    driveUpward(dcEighth);
-    delay(800);
-    stopDriving();
-    */
-
     // WITH ELEVATOR AND SWEEPER
     driveDownward(dcQuarter);
     setCrossTimer(800);
     spinAround(dcQuarter);
     if (directlyAcross())
         extendSweeper(dcQuarter);
-    setCrossTimer(950);
+    setCrossTimer(990);
     stopDriving();
     setCrossTimer(300);
     driveUpward(dcQuarter);
     setCrossTimer(300);
     driveUpward(dcEighth);
-    setCrossTimer(1400);
+    setCrossTimer(1300);
     stopDriving();
 
     // Update where we are
