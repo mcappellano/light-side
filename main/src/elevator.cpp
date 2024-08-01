@@ -1,7 +1,7 @@
 #include "elevator.h"
 #include "main.h"
 
-const double ELEV_PULSE_DISTANCE = 0.40906; // millimitres - previously 1.63625 (4x)
+const double ELEV_PULSE_DISTANCE = 0.40906; // Millimitres - previously 1.63625 (4x)
 int elevCounter = 0;
 volatile bool raising = false;
 volatile bool elevStopped = true;
@@ -32,19 +32,16 @@ void stopPlatform()
 {
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, 0);
+    raising = false;
+    elevStopped = true;
 }
 
 void elevSwitchInterrupt()
 {
     if (raising)
-    {
         stopPlatform();
-        raising = false;
-        elevStopped = true;
-    }
 }
 
-// IF EACH TIME WE GO DOWN WE GO 1 MM EXTRA, WE MAY HAVE TO ACCOUNT FOR THIS (by the end it could be 0.5 cm off)
 void elevEncoderInterrupt()
 {
     int MSB = digitalRead(ELEV_ENCODER_1);
@@ -67,15 +64,7 @@ void elevEncoderInterrupt()
         stoppingTicks = 14;
 
     if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + stoppingTicks))
-    {
         stopPlatform();
-        elevStopped = true;
-    }
-
-    if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
-    {
+    else if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
         stopPlatform();
-        elevStopped = true;
-        raising = false;
-    }
 }

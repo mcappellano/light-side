@@ -17,7 +17,8 @@ extern const double ELEV_PULSE_DISTANCE; // The distance that the platform moves
 extern int elevCounter;
 extern volatile bool raising;
 extern int var1;
-extern double previousFoodHeight; // For the plate, this height is the distance between the two platforms, not the height of the plate
+extern double previousFoodHeight;
+extern volatile bool elevStopped;
 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle);

@@ -1,6 +1,7 @@
 #include "sweeper.h"
 #include "main.h"
 #include "drive.h"
+#include "elevator.h"
 
 const double SWEEP_PULSE_DISTANCE = 0.6545; // PREVIOUSLY 0.6545 - previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
 volatile int sweepCounter = 0;
@@ -8,6 +9,7 @@ volatile bool extending = false;
 volatile bool sweepStopped = true;
 volatile bool slowed = false;
 volatile bool swept = false;
+bool raiseA = false;
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
@@ -23,9 +25,10 @@ void extendSweeper(uint8_t dutyCycle)
     }
 }
 
-void retractSweeper(uint8_t dutyCycle, bool reset)
+void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB)
 {
     swept = false;
+    raiseA = raiseB;
     if (reset)
         sweepCounter = 0;
 
@@ -40,6 +43,11 @@ void stopSweeper()
     analogWrite(SWEEP_MOTOR_BACK, 0);
     sweepStopped = true;
     extending = false;
+    if (raiseA)
+    {
+        raisePlatform(dcQuarter);
+        raiseA = false;
+    }
 }
 
 void sweepSwitchInterrupt()

@@ -21,7 +21,7 @@ extern volatile bool swept;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);
-void retractSweeper(uint8_t dutyCycle, bool reset);
+void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB);
 void stopSweeper();
 void sweepSwitchInterrupt();
 void sweepEncoderInterrupt();

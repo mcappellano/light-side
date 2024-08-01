@@ -19,8 +19,9 @@ void goNextStation();
 bool directlyAcross();
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed); // Enter true to go forwards, false to go backwards?
 void handleEdgeCases();
-void moveBurgerBack();
 void serveMeal();
+void moveBurgerBack();
+void lowerIfServing();
 void slowDownTimerInterrupt();
 
 #endif // NAV_H
