@@ -26,6 +26,8 @@ void goNextStation()
     // Cross counter if necessary
     if ((node >= 10 && nextStation.num < 10) || (node < 10 && nextStation.num >= 10))
     {
+        if (nextStation.equals(exchange) || nextStation.equals(cooktop))
+            lowerPlatform(dcQuarter, true);
         crossCounters();
         crossed = true;
     }
@@ -55,7 +57,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
     // Move sweeper and platform to ready positions
     if (currentStation.equals(potatoes) || currentStation.equals(patties) || currentStation.equals(buns))
-        lowerPlatform(dcQuarter, true);
+        raisePlatform(dcQuarter, false);
 
     else if (currentStation.equals(start))
     {
@@ -64,7 +66,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     }
     else if (currentStation.equals(exchange) || currentStation.equals(cooktop))
     {
-        previousFoodHeight = 5;
+        previousFoodHeight = DROP_DIST;
         lowerPlatform(dcQuarter, false);
     }
 
@@ -114,7 +116,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 
 void exchangeItem()
 {
-    raisePlatform(dcQuarter, true);
+    // raisePlatform(dcQuarter, true);
+    extendSweeper(dcQuarter);
 }
 
 void IRAM_ATTR slowDownTimerInterrupt()

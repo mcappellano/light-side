@@ -17,13 +17,11 @@ void crossCounters()
     driveDownward(dcQuarter);
     setCrossTimer(650);
     spinAround(dcQuarter);
-    setCrossTimer(910);
+    setCrossTimer(1100);
     stopDriving();
     setCrossTimer(300);
     driveUpward(dcQuarter);
-    setCrossTimer(150);
-    driveUpward(dcEighth);
-    setCrossTimer(1000);
+    setCrossTimer(450);
     stopDriving();
 
     // Update where we are
@@ -31,6 +29,13 @@ void crossCounters()
         node -= 10;
     else
         node += 10;
+}
+
+void forceIntoCounter()
+{
+    driveUpward(dcQuarter);
+    setCrossTimer(150);
+    stopDriving();
 }
 
 void crossCountersTape()

@@ -4,13 +4,15 @@
 #include "main.h"
 
 const double ELEV_PULSE_DIST = 0.40906; // Previously 1.63625 (4x)
+const int DROP_DIST = 13;
+const int FULL_DROP_DIST = 25;
 int elevCounter = 0;
 volatile bool maxHeight = false;
 volatile bool raising = false;
 volatile bool elevStopped = true;
 volatile bool retract = false;
 volatile bool extend = false;
-double previousFoodHeight = 35;
+double previousFoodHeight = FULL_DROP_DIST;
 int elevPrevious = 0;
 
 void raisePlatform(uint8_t dutyCycle, bool extendB)

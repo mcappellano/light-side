@@ -187,7 +187,7 @@ void timeTrials()
     nextStation = buns;
     goNextStation();
 
-    previousFoodHeight = 5;
+    previousFoodHeight = DROP_DIST;
     lowerPlatform(dcQuarter, false);
 
     retractSweeper(dcQuarter, true);
