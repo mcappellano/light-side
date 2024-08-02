@@ -25,8 +25,12 @@ void crossCounters()
     setCrossTimer(875);
     spinAround(dcQuarter);
     if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
+    {
         extendSweeper(dcQuarter);
-    setCrossTimer(1045);
+        setCrossTimer(1165);
+    }
+    else
+        setCrossTimer(1055);
     stopDriving();
     setCrossTimer(300);
     driveUpward(dcQuarter);

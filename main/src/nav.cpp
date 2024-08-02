@@ -56,10 +56,16 @@ void goNextStation()
         tapeToSee = abs(nextStation.num - node);
     else if (node >= 10)
         tapeToSee = 1;
-    else if (currentStation.equals(servingArea))
+
+    if (currentStation.equals(servingArea))
         tapeToSee = 2;
 
-    // TO DO: wait until the crossing counter timer interrupt changes a variable that signals we made it to the other side
+    // Workaround fix for bug going from cheese to lettuce
+    if (currentStation.equals(cheese) && nextStation.equals(lettuce))
+    {
+        driveBackward(dcThreeQs);
+        delay(200);
+    }
 
     // Accounts for the "forward" direction changing when we spin 180 degrees
     if ((nextStation.num > node && node < 10) || (nextStation.num < node && nextStation.num >= 10))
@@ -74,6 +80,8 @@ bool directlyAcross()
     if ((currentStation.equals(lettuce) && nextStation.equals(plates)) || (currentStation.equals(plates) && nextStation.equals(lettuce)))
         return true;
     if ((currentStation.equals(cheese) && nextStation.equals(tomatoes)) || (currentStation.equals(tomatoes) && nextStation.equals(cheese)))
+        return true;
+    if ((currentStation.equals(lettuce) && nextStation.equals(cooktop)) || (currentStation.equals(cheese) && nextStation.equals(exchange)))
         return true;
 
     return false;
@@ -117,7 +125,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             driveForward(dcQuarter);
 
         currentStation = servingArea;
-        retractSweeper(dcQuarter, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
+        retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
     }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
@@ -145,8 +153,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     }
 
     // In case they don't finish before making it to the food station
-    stopSweeper();
-    stopPlatform();
+    // stopSweeper();
+    // stopPlatform();
 
     if (!nextStation.equals(servingArea))
     {
@@ -200,7 +208,7 @@ void handleEdgeCases()
             if (node == 11)
                 timerAlarmWrite(slowDownTimer, 500 * 1000, false);
             else if (node == 12)
-                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+                timerAlarmWrite(slowDownTimer, 2200 * 1000, false);
             else if (node == 13)
                 timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
@@ -221,7 +229,7 @@ void handleEdgeCases()
             if (node == 11)
                 timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
             else if (node == 10)
-                timerAlarmWrite(slowDownTimer, 2250 * 1000, false);
+                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
             timerWrite(slowDownTimer, 0);
             timerAlarmEnable(slowDownTimer);
@@ -230,10 +238,12 @@ void handleEdgeCases()
     }
     if (next == 11.5)
     {
-        if (node == 11 || node == 12)
-            timerAlarmWrite(slowDownTimer, 700 * 1000, false);
+        if (node == 11)
+            timerAlarmWrite(slowDownTimer, 600 * 1000, false);
+        else if (node == 12)
+            timerAlarmWrite(slowDownTimer, 900, false);
         else if (node == 10 || node == 13)
-            timerAlarmWrite(slowDownTimer, 2400 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
@@ -249,12 +259,12 @@ void handleEdgeCases()
 // Directly after arriving at serving area
 void serveMeal()
 {
-    currentStation = servingArea;
     while (raising)
     {
     }
+    delay(100);
     extendSweeper(dcQuarter);
-    delay(2000);
+    delay(1500);
     stopSweeper();
 }
 
