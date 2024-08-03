@@ -199,68 +199,76 @@ void buildBurgerStationary()
     currentStation = plates;
     previousFoodHeight = plates.height;
     retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
+    while (!swept)
+    {
+    }
     extendSweeper(dcThreeQs);
     delay(2000);
     lowerPlatform(dcQuarter);
     delay(2000);
+
     currentStation = exchange;
     previousFoodHeight = exchange.height;
     retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    // lowerPlatform(dcQuarter); Don't uncomment
-    // delay(2000); Don't uncomment
-    currentStation = cooktop;
-    previousFoodHeight = cooktop.height;
-    retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
+    while (!swept)
+    {
+    }
     extendSweeper(dcThreeQs);
     delay(2000);
     lowerPlatform(dcQuarter);
     delay(2000);
-    currentStation = cheese;
-    previousFoodHeight = cheese.height;
-    retractSweeper(dcQuarter, true, false);
-    delay(3000);
 
-    extendSweeper(dcThreeQs);
-    delay(2000);
-    lowerPlatform(dcQuarter);
-    delay(2000);
     currentStation = tomatoes;
     previousFoodHeight = tomatoes.height;
     retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
+    while (!swept)
+    {
+    }
     extendSweeper(dcThreeQs);
     delay(2000);
     lowerPlatform(dcQuarter);
     delay(2000);
+
+    currentStation = cheese;
+    previousFoodHeight = cheese.height;
+    retractSweeper(dcQuarter, true, false);
+    while (!swept)
+    {
+    }
+    extendSweeper(dcThreeQs);
+    delay(2000);
+    lowerPlatform(dcQuarter);
+    delay(2000);
+
     currentStation = lettuce;
     previousFoodHeight = lettuce.height;
     retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
+    while (!swept)
+    {
+    }
     extendSweeper(dcThreeQs);
     delay(2000);
     lowerPlatform(dcQuarter);
     delay(2000);
+
+    currentStation = cooktop;
+    previousFoodHeight = cooktop.height;
+    retractSweeper(dcQuarter, true, false);
+    while (!swept)
+    {
+    }
+    extendSweeper(dcThreeQs);
+    delay(2000);
+    lowerPlatform(dcQuarter);
+    delay(2000);
+
+    exchange.sweepLength = 193;
     currentStation = exchange;
     previousFoodHeight = 35; // VALUE NOT FINALIZED
     retractSweeper(dcQuarter, true, false);
-    delay(3000);
-
-    lowerPlatform(dcQuarter);
-    delay(2500);
-    currentStation = servingArea;
-    retractSweeper(dcQuarter, false, false);
-    delay(2500);
-    serveMeal();
+    while (!swept)
+    {
+    }
 }
 
 // Don't use. is broken. use cheesePlateOld below

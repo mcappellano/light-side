@@ -84,8 +84,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     The platform and sweeper are stopped at the right height/length by the encoder interrupts. */
     while (!arrived)
     {
-        // if (!adjusted)
-        //  handleEdgeCases();
+        if (!adjusted)
+            handleEdgeCases();
     }
 
     // In case they don't finish before making it to the food station
@@ -112,6 +112,17 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     currentStation = nextStation;
     distanceToSweep = currentStation.sweepLength;
     node = currentStation.num;
+}
+
+void handleEdgeCases()
+{
+    if (nextStation.equals(cooktop) && currentStation.equals(patties))
+    {
+        timerAlarmWrite(slowDownTimer, 2200 * 1000, false);
+        timerWrite(slowDownTimer, 0);
+        timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
 }
 
 void exchangeItem()

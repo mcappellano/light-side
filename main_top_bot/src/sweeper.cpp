@@ -3,7 +3,7 @@
 #include "drive.h"
 
 const double SWEEP_PULSE_DIST = 0.6545; // Previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
-const int FULL_RETRACT_DIST = 327;
+const int FULL_RETRACT_DIST = 315;
 const int HALF_RETRACT_DIST = 199;
 int distanceToSweep = HALF_RETRACT_DIST;
 volatile int sweepCounter = 0;
@@ -18,7 +18,6 @@ void extendSweeper(uint8_t dutyCycle)
 {
     if (digitalRead(SWEEP_SWITCH))
     {
-        sweepCounter = 0;
         extending = true;
         sweepStopped = false;
         slowed = false;

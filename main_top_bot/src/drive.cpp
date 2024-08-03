@@ -326,3 +326,18 @@ void stopDriving()
     analogWrite(motor4F, 0);
     analogWrite(motor4B, 0);
 }
+
+void driveDiagonal()
+{
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, 0);
+
+    analogWrite(motor2F, dcThreeQs);
+    analogWrite(motor2B, 0);
+
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, 0);
+
+    analogWrite(motor4F, dcThreeQs);
+    analogWrite(motor4B, 0);
+}

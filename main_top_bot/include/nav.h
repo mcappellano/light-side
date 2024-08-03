@@ -19,6 +19,6 @@ void goNextStation();
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed);
 void exchangeItem();
 void slowDownTimerInterrupt();
-// void handleEdgeCases();
+void handleEdgeCases();
 
 #endif // NAV_H

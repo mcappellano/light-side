@@ -39,5 +39,6 @@ void driveBackward(uint8_t dutyCycle);
 void driveUpward(uint8_t dutyCycle);
 void driveDownward(uint8_t dutyCycle);
 void stopDriving();
+void driveDiagonal();
 
 #endif // DRIVE_H

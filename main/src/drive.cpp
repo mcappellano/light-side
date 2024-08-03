@@ -23,18 +23,17 @@ void crossCounters()
     driveDownward(dcQuarter);
     lowerIfServing(); // Speeds up serving process by lowering the platform earlier
     setCrossTimer(875);
-    spinAround(dcQuarter);
-    if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
-    {
-        extendSweeper(dcQuarter);
-        setCrossTimer(1165);
-    }
-    else
-        setCrossTimer(1055);
+    spinAround(dcThreeQs);
+    // if (directlyAcross())
+    //     setCrossTimer(1165);
+    // else
+    setCrossTimer(640);
     stopDriving();
-    setCrossTimer(300);
+    if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
+        extendSweeper(dcQuarter);
+    setCrossTimer(100);
     driveUpward(dcQuarter);
-    setCrossTimer(700);
+    setCrossTimer(740);
     // driveUpward(dcEighth);
     // setCrossTimer(1200);
     stopDriving();

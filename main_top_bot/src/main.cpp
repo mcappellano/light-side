@@ -30,7 +30,7 @@ Station currentStation = start;
 Station nextStation = buns;
 
 Station stationOrder[6] = {buns, exchange, patties, cooktop, buns, exchange};
-int delayOrder[6] = { 0, 0, 0, 0, 0, 0};
+int delayOrder[6] = {0, 0, 0, 0, 0, 0};
 int orderNum = 0;
 bool justStarted = true;
 
@@ -91,7 +91,6 @@ void setup()
 
     slowDownTimer = timerBegin(1, 80, true);
     timerAttachInterrupt(slowDownTimer, &slowDownTimerInterrupt, true);
-    timerAlarmWrite(slowDownTimer, 500 * 1000, false);
 
     crossTimer = timerBegin(2, 80, true);
     timerAttachInterrupt(crossTimer, &crossTimerInterrupt, true);
@@ -100,19 +99,16 @@ void setup()
     Serial.println("Setup");
 
     // ACTUAL CODE --------------------------------------------------
-    delay(1000);
-    driveUpward(dcQuarter);
-    delay(1000);
-    stopDriving();
+    // delay(1000);
+    // driveUpward(dcQuarter);
+    // delay(1000);
+    // stopDriving();
 
     // TESTING CODE -------------------------------------------------
-    // delay(1000);
-    // extendSweeper(dcQuarter);
-    // delay(4000);
-    // retractSweeper(dcQuarter, true);
-    // delay(3500);
-    // distanceToSweep = FULL_RETRACT_DIST;
-    // retractSweeper(dcQuarter, false);
+    // currentStation = patties;
+    // nextStation = cooktop;
+    // goNextStation();
+    crossCounters();
 }
 
 /* The loop determines the next station we have to go to, and sends the robot there.
@@ -120,49 +116,49 @@ Once arrived, we either sweep in the item or push it out onto the counter.
 After waiting for this action to finish, we go back to the beginning of the loop. */
 void loop()
 {
-    nextStation = stationOrder[orderNum];
-    delay(delayOrder[orderNum++]);
-    goNextStation();
+    // nextStation = stationOrder[orderNum];
+    // delay(delayOrder[orderNum++]);
+    // goNextStation();
 
-    if (currentStation.equals(exchange) || currentStation.equals(cooktop))
-    {
-        forceIntoCounter();
-        exchangeItem();
-        while (extending || raising)
-        {
-        }
-    }
-    else if (currentStation.equals(potatoes))
-    {
-        forceIntoCounter();
-        // cutFries();
-        // Right here we will have to drive to make sure we are in the right place relative to the fries
-        retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
-        while (!swept)
-        {
-        }
-    }
-    else
-    {
-        if (justStarted)
-        {
-            previousFoodHeight = DROP_DIST;
-            lowerPlatform(dcQuarter, false);
-            justStarted = false;
-        }
-        retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
-        forceIntoCounter();
-        while (!swept)
-        {
-        }
-        extendSweeper(dcQuarter);
-        delay(100);
-        stopSweeper();
-        previousFoodHeight = FULL_DROP_DIST;
-    }
+    // if (currentStation.equals(exchange) || currentStation.equals(cooktop))
+    // {
+    //     forceIntoCounter();
+    //     exchangeItem();
+    //     while (extending || raising)
+    //     {
+    //     }
+    // }
+    // else if (currentStation.equals(potatoes))
+    // {
+    //     forceIntoCounter();
+    //     // cutFries();
+    //     // Right here we will have to drive to make sure we are in the right place relative to the fries
+    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
+    //     while (!swept)
+    //     {
+    //     }
+    // }
+    // else
+    // {
+    //     if (justStarted)
+    //     {
+    //         previousFoodHeight = DROP_DIST;
+    //         lowerPlatform(dcQuarter, false);
+    //         justStarted = false;
+    //     }
+    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
+    //     forceIntoCounter();
+    //     while (!swept)
+    //     {
+    //     }
+    //     extendSweeper(dcQuarter);
+    //     delay(100);
+    //     stopSweeper();
+    //     previousFoodHeight = FULL_DROP_DIST;
+    // }
 
-    if (currentStation.equals(potatoes))
-        orderNum = 0;
+    // if (orderNum == 6) // MUST CHANGE WHEN ADDING FRIES
+    //     orderNum = 0;
 }
 
 /*

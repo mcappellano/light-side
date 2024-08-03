@@ -36,8 +36,6 @@ void lowerPlatform(uint8_t dutyCycle, bool retractB)
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, dutyCycle);
     retract = retractB;
-    if (retract)
-        distanceToSweep = FULL_RETRACT_DIST;
 }
 
 void stopPlatform()
@@ -46,7 +44,8 @@ void stopPlatform()
     analogWrite(ELEV_MOTOR_DOWN, 0);
     if (retract)
     {
-        retractSweeper(dcQuarter, false);
+        distanceToSweep = FULL_RETRACT_DIST;
+        retractSweeper(40, false);
         retract = false;
     }
     else if (extend)

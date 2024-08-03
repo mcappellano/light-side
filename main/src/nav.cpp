@@ -111,18 +111,26 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             extendSweeper(40);
             raisePlatform(dcQuarter);
         }
-        else
+        else if (currentStation.equals(exchange) && exchange.item == BOTTOM_BUN)
+        {
+            lowerPlatform(dcQuarter);
+            setCrossTimer(200);
+            extendSweeper(dcQuarter);
+        }
+        else if (!currentStation.equals(exchange))
+        {
             extendSweeper(dcQuarter); // Modify sweeper speed here
-        if (!currentStation.equals(start) && !currentStation.equals(exchange))
-            lowerPlatform(dcQuarter); // Modify platform speed here
+            if (!currentStation.equals(start) && !currentStation.equals(servingArea))
+                lowerPlatform(dcQuarter); // Modify platform speed here
+        }
     }
     else
     {
         alreadySeen = true;
         if (forward == true)
-            driveBackward(dcQuarter); // Change speed for approaching serving area here
+            driveBackward(dcThreeQs); // Change speed for approaching serving area here
         else
-            driveForward(dcQuarter);
+            driveForward(dcThreeQs);
 
         currentStation = servingArea;
         retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
@@ -185,11 +193,13 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     node = currentStation.num;
 }
 
-// Handle edge cases that require slowing down before arriving at the tape - DIFFERS BETWEEN THE TWO BOTS
+// Handle edge cases that require slowing down before arriving at the tape
 void handleEdgeCases()
 {
     double next = nextStation.num;
-    if ((next == 0 || next == 3) && tapeCounter == tapeToSee - 1)
+
+    // Going to tomatoes or plates (which are at the very edge of the table)
+    if (((next == 0 && !currentStation.equals(exchange)) || next == 3) && tapeCounter == tapeToSee - 1)
     {
         if (forward2 == true)
             driveBackward(dcEighth);
@@ -198,7 +208,18 @@ void handleEdgeCases()
 
         adjusted = true;
     }
-    if (next == 10)
+
+    // Going to tomatoes from exchange (this saves about a second)
+    else if (next == 0 && currentStation.equals(exchange))
+    {
+        timerAlarmWrite(slowDownTimer, 700 * 1000, false);
+        timerWrite(slowDownTimer, 0);
+        timerAlarmEnable(slowDownTimer);
+        adjusted = true;
+    }
+
+    // Going to cheese (which is at the edge of the table)
+    else if (next == 10)
     {
         alreadySeen = false;
         if (currentStation.equals(tomatoes))
@@ -217,7 +238,9 @@ void handleEdgeCases()
         }
         adjusted = true;
     }
-    if (next == 13)
+
+    // Going to lettuce (which is at the edge of the table)
+    else if (next == 13)
     {
         alreadySeen = false;
         if (currentStation.equals(plates) || node == 12)
@@ -236,12 +259,14 @@ void handleEdgeCases()
         }
         adjusted = true;
     }
-    if (next == 11.5)
+
+    // Going to serving area (which doesn't have tape to signal stopping)
+    else if (next == 11.5)
     {
         if (node == 11)
-            timerAlarmWrite(slowDownTimer, 600 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 400 * 1000, false);
         else if (node == 12)
-            timerAlarmWrite(slowDownTimer, 900, false);
+            timerAlarmWrite(slowDownTimer, 600, false);
         else if (node == 10 || node == 13)
             timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
@@ -249,7 +274,9 @@ void handleEdgeCases()
         timerAlarmEnable(slowDownTimer);
         adjusted = true;
     }
-    if (node == 1.5 && tapeCounter == tapeToSee - 1)
+
+    // Special case for going from serving area to plates between meals
+    else if (node == 1.5 && tapeCounter == tapeToSee - 1)
     {
         driveForward(dcEighth);
         adjusted = true;
@@ -262,9 +289,8 @@ void serveMeal()
     while (raising)
     {
     }
-    delay(100);
     extendSweeper(dcQuarter);
-    delay(1500);
+    delay(1100);
     stopSweeper();
 }
 
@@ -282,9 +308,9 @@ void lowerIfServing()
     if (nextStation.equals(servingArea))
     {
         if (currentStation.equals(exchange))
-            previousFoodHeight = 35; // Move top bun out of the way
+            previousFoodHeight = 5; // Move top bun out of the way
         else
-            previousFoodHeight = 70; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
+            previousFoodHeight = 0; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
         lowerPlatform(dcQuarter);
     }
 }
