@@ -22,7 +22,7 @@ extern volatile bool elevStopped;
 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle);
-void lowerPlatform(uint8_t dutyCycle);
+void lowerPlatform(uint8_t dutyCycle, bool retractB);
 void stopPlatform(); // Stop moving the platform up or down
 void elevSwitchInterrupt();
 void elevEncoderInterrupt();

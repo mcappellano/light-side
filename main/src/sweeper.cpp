@@ -1,6 +1,5 @@
 #include "sweeper.h"
 #include "main.h"
-#include "drive.h"
 #include "elevator.h"
 
 const double SWEEP_PULSE_DISTANCE = 0.6545; // PREVIOUSLY 0.6545 - previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
@@ -45,7 +44,7 @@ void stopSweeper()
     extending = false;
     if (raiseA)
     {
-        raisePlatform(dcQuarter);
+        raisePlatform(63);
         raiseA = false;
     }
 }

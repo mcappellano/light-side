@@ -26,7 +26,7 @@ void testElevator()
 
     // MOVE DOWN BY THE HEIGHT OF A BOTTOM BUN
     previousFoodHeight = exchange.height;
-    lowerPlatform(dcEighth);
+    lowerPlatform(dcEighth, false);
 
     delay(2000);
 
@@ -43,7 +43,7 @@ void testElevator()
 
     // MOVE DOWN BY THE HEIGHT OF A TOMATO
     previousFoodHeight = tomatoes.height;
-    lowerPlatform(dcEighth);
+    lowerPlatform(dcEighth, false);
 
     delay(2000);
 
@@ -193,7 +193,7 @@ void buildBurgerStationary()
     delay(3000);
 
     // previousFoodHeight = 1; // TO GET PERFECTLY THE HEIGHT OF COUNTER
-    // lowerPlatform(dcQuarter);
+    // lowerPlatform(dcQuarter, false);
     // delay(3000);
 
     currentStation = plates;
@@ -204,7 +204,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     currentStation = exchange;
@@ -215,7 +215,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     currentStation = tomatoes;
@@ -226,7 +226,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     currentStation = cheese;
@@ -237,7 +237,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     currentStation = lettuce;
@@ -248,7 +248,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     currentStation = cooktop;
@@ -259,7 +259,7 @@ void buildBurgerStationary()
     }
     extendSweeper(dcThreeQs);
     delay(2000);
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(2000);
 
     exchange.sweepLength = 193;
@@ -277,7 +277,7 @@ void cheesePlate()
     raisePlatform(dcQuarter);
     delay(2000);
     previousFoodHeight = 1;
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(500);
 
     currentStation = start;
@@ -368,7 +368,7 @@ void burger()
     serveMeal();
 
     // previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    // lowerPlatform(dcQuarter);
+    // lowerPlatform(dcQuarter, false);
     // delay(500);
 }
 
@@ -377,7 +377,7 @@ void salad()
     raisePlatform(dcQuarter);
     delay(2000);
     previousFoodHeight = 3; // VALUE NOT FINALIZED - the height in mm that the platform must lower from the fully raised position to having the platform at counter height
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(500);
 
     currentStation = start;
@@ -415,7 +415,7 @@ void timeTrials()
     raisePlatform(dcQuarter);
     delay(2000);
     previousFoodHeight = 1;
-    lowerPlatform(dcQuarter);
+    lowerPlatform(dcQuarter, false);
     delay(500);
 
     currentStation = start;
@@ -467,7 +467,7 @@ void cheesePlateOld()
     raisePlatform(dcQuarter);
     delay(2000);
     // previousFoodHeight = 1;
-    // lowerPlatform(dcQuarter);
+    // lowerPlatform(dcQuarter, false);
     // delay(1000);
 
     currentStation = start;

@@ -113,7 +113,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         }
         else if (currentStation.equals(exchange) && exchange.item == BOTTOM_BUN)
         {
-            lowerPlatform(dcQuarter);
+            lowerPlatform(dcQuarter, false);
             setCrossTimer(200);
             extendSweeper(dcQuarter);
         }
@@ -121,7 +121,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         {
             extendSweeper(dcQuarter); // Modify sweeper speed here
             if (!currentStation.equals(start) && !currentStation.equals(servingArea))
-                lowerPlatform(dcQuarter); // Modify platform speed here
+                lowerPlatform(dcQuarter, false); // Modify platform speed here
         }
     }
     else
@@ -133,7 +133,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             driveForward(dcThreeQs);
 
         currentStation = servingArea;
-        retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
+        // retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
     }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
@@ -185,7 +185,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     else
     {
         while (!arrived)
-            delay(1);
+        {
+        }
     }
 
     // Update relevant variables
@@ -264,9 +265,9 @@ void handleEdgeCases()
     else if (next == 11.5)
     {
         if (node == 11)
-            timerAlarmWrite(slowDownTimer, 400 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
         else if (node == 12)
-            timerAlarmWrite(slowDownTimer, 600, false);
+            timerAlarmWrite(slowDownTimer, 700, false);
         else if (node == 10 || node == 13)
             timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
 
@@ -311,7 +312,7 @@ void lowerIfServing()
             previousFoodHeight = 5; // Move top bun out of the way
         else
             previousFoodHeight = 0; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
-        lowerPlatform(dcQuarter);
+        lowerPlatform(dcQuarter, true);
     }
 }
 

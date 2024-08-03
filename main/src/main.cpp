@@ -28,8 +28,8 @@ Station burgerBack(1, 15, 25, NA); // This is a "fake" station that is only used
 Station currentStation = start;
 Station nextStation = plates;
 
-Station stationOrder[8] = {plates, exchange, tomatoes, cheese, lettuce, cooktop, exchange, servingArea};
-int delayOrder[8] = {0, 4000, 0, 0, 0, 0, 0, 0};
+Station stationOrder[3] = {plates, exchange, servingArea}; // tomatoes, cheese, lettuce, cooktop, exchange,
+int delayOrder[3] = {0, 0, 0};
 int orderNum = 0;
 
 double node = -1;
@@ -108,16 +108,24 @@ void setup()
     Serial.println("Setup");
 
     // ACTUAL CODE ----------------------------------------------------
-    // delay(1000); // Take this out eventually
-    // driveUpward(dcQuarter);
-    // delay(900);
-    // stopDriving();
+    delay(1000); // Take this out eventually
+    driveUpward(dcQuarter);
+    delay(900);
+    stopDriving();
 
     // TESTING CODE ---------------------------------------------------
-    // currentStation = exchange;
-    // nextStation = tomatoes;
-    // goNextStation();
-    crossCounters();
+    // raisePlatform(dcQuarter);
+    // extendSweeper(dcQuarter);
+    // delay(3000);
+    // previousFoodHeight = 40;
+    // lowerPlatform(dcQuarter, false);
+    // retractSweeper()
+    // delay(3000);
+    // previousFoodHeight = 5;
+    // lowerPlatform(dcQuarter, true);
+    // while (true)
+    // {
+    // }
 }
 
 /* The loop decides where the robot will go next, and calls goNextStation().
@@ -125,40 +133,40 @@ Once arrived, it retracts the sweeper to collect the item. Finally, it loops bac
 If the next station is the serving area, it serves the meal. */
 void loop()
 {
-    // nextStation = stationOrder[orderNum];
-    // delay(delayOrder[orderNum++]);
-    // if (nextStation.equals(exchange) && orderNum < 5)
-    // {
-    //     exchange.sweepLength = 216;
-    //     exchange.item = BOTTOM_BUN;
-    // }
-    // else if (nextStation.equals(exchange) && orderNum > 5)
-    // {
-    //     exchange.sweepLength = 193;
-    //     exchange.item = TOP_BUN;
-    // }
+    nextStation = stationOrder[orderNum];
+    delay(delayOrder[orderNum++]);
+    if (nextStation.equals(exchange) && orderNum < 5)
+    {
+        exchange.sweepLength = 216;
+        exchange.item = BOTTOM_BUN;
+    }
+    else if (nextStation.equals(exchange) && orderNum > 5)
+    {
+        exchange.sweepLength = 193;
+        exchange.item = TOP_BUN;
+    }
 
-    // goNextStation();
-    // if (currentStation.equals(servingArea))
-    //     serveMeal();
-    // else
-    // {
-    //     retractSweeper(dcQuarter, true, false); // Maybe make it dcThreeQs
-    //     // if (currentStation.equals(plates))      // Depending on the height of the counter, we may or may not need this part
-    //     // {
-    //     //     previousFoodHeight = 0;
-    //     //     lowerPlatform(dcQuarter);
-    //     // }
-    //     driveUpward(dcQuarter);
-    //     setCrossTimer(150);
-    //     stopDriving();
-    //     while (!swept)
-    //     {
-    //     }
-    // }
+    goNextStation();
+    if (currentStation.equals(servingArea))
+        serveMeal();
+    else
+    {
+        retractSweeper(dcQuarter, true, false); // Maybe make it dcThreeQs
+        // if (currentStation.equals(plates))      // Depending on the height of the counter, we may or may not need this part
+        // {
+        //     previousFoodHeight = 0;
+        //     lowerPlatform(dcQuarter, false);
+        // }
+        driveUpward(dcQuarter);
+        setCrossTimer(150);
+        stopDriving();
+        while (!swept)
+        {
+        }
+    }
 
-    // if (nextStation.equals(servingArea))
-    //     orderNum = 0;
+    if (nextStation.equals(servingArea))
+        orderNum = 0;
 }
 
 // Old code

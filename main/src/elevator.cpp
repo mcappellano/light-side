@@ -1,4 +1,5 @@
 #include "elevator.h"
+#include "sweeper.h"
 #include "main.h"
 
 const double ELEV_PULSE_DISTANCE = 0.40906; // Millimitres - previously 1.63625 (4x)
@@ -7,6 +8,7 @@ volatile bool raising = false;
 volatile bool elevStopped = true;
 double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
 int elevPrevious = 0;
+bool retract = false;
 
 void raisePlatform(uint8_t dutyCycle)
 {
@@ -20,12 +22,13 @@ void raisePlatform(uint8_t dutyCycle)
     }
 }
 
-void lowerPlatform(uint8_t dutyCycle)
+void lowerPlatform(uint8_t dutyCycle, bool retractB)
 {
     elevCounter = 0;
     elevStopped = false;
     analogWrite(ELEV_MOTOR_UP, 0);
     analogWrite(ELEV_MOTOR_DOWN, dutyCycle);
+    retract = retractB;
 }
 
 void stopPlatform()
@@ -34,6 +37,12 @@ void stopPlatform()
     analogWrite(ELEV_MOTOR_DOWN, 0);
     raising = false;
     elevStopped = true;
+    if (retract)
+    {
+        retract = false;
+        currentStation = servingArea;
+        retractSweeper(63, false, true);
+    }
 }
 
 void elevSwitchInterrupt()
