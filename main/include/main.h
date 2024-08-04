@@ -30,7 +30,6 @@ public:
 #define NA 5
 
 // Variables
-extern std::map<int, Station> numsToStation;
 extern Station start;
 extern Station tomatoes;
 extern Station exchange;

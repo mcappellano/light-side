@@ -19,6 +19,7 @@ extern volatile bool raising;
 extern int var1;
 extern double previousFoodHeight;
 extern volatile bool elevStopped;
+extern volatile bool raisePartial;
 
 // Function declarations
 void raisePlatform(uint8_t dutyCycle);

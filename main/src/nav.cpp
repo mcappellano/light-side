@@ -15,6 +15,7 @@ int tapeToSee = 0;
 bool adjusted = false;
 bool forward2 = true;
 bool crossed = false;
+bool lowerFurther = false;
 
 hw_timer_t *slowDownTimer = NULL;
 
@@ -39,13 +40,15 @@ void goNextStation()
         else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
         {
             driveForward(dcQuarter);
-            delay(100);
+            delay(200);
             stopDriving();
             delay(200);
         }
 
         crossCounters();
-        crossed = true;
+        while (!crossed)
+        {
+        }
     }
 
     // Get ready to cross the correct number of tape pieces
@@ -97,6 +100,9 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
 {
     forward2 = forward;
 
+    if (currentStation.equals(exchange) && nextStation.equals(tomatoes))
+        extendSweeper(dcThreeQs);
+
     // Start driving along the counter
     if (forward == true)
         driveBackward(driveSpeed);
@@ -119,7 +125,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         }
         else if (!currentStation.equals(exchange))
         {
-            extendSweeper(dcQuarter); // Modify sweeper speed here
+            if (!nextStation.equals(tomatoes))
+                extendSweeper(dcQuarter); // Modify sweeper speed here
             if (!currentStation.equals(start) && !currentStation.equals(servingArea))
                 lowerPlatform(dcQuarter, false); // Modify platform speed here
         }
@@ -128,11 +135,11 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     {
         alreadySeen = true;
         if (forward == true)
-            driveBackward(dcThreeQs); // Change speed for approaching serving area here
+            driveForward(dcThreeQs); // Change speed for approaching serving area here
         else
-            driveForward(dcThreeQs);
+            driveBackward(dcThreeQs);
 
-        currentStation = servingArea;
+        // currentStation = servingArea;
         // retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
     }
 
@@ -174,7 +181,6 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             driveForward(reverseSpeed);
         else
             driveBackward(reverseSpeed);
-
         delay(100);
 
         while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) // PREVIOUSLY || (not &&)
@@ -192,6 +198,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     // Update relevant variables
     currentStation = nextStation;
     node = currentStation.num;
+    distanceToSweep = currentStation.sweepLength;
 }
 
 // Handle edge cases that require slowing down before arriving at the tape
@@ -200,7 +207,7 @@ void handleEdgeCases()
     double next = nextStation.num;
 
     // Going to tomatoes or plates (which are at the very edge of the table)
-    if (((next == 0 && !currentStation.equals(exchange)) || next == 3) && tapeCounter == tapeToSee - 1)
+    if (((next == 0 && !currentStation.equals(exchange)) || next == 3 || (next == 2 && currentStation.equals(lettuce))) && tapeCounter == tapeToSee - 1)
     {
         if (forward2 == true)
             driveBackward(dcEighth);
@@ -213,7 +220,7 @@ void handleEdgeCases()
     // Going to tomatoes from exchange (this saves about a second)
     else if (next == 0 && currentStation.equals(exchange))
     {
-        timerAlarmWrite(slowDownTimer, 700 * 1000, false);
+        timerAlarmWrite(slowDownTimer, 400 * 1000, false);
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
         adjusted = true;
@@ -264,6 +271,9 @@ void handleEdgeCases()
     // Going to serving area (which doesn't have tape to signal stopping)
     else if (next == 11.5)
     {
+        // Fix to wacky bug somewhere else...
+        if (currentStation.num == 11.5)
+            node = 11;
         if (node == 11)
             timerAlarmWrite(slowDownTimer, 500 * 1000, false);
         else if (node == 12)
@@ -296,22 +306,33 @@ void serveMeal()
 }
 
 // Directly after sweeping in top bun, if we are not getting a fry or salad
-void moveBurgerBack()
+void moveBackIfServing()
 {
-    raisePlatform(dcQuarter);
-    delay(2000);
-    currentStation = burgerBack;
-    retractSweeper(dcQuarter, true, false);
+    if (nextStation.equals(servingArea))
+    {
+        raisePartial = true;
+        lowerFurther = true;
+        raisePlatform(dcQuarter);
+        while (raising)
+        {
+        }
+        distanceToSweep = 224;
+        retractSweeper(dcQuarter, false, false);
+    }
 }
 
 void lowerIfServing()
 {
     if (nextStation.equals(servingArea))
     {
-        if (currentStation.equals(exchange))
-            previousFoodHeight = 5; // Move top bun out of the way
+        if (!lowerFurther)
+            previousFoodHeight = 15; // Move top bun out of the way
         else
-            previousFoodHeight = 0; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
+            previousFoodHeight = 60; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
+
+        while (!sweepStopped)
+        {
+        }
         lowerPlatform(dcQuarter, true);
     }
 }

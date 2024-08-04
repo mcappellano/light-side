@@ -13,11 +13,12 @@
 
 // Variables
 extern const double SWEEP_PULSE_DISTANCE;
-extern double sweeperPosition;
+extern int distanceToSweep;
 extern volatile int sweepCounter;
 extern volatile bool extending;
 extern volatile bool sweepStopped;
 extern volatile bool swept;
+extern bool resetSweepCount;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);

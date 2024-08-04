@@ -4,10 +4,12 @@
 
 const double SWEEP_PULSE_DISTANCE = 0.6545; // PREVIOUSLY 0.6545 - previously 2.618 (4x) - The distance that the sweeper moves for every pulse sent by the rotary encoder
 volatile int sweepCounter = 0;
+int distanceToSweep = 0;
 volatile bool extending = false;
 volatile bool sweepStopped = true;
 volatile bool slowed = false;
 volatile bool swept = false;
+bool resetSweepCount = true;
 bool raiseA = false;
 int sweepPrevious = 0;
 
@@ -15,7 +17,9 @@ void extendSweeper(uint8_t dutyCycle)
 {
     if (digitalRead(SWEEP_SWITCH))
     {
-        sweepCounter = 0;
+        if (resetSweepCount)
+            sweepCounter = 0;
+        resetSweepCount = true;
         extending = true;
         slowed = false;
         sweepStopped = false;
@@ -72,7 +76,7 @@ void sweepEncoderInterrupt()
 
     if (!extending && !sweepStopped)
     {
-        if (sweepCounter <= (-currentStation.sweepLength / SWEEP_PULSE_DISTANCE) + 15)
+        if (sweepCounter <= (-distanceToSweep / SWEEP_PULSE_DISTANCE) + 15)
         {
             stopSweeper();
             swept = true;

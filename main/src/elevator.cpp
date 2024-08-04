@@ -9,6 +9,7 @@ volatile bool elevStopped = true;
 double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
 int elevPrevious = 0;
 bool retract = false;
+volatile bool raisePartial = false;
 
 void raisePlatform(uint8_t dutyCycle)
 {
@@ -40,7 +41,7 @@ void stopPlatform()
     if (retract)
     {
         retract = false;
-        currentStation = servingArea;
+        distanceToSweep = servingArea.sweepLength;
         retractSweeper(63, false, true);
     }
 }
@@ -74,6 +75,11 @@ void elevEncoderInterrupt()
 
     if (!raising && !elevStopped && (elevCounter <= (-previousFoodHeight / ELEV_PULSE_DISTANCE) + stoppingTicks))
         stopPlatform();
-    else if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
+    // else if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
+    //     stopPlatform();
+    else if (raisePartial && !elevStopped && (elevCounter >= (41 / ELEV_PULSE_DISTANCE) - 7))
+    {
         stopPlatform();
+        raisePartial = false;
+    }
 }
