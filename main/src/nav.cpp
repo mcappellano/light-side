@@ -114,8 +114,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     {
         if (currentStation.equals(start))
         {
-            extendSweeper(40);
-            raisePlatform(dcQuarter);
+            extendSweeper(50);
+            raisePlatform(dcQuarter, false);
         }
         else if (currentStation.equals(exchange) && exchange.item == BOTTOM_BUN)
         {
@@ -135,12 +135,12 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     {
         alreadySeen = true;
         if (forward == true)
-            driveForward(dcThreeQs); // Change speed for approaching serving area here
+            driveBackward(dcThreeQs); // Change speed for approaching serving area here
         else
-            driveBackward(dcThreeQs);
+            driveForward(dcThreeQs);
 
         // currentStation = servingArea;
-        // retractSweeper(dcThreeQs, false, true); // With the current code, lettuce/cheese cannot be the final items we get before serving
+        // retractSweeper(dcThreeQs, false, true, false); // With the current code, lettuce/cheese cannot be the final items we get before serving
     }
 
     // Allow tape to be counted starting a short duration after leaving the current piece of tape
@@ -215,6 +215,10 @@ void handleEdgeCases()
             driveForward(dcEighth);
 
         adjusted = true;
+        if (next == 3)
+        {
+            lowerPlatform(dcQuarter, false);
+        }
     }
 
     // Going to tomatoes from exchange (this saves about a second)
@@ -275,7 +279,7 @@ void handleEdgeCases()
         if (currentStation.num == 11.5)
             node = 11;
         if (node == 11)
-            timerAlarmWrite(slowDownTimer, 500 * 1000, false);
+            timerAlarmWrite(slowDownTimer, 300 * 1000, false);
         else if (node == 12)
             timerAlarmWrite(slowDownTimer, 700, false);
         else if (node == 10 || node == 13)
@@ -292,6 +296,12 @@ void handleEdgeCases()
         driveForward(dcEighth);
         adjusted = true;
     }
+
+    // else if (next == 1 && tapeCounter == tapeToSee - 1)
+    // {
+    //     extendSweeper(dcQuarter);
+    //     adjusted = true;
+    // }
 }
 
 // Directly after arriving at serving area
@@ -312,12 +322,12 @@ void moveBackIfServing()
     {
         raisePartial = true;
         lowerFurther = true;
-        raisePlatform(dcQuarter);
-        while (raising)
-        {
-        }
-        distanceToSweep = 224;
-        retractSweeper(dcQuarter, false, false);
+        raisePlatform(dcQuarter, true);
+        // while (raising)
+        // {
+        // }
+        // distanceToSweep = 225; // 224
+        // retractSweeper(dcQuarter, false, false, false);
     }
 }
 

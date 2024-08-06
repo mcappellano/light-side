@@ -15,22 +15,25 @@ bool Station::equals(const Station &other) const
            (this->sweepLength == other.sweepLength);
 }
 
-Station start(0, 0, 100, NA);         // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
-Station tomatoes(0, 3, 205, NA);      // 215 - PREVIOUSLY 4.4
-Station exchange(1, 8, 219, TOP_BUN); // PREVIOUSLY 0 - Only buns are being exchanged here. Top bun height doesn't matter
-Station cooktop(2, 9, 196, EMPTY);    // PREVIOUSLY 10 - 193 ... Only height of patty matters; fries are not being stacked
-Station plates(3, 13.5, 193, NA);     // 193
-Station cheese(10, 4.3, 206, NA);     // 206
-Station lettuce(13, 3, 207, NA);      // PREVIOUSLY 4.3  -  210
-Station servingArea(11.5, 1, 362, NA);
-Station burgerBack(1, 15, 25, NA); // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
+Station start(0, 0, 100, NA);          // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
+Station tomatoes(0, 3, 198, NA);       // 205 - PREVIOUSLY 4.4
+Station exchange(1, 8, 219, TOP_BUN);  // PREVIOUSLY 0 - Only buns are being exchanged here. Top bun height doesn't matter
+Station cooktop(2, 9, 186, EMPTY);     // PREVIOUSLY 10 - 196 ... Only height of patty matters; fries are not being stacked
+Station plates(3, 17, 186, NA);        // 13.5, 193
+Station cheese(10, 4.3, 206, NA);      // 206
+Station lettuce(13, 3, 180, NA);       // PREVIOUSLY 4.3  -  207
+Station servingArea(11.5, 1, 366, NA); // 362
+Station burgerBack(1, 15, 25, NA);     // This is a "fake" station that is only used to know the distance needed to sweep the burger to the back of the plate
 
 Station currentStation = start;
 Station nextStation = plates;
 
 Station stationOrder[8] = {plates, exchange, tomatoes, cheese, lettuce, cooktop, exchange, servingArea};
-int delayOrder[8] = {0, 3000, 0, 0, 0, 0, 0, 0};
+int delayOrder1[8] = {0, 3000, 0, 0, 0, 0, 2000, 0};
+int delayOrder2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+int delayOrder3[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int orderNum = 0;
+int delayNum = 0;
 
 double node = -1;
 
@@ -94,16 +97,6 @@ void setup()
     crossTimer = timerBegin(3, 80, true);
     timerAttachInterrupt(crossTimer, &crossTimerInterrupt, true);
 
-    // accelTimer = timerBegin(1, 80, true);
-    // timerAttachInterrupt(accelTimer, &accelTimerInterrupt, true);
-    // timerAlarmWrite(accelTimer, 500 * 1000, true);
-
-    // Adjustments if on higher counter
-    // if (higherCounter)
-    // {
-    //     plates.height = 12;
-    // }
-
     Serial.println("");
     Serial.println("Setup");
 
@@ -114,38 +107,6 @@ void setup()
     stopDriving();
 
     // TESTING CODE ---------------------------------------------------
-    // delay(1000);
-    // extendSweeper(dcQuarter);
-    // raisePlatform(dcQuarter);
-    // delay(3000);
-    // previousFoodHeight = plates.height;
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // previousFoodHeight = exchange.height;
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // previousFoodHeight = tomatoes.height;
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // previousFoodHeight = cheese.height;
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // previousFoodHeight = lettuce.height;
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // previousFoodHeight = cooktop.height;
-    // delay(5000);
-    // lowerPlatform(dcQuarter, false);
-    // delay(500);
-    // distanceToSweep = 183;
-    // retractSweeper(dcQuarter, true, false);
-    // delay(3000);
-    // moveBurgerBack();
-    // nextStation = servingArea;
-    // lowerIfServing();
-    // while (true)
-    // {
-    // }
 }
 
 /* The loop decides where the robot will go next, and calls goNextStation().
@@ -154,7 +115,13 @@ If the next station is the serving area, it serves the meal. */
 void loop()
 {
     nextStation = stationOrder[orderNum];
-    delay(delayOrder[orderNum++]);
+    if (delayNum == 0)
+        delay(delayOrder1[orderNum++]);
+    else if (delayNum == 1)
+        delay(delayOrder2[orderNum++]);
+    else if (delayNum == 2)
+        delay(delayOrder3[orderNum++]);
+
     if (nextStation.equals(exchange) && orderNum < 5)
     {
         exchange.sweepLength = 219;
@@ -162,7 +129,7 @@ void loop()
     }
     else if (nextStation.equals(exchange) && orderNum > 5)
     {
-        exchange.sweepLength = 183;
+        exchange.sweepLength = 173;
         exchange.item = TOP_BUN;
     }
 
@@ -171,7 +138,8 @@ void loop()
         serveMeal();
     else
     {
-        retractSweeper(dcThreeQs, true, false);
+
+        retractSweeper(dcThreeQs, true, false, false);
         driveUpward(dcQuarter);
         setCrossTimer(150);
         stopDriving();
@@ -190,6 +158,7 @@ void loop()
     if (nextStation.equals(servingArea))
     {
         orderNum = 0;
+        delayNum++;
         raisePartial = false;
         lowerFurther = false;
     }

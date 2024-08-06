@@ -11,6 +11,7 @@ volatile bool slowed = false;
 volatile bool swept = false;
 bool resetSweepCount = true;
 bool raiseA = false;
+bool lower = false;
 int sweepPrevious = 0;
 
 void extendSweeper(uint8_t dutyCycle)
@@ -28,10 +29,11 @@ void extendSweeper(uint8_t dutyCycle)
     }
 }
 
-void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB)
+void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB, bool lowerB)
 {
     swept = false;
     raiseA = raiseB;
+    lower = lowerB;
     if (reset)
         sweepCounter = 0;
 
@@ -48,8 +50,14 @@ void stopSweeper()
     extending = false;
     if (raiseA)
     {
-        raisePlatform(63);
+        raisePlatform(63, false);
         raiseA = false;
+    }
+    if (lower)
+    {
+        lower = false;
+        previousFoodHeight = 60; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
+        lowerPlatform(63, true);
     }
 }
 

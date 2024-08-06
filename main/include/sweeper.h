@@ -22,7 +22,7 @@ extern bool resetSweepCount;
 
 // Function declarations
 void extendSweeper(uint8_t dutyCycle);
-void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB);
+void retractSweeper(uint8_t dutyCycle, bool reset, bool raiseB, bool lowerB);
 void stopSweeper();
 void sweepSwitchInterrupt();
 void sweepEncoderInterrupt();

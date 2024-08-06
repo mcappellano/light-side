@@ -20,23 +20,54 @@ uint8_t dcThreeQs = 191;
 
 void crossCounters()
 {
+    // driveDownward(dcQuarter);
+    // moveBackIfServing(); // Unneeded if not pushing burger back
+    // // setCrossTimer(875);
+    // spinAround(dcThreeQs);
+    // lowerIfServing();
+    // if (nextStation.equals(servingArea))
+    //     setCrossTimer(735);
+    // else
+    //     setCrossTimer(635);
+    // stopDriving();
+    // if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
+    //     extendSweeper(dcQuarter);
+    // setCrossTimer(100);
+
+    // driveUpward(dcQuarter);
+    // setCrossTimer(700);
+
+    // if (nextStation.equals(servingArea)) // May or may not be needed, depending if burger moves too much when hitting counter
+    // {
+    //     driveUpward(dcQuarter);
+    //     setCrossTimer(700);
+    // }
+    // else
+    // {
+    //     driveUpward(dcEighth);
+    //     setCrossTimer(1500);
+    // }
+
+    // stopDriving();
+
+    // ---------------------------------------------------------------------------------------------
+
     driveDownward(dcQuarter);
     moveBackIfServing(); // Unneeded if not pushing burger back
+    // if (!nextStation.equals(servingArea))
     setCrossTimer(875);
     spinAround(dcThreeQs);
-    lowerIfServing();
-    if (nextStation.equals(servingArea))
+    // lowerIfServing();
+    if (nextStation.equals(servingArea) || currentStation.equals(servingArea))
         setCrossTimer(735);
     else
-        setCrossTimer(635);
+        setCrossTimer(620);
     stopDriving();
     if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
         extendSweeper(dcQuarter);
     setCrossTimer(100);
     driveUpward(dcQuarter);
     setCrossTimer(700);
-    // driveUpward(dcEighth);
-    // setCrossTimer(1200);
     stopDriving();
 
     // Update where we are
@@ -119,17 +150,17 @@ void spinAround(uint8_t dutyCycle)
 {
     calibrateDutyCycle(dutyCycle);
 
-    // analogWrite(motor1F, speeds[0]);
-    // analogWrite(motor1B, 0);
+    analogWrite(motor1F, speeds[0]);
+    analogWrite(motor1B, 0);
 
-    // analogWrite(motor2F, 0);
-    // analogWrite(motor2B, speeds[1]);
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, speeds[1]);
 
-    // analogWrite(motor3F, 0);
-    // analogWrite(motor3B, speeds[2]);
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, speeds[2]);
 
-    // analogWrite(motor4F, speeds[3]);
-    // analogWrite(motor4B, 0);
+    analogWrite(motor4F, speeds[3]);
+    analogWrite(motor4B, 0);
 }
 
 void driveForward(uint8_t dutyCycle)
@@ -155,19 +186,19 @@ void driveForward(uint8_t dutyCycle)
         speeds[2] += 0;
     }
 
-    // analogWrite(motor1F, speeds[0] + 2);
-    // analogWrite(motor1B, 0);
+    analogWrite(motor1F, speeds[0] + 2);
+    analogWrite(motor1B, 0);
 
-    // analogWrite(motor4F, speeds[3] + 2);
-    // analogWrite(motor4B, 0);
+    analogWrite(motor4F, speeds[3] + 2);
+    analogWrite(motor4B, 0);
 
-    // delay(waitTime);
+    delay(waitTime);
 
-    // analogWrite(motor2F, speeds[1]);
-    // analogWrite(motor2B, 0);
+    analogWrite(motor2F, speeds[1]);
+    analogWrite(motor2B, 0);
 
-    // analogWrite(motor3F, speeds[2]);
-    // analogWrite(motor3B, 0);
+    analogWrite(motor3F, speeds[2]);
+    analogWrite(motor3B, 0);
 }
 
 void driveBackward(uint8_t dutyCycle)
@@ -193,19 +224,19 @@ void driveBackward(uint8_t dutyCycle)
         speeds[2] += 0;
     }
 
-    // analogWrite(motor1F, 0);
-    // analogWrite(motor1B, speeds[0]);
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, speeds[0]);
 
-    // analogWrite(motor4F, 0);
-    // analogWrite(motor4B, speeds[3]);
+    analogWrite(motor4F, 0);
+    analogWrite(motor4B, speeds[3]);
 
-    // delay(waitTime); // Motors 2 and 3 seem to start a tiny bit early
+    delay(waitTime); // Motors 2 and 3 seem to start a tiny bit early
 
-    // analogWrite(motor2F, 0);
-    // analogWrite(motor2B, speeds[1]);
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, speeds[1]);
 
-    // analogWrite(motor3F, 0);
-    // analogWrite(motor3B, speeds[2]);
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, speeds[2]);
 }
 
 void driveUpward(uint8_t dutyCycle)
@@ -229,17 +260,17 @@ void driveUpward(uint8_t dutyCycle)
         speeds[3] += 23; // +22
     }
 
-    // analogWrite(motor1F, 0);
-    // analogWrite(motor1B, speeds[0]);
+    analogWrite(motor1F, 0);
+    analogWrite(motor1B, speeds[0]);
 
-    // analogWrite(motor2F, speeds[1]);
-    // analogWrite(motor2B, 0);
+    analogWrite(motor2F, speeds[1]);
+    analogWrite(motor2B, 0);
 
-    // analogWrite(motor3F, 0);
-    // analogWrite(motor3B, speeds[2]);
+    analogWrite(motor3F, 0);
+    analogWrite(motor3B, speeds[2]);
 
-    // analogWrite(motor4F, speeds[3]);
-    // analogWrite(motor4B, 0);
+    analogWrite(motor4F, speeds[3]);
+    analogWrite(motor4B, 0);
 }
 
 void driveDownward(uint8_t dutyCycle)
@@ -262,17 +293,17 @@ void driveDownward(uint8_t dutyCycle)
         speeds[3] += 22;
     }
 
-    // analogWrite(motor1F, speeds[0]);
-    // analogWrite(motor1B, 0);
+    analogWrite(motor1F, speeds[0]);
+    analogWrite(motor1B, 0);
 
-    // analogWrite(motor2F, 0);
-    // analogWrite(motor2B, speeds[1]);
+    analogWrite(motor2F, 0);
+    analogWrite(motor2B, speeds[1]);
 
-    // analogWrite(motor3F, speeds[2]);
-    // analogWrite(motor3B, 0);
+    analogWrite(motor3F, speeds[2]);
+    analogWrite(motor3B, 0);
 
-    // analogWrite(motor4F, 0);
-    // analogWrite(motor4B, speeds[3]);
+    analogWrite(motor4F, 0);
+    analogWrite(motor4B, speeds[3]);
 }
 
 void stopDriving()

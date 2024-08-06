@@ -6,18 +6,20 @@ const double ELEV_PULSE_DISTANCE = 0.40906; // Millimitres - previously 1.63625 
 int elevCounter = 0;
 volatile bool raising = false;
 volatile bool elevStopped = true;
-double previousFoodHeight = 23.175; // For testing, but I don't believe it matters what we initialize this to
+double previousFoodHeight = 11.5;
 int elevPrevious = 0;
 bool retract = false;
+bool retractD = false;
 volatile bool raisePartial = false;
 
-void raisePlatform(uint8_t dutyCycle)
+void raisePlatform(uint8_t dutyCycle, bool retractC)
 {
     if (digitalRead(ELEV_SWITCH))
     {
         elevCounter = 0;
         raising = true;
         elevStopped = false;
+        retractD = retractC;
         analogWrite(ELEV_MOTOR_UP, dutyCycle);
         analogWrite(ELEV_MOTOR_DOWN, 0);
     }
@@ -42,7 +44,13 @@ void stopPlatform()
     {
         retract = false;
         distanceToSweep = servingArea.sweepLength;
-        retractSweeper(63, false, true);
+        retractSweeper(63, false, true, false);
+    }
+    if (retractD)
+    {
+        retractD = false;
+        distanceToSweep = 225;
+        retractSweeper(63, false, false, true);
     }
 }
 
