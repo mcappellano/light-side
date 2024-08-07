@@ -88,23 +88,18 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
             handleEdgeCases();
     }
 
-    // In case they don't finish before making it to the food station
-    // stopSweeper();
-    // stopPlatform();
-
     // Don't allow any more tape pieces to be unintentionally counted until we are ready again
     alreadySeen = true;
 
-    // Now back up until centred exactly on the tape
+    // Now back up until centred on the tape
     if (forward == true)
         driveForward(reverseSpeed);
     else
         driveBackward(reverseSpeed);
 
-    delay(100);
+    delay(150);
 
-    while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) // PREVIOUSLY || (not &&)
-        delay(1);
+    while (digitalRead(REFLEC1) == LOW && digitalRead(REFLEC2) == LOW) {} // PREVIOUSLY || (not &&)
 
     stopDriving();
 
@@ -118,22 +113,22 @@ void handleEdgeCases()
 {
     if (nextStation.equals(cooktop) && currentStation.equals(patties))
     {
-        timerAlarmWrite(slowDownTimer, 2200 * 1000, false);
+        timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
         adjusted = true;
     }
-}
-
-void exchangeItem()
-{
-    // raisePlatform(dcQuarter, true);
-    extendSweeper(dcQuarter);
+    else if (currentStation.equals(exchange) && nextStation.equals(patties))
+    {
+        setCrossTimer(500);
+        driveBackward(dcQuarter);
+        adjusted = true;
+    }
 }
 
 void IRAM_ATTR slowDownTimerInterrupt()
 {
-    if (forward2 == true)
+    if ((forward2 && node >= 10) || (!forward2 && node < 10))
         driveBackward(dcEighth);
     else
         driveForward(dcEighth);

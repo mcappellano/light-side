@@ -6,22 +6,32 @@ hw_timer_t *crossTimer = NULL;
 bool next = true;
 uint8_t speeds[4] = {0, 0, 0, 0};
 uint32_t freqHz = 50;
-uint8_t dcEighth = 31;
-uint8_t dc316 = 48;
-uint8_t dcQuarter = 63;
-uint8_t dcThreeQs = 191;
+uint8_t dcEighth = 31; // 255
+uint8_t dc316 = 48; // 383
+uint8_t dcQuarter = 63; // 511
+uint8_t dcThreeQs = 191; // 1535
 
 // With the weight of the elevator and sweeper (but without fry arm)
 void crossCounters()
 {
+    // driveDownward(dcQuarter);
+    // setCrossTimer(650);
+    // spinAround(dcQuarter);
+    // setCrossTimer(1100);
+    // stopDriving();
+    // setCrossTimer(300);
+    // driveUpward(dcQuarter);
+    // setCrossTimer(450);
+    // stopDriving();
+
     driveDownward(dcQuarter);
-    setCrossTimer(650);
-    spinAround(dcQuarter);
-    setCrossTimer(1100);
+    setCrossTimer(600);
+    spinAround(dcThreeQs);
+    setCrossTimer(656);
     stopDriving();
-    setCrossTimer(300);
+    setCrossTimer(200);
     driveUpward(dcQuarter);
-    setCrossTimer(450);
+    setCrossTimer(550);
     stopDriving();
 
     // Update where we are

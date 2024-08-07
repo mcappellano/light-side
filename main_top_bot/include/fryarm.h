@@ -4,8 +4,8 @@
 // Includes
 
 // Pin definitions
-#define FRY_ALIGNER 99
-#define FRY_CUTTER 88
+#define FRY_ALIGNER 26
+#define FRY_CUTTER 25
 
 // Variables
 

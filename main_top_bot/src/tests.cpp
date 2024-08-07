@@ -200,7 +200,7 @@ void timeTrials()
     while (!sweepStopped)
     {
     }
-    exchangeItem();
+    // exchangeItem();
     while (raising || extending)
     {
     }
@@ -217,7 +217,7 @@ void timeTrials()
     while (!sweepStopped)
     {
     }
-    exchangeItem();
+    // exchangeItem();
     while (raising || extending)
     {
     }
@@ -231,5 +231,5 @@ void timeTrials()
 
     nextStation = exchange;
     goNextStation();
-    exchangeItem();
+    // exchangeItem();
 }

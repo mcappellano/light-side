@@ -17,7 +17,6 @@ extern bool adjusted;
 // Function declarations
 void goNextStation();
 void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed);
-void exchangeItem();
 void slowDownTimerInterrupt();
 void handleEdgeCases();
 

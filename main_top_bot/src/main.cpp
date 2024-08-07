@@ -5,7 +5,7 @@
 #include "sweeper.h"
 #include "tests.h"
 #include "nav.h"
-#include "fryarm.h"
+// #include "fryarm.h"
 
 Station::Station(int num, double height, int sweepLength, int item) : num(num), height(height), sweepLength(sweepLength), item(item) {}
 
@@ -32,6 +32,7 @@ Station nextStation = buns;
 Station stationOrder[6] = {buns, exchange, patties, cooktop, buns, exchange};
 int delayOrder[6] = {0, 0, 0, 0, 0, 0};
 int orderNum = 0;
+int burgerNum = 1;
 bool justStarted = true;
 
 int node = -1;
@@ -68,6 +69,9 @@ void setup()
     pinMode(SWEEP_MOTOR_OUT, OUTPUT);
     pinMode(SWEEP_MOTOR_BACK, OUTPUT);
 
+    // pinMode(FRY_ALIGNER,OUTPUT);
+    // pinMode(FRY_CUTTER,OUTPUT);
+
     // Set our PWM frequency (50 Hz)
     analogWriteFrequency(freqHz);
 
@@ -99,16 +103,18 @@ void setup()
     Serial.println("Setup");
 
     // ACTUAL CODE --------------------------------------------------
-    // delay(1000);
-    // driveUpward(dcQuarter);
-    // delay(1000);
-    // stopDriving();
+    delay(1000);
+    driveUpward(dcQuarter);
+    delay(1000);
+    stopDriving();
 
     // TESTING CODE -------------------------------------------------
-    // currentStation = patties;
-    // nextStation = cooktop;
-    // goNextStation();
-    crossCounters();
+    // while (true)
+    // {
+    //     Serial.println(digitalRead(REFLEC1));
+    //     Serial.println(digitalRead(REFLEC2));
+    //     delay(10);
+    // }
 }
 
 /* The loop determines the next station we have to go to, and sends the robot there.
@@ -116,49 +122,51 @@ Once arrived, we either sweep in the item or push it out onto the counter.
 After waiting for this action to finish, we go back to the beginning of the loop. */
 void loop()
 {
-    // nextStation = stationOrder[orderNum];
-    // delay(delayOrder[orderNum++]);
-    // goNextStation();
 
-    // if (currentStation.equals(exchange) || currentStation.equals(cooktop))
-    // {
-    //     forceIntoCounter();
-    //     exchangeItem();
-    //     while (extending || raising)
-    //     {
-    //     }
-    // }
-    // else if (currentStation.equals(potatoes))
-    // {
-    //     forceIntoCounter();
-    //     // cutFries();
-    //     // Right here we will have to drive to make sure we are in the right place relative to the fries
-    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
-    //     while (!swept)
-    //     {
-    //     }
-    // }
-    // else
-    // {
-    //     if (justStarted)
-    //     {
-    //         previousFoodHeight = DROP_DIST;
-    //         lowerPlatform(dcQuarter, false);
-    //         justStarted = false;
-    //     }
-    //     retractSweeper(dcQuarter, true); // Maybe make it dcThreeQs
-    //     forceIntoCounter();
-    //     while (!swept)
-    //     {
-    //     }
-    //     extendSweeper(dcQuarter);
-    //     delay(100);
-    //     stopSweeper();
-    //     previousFoodHeight = FULL_DROP_DIST;
-    // }
+    nextStation = stationOrder[orderNum];
+    delay(delayOrder[orderNum++]);
+    goNextStation();
 
-    // if (orderNum == 6) // MUST CHANGE WHEN ADDING FRIES
-    //     orderNum = 0;
+    if (currentStation.equals(exchange) || currentStation.equals(cooktop))
+    {
+        forceIntoCounter();
+        if (orderNum == 1 && burgerNum == 3)
+        {
+            delay(5000);
+        }
+        extendSweeper(100);
+        while (extending || raising)
+        {
+        }
+    }
+    else
+    {
+        if (justStarted)
+        {
+            previousFoodHeight = DROP_DIST;
+            lowerPlatform(dcQuarter, false);
+            justStarted = false;
+        }
+        retractSweeper(dcThreeQs, true); // Edit sweep in speed here
+        forceIntoCounter();
+        while (!swept)
+        {
+        }
+        extendSweeper(dcQuarter);
+        delay(100);
+        stopSweeper();
+        previousFoodHeight = FULL_DROP_DIST;
+    }
+
+    if (orderNum == 6)
+    {
+        orderNum = 0;
+        burgerNum++;
+    }
+
+    if(burgerNum == 4)
+        for(;;);
+
 }
 
 /*
