@@ -56,7 +56,7 @@ void stopSweeper()
     if (lower)
     {
         lower = false;
-        previousFoodHeight = 60; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
+        previousFoodHeight = 50; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
         lowerPlatform(63, true);
     }
 }

@@ -23,7 +23,6 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed); //
 void handleEdgeCases();
 void serveMeal();
 void moveBackIfServing();
-void lowerIfServing();
 void slowDownTimerInterrupt();
 
 #endif // NAV_H

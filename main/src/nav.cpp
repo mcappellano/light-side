@@ -125,8 +125,8 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         }
         else if (!currentStation.equals(exchange))
         {
-            if (!nextStation.equals(tomatoes))
-                extendSweeper(dcQuarter); // Modify sweeper speed here
+            // if (!nextStation.equals(tomatoes))
+            extendSweeper(dcQuarter); // Modify sweeper speed here
             if (!currentStation.equals(start) && !currentStation.equals(servingArea))
                 lowerPlatform(dcQuarter, false); // Modify platform speed here
         }
@@ -199,6 +199,9 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     currentStation = nextStation;
     node = currentStation.num;
     distanceToSweep = currentStation.sweepLength;
+
+    // if (currentStation.equals(exchange) && exchange.item == TOP_BUN)
+    //     distanceToSweep = 148;
 }
 
 // Handle edge cases that require slowing down before arriving at the tape
@@ -216,9 +219,7 @@ void handleEdgeCases()
 
         adjusted = true;
         if (next == 3)
-        {
             lowerPlatform(dcQuarter, false);
-        }
     }
 
     // Going to tomatoes from exchange (this saves about a second)
@@ -294,6 +295,8 @@ void handleEdgeCases()
     else if (node == 1.5 && tapeCounter == tapeToSee - 1)
     {
         driveForward(dcEighth);
+        previousFoodHeight = 0;
+        lowerPlatform(dcQuarter, false);
         adjusted = true;
     }
 
@@ -307,9 +310,11 @@ void handleEdgeCases()
 // Directly after arriving at serving area
 void serveMeal()
 {
-    while (raising)
+    Serial.println(serveReady);
+    while (!serveReady)
     {
     }
+    serveReady = false;
     extendSweeper(dcQuarter);
     delay(1100);
     stopSweeper();
@@ -323,27 +328,6 @@ void moveBackIfServing()
         raisePartial = true;
         lowerFurther = true;
         raisePlatform(dcQuarter, true);
-        // while (raising)
-        // {
-        // }
-        // distanceToSweep = 225; // 224
-        // retractSweeper(dcQuarter, false, false, false);
-    }
-}
-
-void lowerIfServing()
-{
-    if (nextStation.equals(servingArea))
-    {
-        if (!lowerFurther)
-            previousFoodHeight = 15; // Move top bun out of the way
-        else
-            previousFoodHeight = 60; // VALUE NOT FINALIZED - Move entire burger from rim of plate to top out of the way
-
-        while (!sweepStopped)
-        {
-        }
-        lowerPlatform(dcQuarter, true);
     }
 }
 

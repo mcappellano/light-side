@@ -6,10 +6,11 @@ const double ELEV_PULSE_DISTANCE = 0.40906; // Millimitres - previously 1.63625 
 int elevCounter = 0;
 volatile bool raising = false;
 volatile bool elevStopped = true;
-double previousFoodHeight = 11.5;
+double previousFoodHeight = 12.5;
 int elevPrevious = 0;
 bool retract = false;
 bool retractD = false;
+volatile bool serveReady = false;
 volatile bool raisePartial = false;
 
 void raisePlatform(uint8_t dutyCycle, bool retractC)
@@ -49,7 +50,7 @@ void stopPlatform()
     if (retractD)
     {
         retractD = false;
-        distanceToSweep = 225;
+        distanceToSweep = 221;
         retractSweeper(63, false, false, true);
     }
 }
@@ -58,6 +59,9 @@ void elevSwitchInterrupt()
 {
     if (raising)
         stopPlatform();
+
+    if (nextStation.equals(servingArea))
+        serveReady = true;
 }
 
 void elevEncoderInterrupt()
@@ -85,7 +89,7 @@ void elevEncoderInterrupt()
         stopPlatform();
     // else if (raising && currentStation.equals(servingArea) && elevCounter >= 84 / ELEV_PULSE_DISTANCE - 7)
     //     stopPlatform();
-    else if (raisePartial && !elevStopped && (elevCounter >= (41 / ELEV_PULSE_DISTANCE) - 7))
+    else if (raisePartial && !elevStopped && (elevCounter >= (49 / ELEV_PULSE_DISTANCE) - 7)) // 34
     {
         stopPlatform();
         raisePartial = false;
