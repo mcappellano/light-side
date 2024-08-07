@@ -5,7 +5,6 @@
 #include "nav.h"
 
 hw_timer_t *crossTimer = NULL;
-// hw_timer_t *accelTimer = NULL;
 bool next = true;
 uint8_t currentDutyCycle = 0;
 volatile double loopNum = 0;
@@ -20,49 +19,15 @@ uint8_t dcThreeQs = 191;
 
 void crossCounters()
 {
-    // driveDownward(dcQuarter);
-    // moveBackIfServing(); // Unneeded if not pushing burger back
-    // // setCrossTimer(875);
-    // spinAround(dcThreeQs);
-    // lowerIfServing();
-    // if (nextStation.equals(servingArea))
-    //     setCrossTimer(735);
-    // else
-    //     setCrossTimer(635);
-    // stopDriving();
-    // if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
-    //     extendSweeper(dcQuarter);
-    // setCrossTimer(100);
-
-    // driveUpward(dcQuarter);
-    // setCrossTimer(700);
-
-    // if (nextStation.equals(servingArea)) // May or may not be needed, depending if burger moves too much when hitting counter
-    // {
-    //     driveUpward(dcQuarter);
-    //     setCrossTimer(700);
-    // }
-    // else
-    // {
-    //     driveUpward(dcEighth);
-    //     setCrossTimer(1500);
-    // }
-
-    // stopDriving();
-
-    // ---------------------------------------------------------------------------------------------
-
     driveDownward(dcQuarter);
     moveBackIfServing(); // Unneeded if not pushing burger back
-    // if (!nextStation.equals(servingArea))
     setCrossTimer(875);
     spinAround(dcThreeQs);
-    // lowerIfServing();
     if (nextStation.equals(servingArea) || currentStation.equals(servingArea))
         setCrossTimer(735);
     else
         setCrossTimer(620);
-    stopDriving();
+    // stopDriving();
     if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
         extendSweeper(dcQuarter);
     setCrossTimer(100);
@@ -259,6 +224,13 @@ void driveUpward(uint8_t dutyCycle)
         speeds[2] += 29; // +28
         speeds[3] += 23; // +22
     }
+    if (dutyCycle == dcThreeQs)
+    {
+        speeds[0] -= 45;
+        speeds[1] -= 55;
+        speeds[2] += 4;
+        speeds[3] += 4;
+    }
 
     analogWrite(motor1F, 0);
     analogWrite(motor1B, speeds[0]);
@@ -281,9 +253,9 @@ void driveDownward(uint8_t dutyCycle)
     if (dutyCycle == dcQuarter)
     {
         speeds[0] -= 25;
-        speeds[1] -= 37; // -45
+        speeds[1] -= 37;
         speeds[2] += 4;
-        speeds[3] += 10; // +4
+        speeds[3] += 10;
     }
     else if (dutyCycle == dcEighth)
     {
@@ -291,6 +263,13 @@ void driveDownward(uint8_t dutyCycle)
         speeds[1] += 5;
         speeds[2] += 28;
         speeds[3] += 22;
+    }
+    else if (dutyCycle == dcThreeQs)
+    {
+        speeds[0] -= 95;
+        speeds[1] -= 117;
+        speeds[2] += 14;
+        speeds[3] += 20;
     }
 
     analogWrite(motor1F, speeds[0]);

@@ -33,6 +33,7 @@ public:
 extern Station start;
 extern Station tomatoes;
 extern Station exchange;
+extern Station exchange2;
 extern Station cooktop;
 extern Station plates;
 extern Station cheese;

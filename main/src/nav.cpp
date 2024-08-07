@@ -125,7 +125,6 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         }
         else if (!currentStation.equals(exchange))
         {
-            // if (!nextStation.equals(tomatoes))
             extendSweeper(dcQuarter); // Modify sweeper speed here
             if (!currentStation.equals(start) && !currentStation.equals(servingArea))
                 lowerPlatform(dcQuarter, false); // Modify platform speed here
@@ -315,8 +314,8 @@ void serveMeal()
     {
     }
     serveReady = false;
-    extendSweeper(dcQuarter);
-    delay(1100);
+    extendSweeper(dcThreeQs);
+    delay(800);
     stopSweeper();
 }
 

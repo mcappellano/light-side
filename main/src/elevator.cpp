@@ -50,7 +50,7 @@ void stopPlatform()
     if (retractD)
     {
         retractD = false;
-        distanceToSweep = 221;
+        distanceToSweep = 217; // 221
         retractSweeper(63, false, false, true);
     }
 }

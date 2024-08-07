@@ -30,11 +30,11 @@ Station currentStation = start;
 Station nextStation = plates;
 
 Station stationOrder[8] = {plates, exchange, tomatoes, cheese, lettuce, cooktop, exchange2, servingArea};
-int delayOrder1[8] = {0, 2500, 0, 0, 0, 0, 1500, 0};
+int delayOrder1[8] = {0, 2000, 0, 0, 0, 0, 1250, 0};
 int delayOrder2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int delayOrder3[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int orderNum = 0;
-int delayNum = 0;
+int burgerNum = 1;
 
 double node = -1;
 
@@ -108,11 +108,7 @@ void setup()
     stopDriving();
 
     // TESTING CODE ---------------------------------------------------
-    // while (true)
-    // {
-    //     Serial.println(sweepCounter);
-    //     delay(10);
-    // }
+    // crossCounters();
 }
 
 /* The loop decides where the robot will go next, and calls goNextStation().
@@ -121,11 +117,11 @@ If the next station is the serving area, it serves the meal. */
 void loop()
 {
     nextStation = stationOrder[orderNum];
-    if (delayNum == 0)
+    if (burgerNum == 1)
         delay(delayOrder1[orderNum++]);
-    else if (delayNum == 1)
+    else if (burgerNum == 2)
         delay(delayOrder2[orderNum++]);
-    else if (delayNum == 2)
+    else if (burgerNum == 3)
         delay(delayOrder3[orderNum++]);
 
     goNextStation();
@@ -141,8 +137,6 @@ void loop()
         else
             retractSweeper(dcThreeQs, true, false, false);
 
-        Serial.println(distanceToSweep);
-        Serial.println(orderNum);
         driveUpward(dcQuarter);
         setCrossTimer(150);
         stopDriving();
@@ -153,7 +147,7 @@ void loop()
         {
             resetSweepCount = false;
             extendSweeper(dcQuarter);
-            delay(250);
+            delay(150);
             stopSweeper();
         }
     }
@@ -161,7 +155,7 @@ void loop()
     if (nextStation.equals(servingArea))
     {
         orderNum = 0;
-        delayNum++;
+        burgerNum++;
         raisePartial = false;
         lowerFurther = false;
     }
