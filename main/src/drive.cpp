@@ -19,20 +19,47 @@ uint8_t dcThreeQs = 191;
 
 void crossCounters()
 {
-    driveDownward(dcQuarter);
+    driveDownward(75);
     moveBackIfServing(); // Unneeded if not pushing burger back
-    setCrossTimer(875);
+    setCrossTimer(620);  // 875
     spinAround(dcThreeQs);
-    if (nextStation.equals(servingArea) || currentStation.equals(servingArea))
-        setCrossTimer(735);
+    if (nextStation.equals(servingArea))
+        setCrossTimer(300); // 735
+    else if (currentStation.equals(servingArea))
+        setCrossTimer(350);
+    else if (currentStation.equals(lettuce))
+        setCrossTimer(300);
+    else if (currentStation.equals(tomatoes))
+        setCrossTimer(235);
     else
-        setCrossTimer(620);
+        setCrossTimer(280); // 620
     // stopDriving();
     if (directlyAcross()) // When we don't have enough time traversing the counter to extend, we can do it while crossing
         extendSweeper(dcQuarter);
-    setCrossTimer(100);
-    driveUpward(dcQuarter);
-    setCrossTimer(700);
+    // setCrossTimer(100);
+    if (nextStation.equals(cheese))
+    {
+        driveUpward(dcQuarter);
+        setCrossTimer(600); // 950
+    }
+    if (nextStation.equals(plates))
+    {
+        driveUpward(dcQuarter);
+        if (burgerNum == 4)
+            setCrossTimer(900);
+        else
+            setCrossTimer(900);
+    }
+    else if (!nextStation.equals(servingArea))
+    {
+        driveUpward(dcQuarter);
+        setCrossTimer(825); // 850
+    }
+    else
+    {
+        driveUpward(dcQuarter);
+        setCrossTimer(825); // 850
+    }
     stopDriving();
 
     // Update where we are
@@ -136,11 +163,19 @@ void driveForward(uint8_t dutyCycle)
     // Further tuning to make it drive slightly into the wall
     if (dutyCycle == dcThreeQs)
     {
-        speeds[0] += 8; // 2
-        speeds[3] += 8; // 2
-        speeds[1] += 0;
-        speeds[2] += 0;
-        waitTime = 80; // 50
+        speeds[0] += 18; // 2
+        speeds[3] += 18; // 2
+        speeds[1] -= 20;
+        speeds[2] -= 20;
+        waitTime = 100; // 50
+
+        if (nextStation.equals(plates) && dutyCycle == dcThreeQs && burgerNum != 1)
+        {
+            speeds[0] += 0;
+            speeds[3] += 40;
+            speeds[1] -= 30;
+            speeds[2] -= 30;
+        }
     }
 
     if (dutyCycle == dcEighth)
@@ -252,10 +287,10 @@ void driveDownward(uint8_t dutyCycle)
     // Further tuning to make up for uneven weight distribution between wheels
     if (dutyCycle == dcQuarter)
     {
-        speeds[0] -= 25;
-        speeds[1] -= 37;
-        speeds[2] += 4;
-        speeds[3] += 10;
+        speeds[0] -= 45;
+        speeds[1] -= 57;
+        speeds[2] += 24;
+        speeds[3] += 30;
     }
     else if (dutyCycle == dcEighth)
     {

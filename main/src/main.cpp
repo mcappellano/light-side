@@ -17,10 +17,10 @@ bool Station::equals(const Station &other) const
 
 Station start(0, 0, 100, NA);            // Same sweep distance as plates and same number as tomato (for technicalities of the start sequence)
 Station tomatoes(0, 3, 198, NA);         // 205 - PREVIOUSLY 4.4
-Station exchange(1, 8, 219, BOTTOM_BUN); // PREVIOUSLY 0 - Only buns are being exchanged here. Top bun height doesn't matter
-Station exchange2(1, 8, 185, TOP_BUN);
+Station exchange(1, 8, 221, BOTTOM_BUN); // PREVIOUSLY 0 - Only buns are being exchanged here. Top bun height doesn't matter
+Station exchange2(1, 8, 188, TOP_BUN);
 Station cooktop(2, 9, 185, EMPTY); // PREVIOUSLY 10 - 196 ... Only height of patty matters; fries are not being stacked
-Station plates(3, 17, 172, NA);    // 13.5, 193
+Station plates(3, 17, 176, NA);    // 13.5, 193
 Station cheese(10, 4.3, 190, NA);  // 206
 Station lettuce(13, 3, 200, NA);   // PREVIOUSLY 4.3  -  180
 Station servingArea(11.5, 1, 371, NA);
@@ -30,9 +30,10 @@ Station currentStation = start;
 Station nextStation = plates;
 
 Station stationOrder[8] = {plates, exchange, tomatoes, cheese, lettuce, cooktop, exchange2, servingArea};
-int delayOrder1[8] = {0, 2000, 0, 0, 0, 0, 1250, 0};
+int delayOrder1[8] = {0, 2200, 0, 0, 0, 0, 1400, 0};
 int delayOrder2[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int delayOrder3[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+int delayOrder4[8] = {0, 0, 0, 0, 0, 0, 0, 0};
 int orderNum = 0;
 int burgerNum = 1;
 
@@ -102,13 +103,14 @@ void setup()
     Serial.println("Setup");
 
     // ACTUAL CODE ----------------------------------------------------
-    delay(1000); // Take this out eventually
     driveUpward(dcQuarter);
-    delay(900);
+    delay(1300);
     stopDriving();
 
-    // TESTING CODE ---------------------------------------------------
-    // crossCounters();
+    // burgerNum = 3;
+    // currentStation = servingArea;
+    // nextStation = plates;
+    // goNextStation();
 }
 
 /* The loop decides where the robot will go next, and calls goNextStation().
@@ -116,6 +118,9 @@ Once arrived, it retracts the sweeper to collect the item. Finally, it loops bac
 If the next station is the serving area, it serves the meal. */
 void loop()
 {
+    if ((burgerNum == 4 || burgerNum == 3) && (orderNum == 3))
+        orderNum++;
+
     nextStation = stationOrder[orderNum];
     if (burgerNum == 1)
         delay(delayOrder1[orderNum++]);
@@ -123,6 +128,8 @@ void loop()
         delay(delayOrder2[orderNum++]);
     else if (burgerNum == 3)
         delay(delayOrder3[orderNum++]);
+    else if (burgerNum == 4)
+        delay(delayOrder4[orderNum++]);
 
     goNextStation();
     if (currentStation.equals(servingArea))
@@ -138,7 +145,7 @@ void loop()
             retractSweeper(dcThreeQs, true, false, false);
 
         driveUpward(dcQuarter);
-        setCrossTimer(150);
+        setCrossTimer(250);
         stopDriving();
         while (!swept)
         {
@@ -159,6 +166,10 @@ void loop()
         raisePartial = false;
         lowerFurther = false;
     }
+
+    if (burgerNum == 5)
+        for (;;)
+            ;
 }
 
 // Old code

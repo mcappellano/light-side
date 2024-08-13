@@ -37,10 +37,17 @@ void goNextStation()
             stopDriving();
             delay(250);
         }
-        else if (currentStation.equals(tomatoes) || currentStation.equals(lettuce))
+        else if (currentStation.equals(tomatoes))
         {
             driveForward(dcQuarter);
+            delay(350);
+            stopDriving();
             delay(200);
+        }
+        else if (currentStation.equals(lettuce))
+        {
+            driveForward(dcQuarter);
+            delay(250);
             stopDriving();
             delay(200);
         }
@@ -114,7 +121,7 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
     {
         if (currentStation.equals(start))
         {
-            extendSweeper(50);
+            extendSweeper(dcQuarter);
             raisePlatform(dcQuarter, false);
         }
         else if (currentStation.equals(exchange) && exchange.item == BOTTOM_BUN)
@@ -125,7 +132,10 @@ void traverseCounter(bool forward, uint8_t driveSpeed, uint8_t reverseSpeed)
         }
         else if (!currentStation.equals(exchange))
         {
-            extendSweeper(dcQuarter); // Modify sweeper speed here
+            if (!currentStation.equals(servingArea))
+                extendSweeper(dcQuarter); // Modify sweeper speed here
+            else
+                extendSweeper(dcThreeQs);
             if (!currentStation.equals(start) && !currentStation.equals(servingArea))
                 lowerPlatform(dcQuarter, false); // Modify platform speed here
         }
@@ -216,6 +226,18 @@ void handleEdgeCases()
         else
             driveForward(dcEighth);
 
+        if (next == 2 && currentStation.equals(lettuce))
+        {
+            if (forward2 == true)
+                driveBackward(dcThreeQs);
+            else
+                driveForward(dcThreeQs);
+
+            timerAlarmWrite(slowDownTimer, 200 * 1000, false);
+            timerWrite(slowDownTimer, 0);
+            timerAlarmEnable(slowDownTimer);
+        }
+
         adjusted = true;
         if (next == 3)
             lowerPlatform(dcQuarter, false);
@@ -224,7 +246,7 @@ void handleEdgeCases()
     // Going to tomatoes from exchange (this saves about a second)
     else if (next == 0 && currentStation.equals(exchange))
     {
-        timerAlarmWrite(slowDownTimer, 400 * 1000, false);
+        timerAlarmWrite(slowDownTimer, 300 * 1000, false);
         timerWrite(slowDownTimer, 0);
         timerAlarmEnable(slowDownTimer);
         adjusted = true;
@@ -262,9 +284,9 @@ void handleEdgeCases()
             // if (node == 12)
             //     timerAlarmWrite(slowDownTimer, 300 * 1000, false);
             if (node == 11)
-                timerAlarmWrite(slowDownTimer, 2000 * 1000, false);
+                timerAlarmWrite(slowDownTimer, 1400 * 1000, false);
             else if (node == 10)
-                timerAlarmWrite(slowDownTimer, 2500 * 1000, false);
+                timerAlarmWrite(slowDownTimer, 1900 * 1000, false);
 
             timerWrite(slowDownTimer, 0);
             timerAlarmEnable(slowDownTimer);
@@ -278,8 +300,10 @@ void handleEdgeCases()
         // Fix to wacky bug somewhere else...
         if (currentStation.num == 11.5)
             node = 11;
-        if (node == 11)
-            timerAlarmWrite(slowDownTimer, 300 * 1000, false);
+        if (node == 11 && burgerNum != 4)
+            timerAlarmWrite(slowDownTimer, 550 * 1000, false);
+        else if (node == 11 && burgerNum == 4)
+            timerAlarmWrite(slowDownTimer, 525 * 1000, false);
         else if (node == 12)
             timerAlarmWrite(slowDownTimer, 700, false);
         else if (node == 10 || node == 13)
@@ -298,24 +322,19 @@ void handleEdgeCases()
         lowerPlatform(dcQuarter, false);
         adjusted = true;
     }
-
-    // else if (next == 1 && tapeCounter == tapeToSee - 1)
-    // {
-    //     extendSweeper(dcQuarter);
-    //     adjusted = true;
-    // }
 }
 
 // Directly after arriving at serving area
 void serveMeal()
 {
-    Serial.println(serveReady);
+    driveUpward(dcEighth);
     while (!serveReady)
     {
     }
+    stopDriving();
     serveReady = false;
     extendSweeper(dcThreeQs);
-    delay(800);
+    delay(385);
     stopSweeper();
 }
 

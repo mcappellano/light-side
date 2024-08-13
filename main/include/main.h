@@ -44,6 +44,7 @@ extern Station currentStation;
 extern Station nextStation;
 extern double node;
 extern int orderNum;
+extern int burgerNum;
 
 // Function declarations
 void setup();
