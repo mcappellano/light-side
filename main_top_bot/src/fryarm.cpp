@@ -18,16 +18,20 @@ void cutFries()
 
 void lowerAligner()
 {
+    analogWrite(FRY_ALIGNER, 162);
 }
 
 void raiseAligner()
 {
+    analogWrite(FRY_ALIGNER, 60);
 }
 
 void lowerCutter()
 {
+    analogWrite(FRY_CUTTER, 250);
 }
 
 void raiseCutter()
 {
+    analogWrite(FRY_CUTTER, 150);
 }
